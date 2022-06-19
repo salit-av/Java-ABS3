@@ -10,23 +10,27 @@ public class Payments {
     private int investment; // Customer's investment
     private int capital;  // Keren until now
     private int interest;  // Ribit until now
-    private int capitalEveryPay;  // Keren needs to pay
-    private int interestEveryPay;  // Ribit needs to pay  ----- (capital * interest) \ 100
+    private int capitalEveryPay;
+    private int interestEveryPay;
     private int countUnpaidPayments; // how many unpaid for customer
     private int totalUnpaidPayments; // unpaid money for customer
-    private int interestAndCapital; //amount needs to pay every yaz
+    private int interestAndCapitalEveryPay; //amount needs to pay every yaz
+    private int totalInterestAndCapitalUntilNow;
+    private int capitalAndInterestAtStart;
     private int totalYazTime;
 
-    public Payments(int investment, int interest, int totalYazTime) {
+    public Payments(int investment, int interest, int totalYazTime, int numberOfPayments) {
         this.allPayments = new ArrayList<>();
         this.investment = investment;
         this.capital = 0;
         this.interest = 0;
         this.capitalEveryPay = investment / totalYazTime;
-        this.interestEveryPay = ((investment * interest) / 100) /totalYazTime;
+        this.interestEveryPay = ((investment * interest) / 100) /numberOfPayments;
         this.countUnpaidPayments = 0;
         this.totalUnpaidPayments = 0;
-        this.interestAndCapital = investment + (investment * interest) / 100;
+        this.interestAndCapitalEveryPay = this.capitalEveryPay + this.interestEveryPay;
+        this.totalInterestAndCapitalUntilNow = 0;
+        this.capitalAndInterestAtStart = investment + (investment * interest) / 100;
         this.totalYazTime = totalYazTime;
     }
 
@@ -78,8 +82,8 @@ public class Payments {
         this.totalUnpaidPayments = totalUnpaidPayments;
     }
 
-    public int getInterestAndCapital() {
-        return interestAndCapital;
+    public int getInterestAndCapitalEveryPay() {
+        return interestAndCapitalEveryPay;
     }
 
     public int getCapitalToPay() {
@@ -87,7 +91,7 @@ public class Payments {
     }
 
     public int getInterestToPay() {
-        return interestAndCapital - investment;
+        return capitalAndInterestAtStart - investment - interest;
     }
 
     public List<DTOpayment> fromPaymentsToDTO(){

@@ -68,6 +68,7 @@ public class Loan {
         this.countAllUnpaidPayments = 0;
         this.totalAllUnpaidPayments = 0;
         this.numberOfPayments = totalYazTime / paysEveryYaz;
+
     }
 
 
@@ -290,10 +291,10 @@ public class Loan {
     public void addToLenders(Customer customer, LoanEditor loanEditor) {
         Payments isInPay = lenders.get(customer.getName());
         if(isInPay == null){
-            lenders.put(customer, new Payments(loanEditor.getInvestment(), interestPerPayment, totalYazTime ));
+            lenders.put(customer, new Payments(loanEditor.getInvestment(), interestPerPayment, totalYazTime, numberOfPayments));
         }
         else{
-            isInPay = new Payments(isInPay.getInvestment() + loanEditor.getInvestment(), (loanEditor.getInvestment()*interestPerPayment) / 100 / (totalYazTime/paysEveryYaz), totalYazTime);
+            isInPay = new Payments(isInPay.getInvestment() + loanEditor.getInvestment(), (loanEditor.getInvestment()*interestPerPayment) / 100 / (totalYazTime/paysEveryYaz), totalYazTime, numberOfPayments);
         }
 
     }
@@ -333,7 +334,7 @@ public class Loan {
         Payments paymentsOfCus;
         for (Customer lender : lenders.keySet()) {
             paymentsOfCus = lenders.get(lender);
-            int totalPay = paymentsOfCus.getInterestAndCapital();
+            int totalPay = paymentsOfCus.getInterestAndCapitalEveryPay();
             // add payment to customers payments
             paymentsOfCus.getAllPayments().add(new Payment(currentYaz, paymentsOfCus.getInterestEveryPay(), paymentsOfCus.getCapitalEveryPay(), 0));
             paymentsOfCus.setCountUnpaidPayments(paymentsOfCus.getTotalUnpaidPayments() + 1);
@@ -354,7 +355,7 @@ public class Loan {
         Payments paymentsOfCus;
         for(Customer lender: lenders.keySet()) {
             paymentsOfCus = lenders.get(lender);
-            int totalPay = paymentsOfCus.getInterestAndCapital();
+            int totalPay = paymentsOfCus.getInterestAndCapitalEveryPay();
             // add payment to customers payments
             paymentsOfCus.setCapital(paymentsOfCus.getCapital() + paymentsOfCus.getCapitalEveryPay());
             paymentsOfCus.setInterest(paymentsOfCus.getInterest() + paymentsOfCus.getInterestEveryPay());
