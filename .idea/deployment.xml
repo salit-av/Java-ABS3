@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="C:\Users\salit\OneDrive\Documents\MTA\Second\Java\ABS\ABS2\.git" uploadOnCheckin="8c1fdaa2-6af1-40d6-8201-e1b6e8cd8663" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="C:\Users\salit\OneDrive\Documents\MTA\Second\Java\ABS\ABS2\.git">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/ui" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="C:\Users\salit\OneDrive\Documents\MTA\Second\Java\ABS\ABS2\.git" />
+  </component>
+</project>

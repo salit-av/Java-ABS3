@@ -1,0 +1,18 @@
+.root {
+    -fx-background-image: url("money.jpg");
+    -fx-background-size: 2000;
+}
+
+.tree-cell{
+    -fx-font-size: 16px;
+    -fx-font-style: Ariel;
+}
+
+.button{
+    -fx-border-width: 1.5;
+    -fx-border-color:  black;
+    -fx-text-fill: black;
+    -fx-background-color:  lightseagreen;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
