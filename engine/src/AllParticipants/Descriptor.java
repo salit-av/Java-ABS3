@@ -172,7 +172,7 @@ public class Descriptor {
                 loan.setStatus(Status.RISK);
                 borrower.getNotificationsList().add(new Notification("RISK!", "loan with id: " + loanID + " is in risk!", "Pay your bill!"));
             }
-            if((loan.getStatus().equals(Status.RISK) || loan.getStatus().equals(Status.ACTIVE)) && loan.doPayThisYaz(currentYaz)) {
+            if(loan.isRiskOrActive() && loan.doPayThisYaz(currentYaz)) {
                 borrower.getLoansWithPayments().getLoans().put(loanID, loan);
                 borrower.getNotificationsList().add(new Notification("PayMe!", "It's time to pay off a loan with an ID:" + loanID, "Thank you!"));
                 loan.setNotificationsAtLenders();

@@ -64,7 +64,7 @@ public class Loan {
         this.paysEveryYaz = paysEveryYaz;
         this.nextYazToPay = paysEveryYaz;
         this.interestPerPayment = interestPerPayment;
-        this.yazFromPendingToActive = capital;
+        this.yazFromPendingToActive = 0;
         this.nextPayIncludesInterestAndCapital = 0;
         this.yazAtFirst = 1;
         this.yazAtTheEnd = 0;
@@ -205,7 +205,7 @@ public class Loan {
     }
 
     public boolean doPayThisYaz(int currentYaz){
-        if((currentYaz - yazFromPendingToActive)/ (paysEveryYaz) == 0){
+        if(yazFromPendingToActive != 0 && (currentYaz - yazFromPendingToActive) % (paysEveryYaz) == 0){
             return true;
         }
         return false;
@@ -414,6 +414,10 @@ public class Loan {
 
     public int getNumberOfPayments() {
         return numberOfPayments;
+    }
+
+    public boolean isRiskOrActive() {
+       return status.equals(Status.RISK) || status.equals(Status.ACTIVE);
     }
 }
 
