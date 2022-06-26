@@ -1,10 +1,9 @@
 package UI.BaseView.Header;
 
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import Engine.Engine;
 import UI.BaseView.BaseViewController;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +18,6 @@ import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.PrimitiveIterator;
 
 public class HeaderController {
     @FXML ComboBox<String> viewByCombo;
@@ -35,7 +33,7 @@ public class HeaderController {
     @FXML ImageView dollar5;
 
     @FXML private BaseViewController mainController;
-    private Map<String, DTOprintCustomer> customersMap;
+    private Map<String, DTOCustomer> customersMap;
 
     private SimpleListProperty customersListProperty;
     private SimpleStringProperty currentYazTime;

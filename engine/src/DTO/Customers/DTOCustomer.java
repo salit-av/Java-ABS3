@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DTOprintCustomer {
+public class DTOCustomer {
     private String name;
     private int balance;
     private List<DTOtransaction> DTOtransactions;
@@ -25,7 +25,7 @@ public class DTOprintCustomer {
 
 
 
-    public DTOprintCustomer(Customer customer) {
+    public DTOCustomer(Customer customer) {
         this.name = customer.getName();
         this.balance = customer.getBalance();
         addTransactions(customer.getTransactions());

@@ -1,17 +1,12 @@
 package UI.BaseView.Body.Components.Customers.AdminView;
 
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import Status.Status;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 
-import java.awt.*;
 import java.util.Map;
 
 public class SingleCustomerController extends SingleCustomerData {
@@ -77,7 +72,7 @@ public class SingleCustomerController extends SingleCustomerData {
     }
 
 
-    public void setInfoOfCustomer(DTOprintCustomer cus) {
+    public void setInfoOfCustomer(DTOCustomer cus) {
         this.namePro.set("Name: " + cus.getName());
         this.currentBalancePro.set("Balance: "+cus.getBalance());
         nameLabel.getChildren().addAll(currentBalanceLabel, asBorrower, asLender);
@@ -107,7 +102,7 @@ public class SingleCustomerController extends SingleCustomerData {
         numOfLoansAsBorrowerPendingPro.set("Pending: " + pen);
         numOfLoansAsBorrowerActivePro.set("Action: " + act);
         numOfLoansAsBorrowerRiskPro.set("Risk: " + ris);
-        numOfLoansAsBorrowerFinishedPro.set("Finished" + fini);
+        numOfLoansAsBorrowerFinishedPro.set("Finished: " + fini);
         asBorrower.getChildren().addAll(numOfLoansAsBorrowerNewLabel, numOfLoansAsBorrowerPendingLabel,numOfLoansAsBorrowerActiveLabel,numOfLoansAsBorrowerRiskLabel,numOfLoansAsBorrowerFinishedLabel);
 
         //as lender
@@ -139,7 +134,7 @@ public class SingleCustomerController extends SingleCustomerData {
         numOfLoansAsLenderPendingPro.set("Pending: " + pen);
         numOfLoansAsLenderActivePro.set("Action: " + act);
         numOfLoansAsLenderRiskPro.set("Risk: " + ris);
-        numOfLoansAsLenderFinishedPro.set("Finished" + fini);
+        numOfLoansAsLenderFinishedPro.set("Finished: " + fini);
         asLender.getChildren().addAll(numOfLoansAsLenderNewLabel, numOfLoansAsLenderPendingLabel,numOfLoansAsLenderActiveLabel,numOfLoansAsLenderRiskLabel,numOfLoansAsLenderFinishedLabel);
         customerTV.setRoot(nameLabel);
     }

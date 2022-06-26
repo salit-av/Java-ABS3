@@ -3,8 +3,7 @@ package AllParticipants.Customer;
 import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.Loans;
 import AllParticipants.Notification;
-import DTO.Customers.DTOprintCustomer;
-import jaxb.schema.generated.AbsCustomers;
+import DTO.Customers.DTOCustomer;
 
 import java.util.*;
 
@@ -46,7 +45,7 @@ public class Customers {
         return allLoansAsBorrower;
     }
 
-    public Customer fromDTOCustomerToCustomer(DTOprintCustomer dtoPrintCustomer){
+    public Customer fromDTOCustomerToCustomer(DTOCustomer dtoPrintCustomer){
         return customers.get(dtoPrintCustomer.getName());
     }
 

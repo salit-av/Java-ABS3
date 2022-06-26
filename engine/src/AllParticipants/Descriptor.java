@@ -2,7 +2,7 @@ package AllParticipants;
 import AllParticipants.Customer.*;
 import AllParticipants.Loan.*;
 import DTO.Customers.DTOBalace;
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
 import Engine.Yaz;
 import Exceptions.*;
@@ -125,7 +125,7 @@ public class Descriptor {
         }
     }
 
-    public boolean payPaymentToLoan(int currentYaz, DTOLoan dtoloan, DTOprintCustomer dtoBorrower) {
+    public boolean payPaymentToLoan(int currentYaz, DTOLoan dtoloan, DTOCustomer dtoBorrower) {
         Loan loan = allLoans.fromDTOLoanToLoan(dtoloan);
         Customer borrower = allCustomers.fromDTOCustomerToCustomer(dtoBorrower);
         int payment = loan.getNextPayIncludesInterestAndCapital();
@@ -147,7 +147,7 @@ public class Descriptor {
         }
     }
 
-    public boolean payAllLoan(int currentYaz, DTOLoan dtoloan, DTOprintCustomer dtoBorrower) {
+    public boolean payAllLoan(int currentYaz, DTOLoan dtoloan, DTOCustomer dtoBorrower) {
         Loan loan = allLoans.fromDTOLoanToLoan(dtoloan);
         Customer borrower = allCustomers.fromDTOCustomerToCustomer(dtoBorrower);
         int payment = loan.getCapitalAndInterestAtStart() - loan.getTotalInterestAndCapitalUntilNow();

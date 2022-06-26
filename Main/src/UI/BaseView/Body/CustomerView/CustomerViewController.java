@@ -1,7 +1,7 @@
 package UI.BaseView.Body.CustomerView;
 
 import AllParticipants.Notification;
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import DTO.Customers.DTOtransaction;
 import DTO.DTOactivate;
 import DTO.Loan.DTOLoan;
@@ -97,7 +97,7 @@ public class CustomerViewController {
 
     @FXML
     private BodyController bodyController;
-    private DTOprintCustomer customer;
+    private DTOCustomer customer;
     private Engine engine;
 
 

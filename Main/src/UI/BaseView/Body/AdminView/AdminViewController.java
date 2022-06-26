@@ -1,14 +1,10 @@
 package UI.BaseView.Body.AdminView;
 
-import DTO.Customers.DTOprintCustomer;
-import DTO.Loan.DTOLoan;
-import DTO.Loan.DTOpayment;
-import DTO.Loan.DTOpayments;
-import DTO.Loan.DTOprintLoan;
+import DTO.Customers.DTOCustomer;
+import DTO.Loan.*;
 import Engine.Engine;
 import Engine.Yaz;
 import Exceptions.*;
-import Status.Status;
 import UI.BaseView.Body.BodyController;
 import UI.BaseView.Body.Components.Customers.AdminView.SingleCustomerController;
 import UI.BaseView.Body.Components.Loans.AdminView.SingleLoanController;
@@ -28,7 +24,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import static UI.CommonResourcesPaths.*;
 
@@ -120,12 +115,12 @@ public class AdminViewController extends BodyController {
 
 
     public void loadLoans() {
-        List<DTOprintLoan> allLoansToPrint = bodyController.getMainController().getEngine().printAllLoans().getAllLoansToPrint();
+        List<DTOLoan> allLoansToPrint = bodyController.getMainController().getEngine().printAllLoans().getDTOAllLoans();
         TreeItem<String> treeLoans = new TreeItem<>("There is not list of Loans");
         if (!allLoansToPrint.isEmpty()) {
             treeLoans.setValue("List of Loans");
 
-            for (DTOprintLoan loan : allLoansToPrint) {
+            for (DTOLoan loan : allLoansToPrint) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     URL url = getClass().getResource(SINGLE_LOAN_ADMIN_VIEW_FXML_RESOURCE);
@@ -146,11 +141,11 @@ public class AdminViewController extends BodyController {
     }
 
     public void loadCustomers() {
-        List<DTOprintCustomer> allCustomersToPrint = bodyController.getMainController().getEngine().printAllCustomers().getAllCustomersToPrint();
+        List<DTOCustomer> allCustomersToPrint = bodyController.getMainController().getEngine().printAllCustomers().getAllCustomersToPrint();
         TreeItem<String> treeCustomers = new TreeItem<>("There is not list of Customers");
         if (!allCustomersToPrint.isEmpty()) {
             treeCustomers.setValue("List of Customers");
-            for(DTOprintCustomer cus: allCustomersToPrint) {
+            for(DTOCustomer cus: allCustomersToPrint) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     URL url = getClass().getResource(SINGLE_CUSTOMER_ADMIN_VIEW_FXML_RESOURCE);

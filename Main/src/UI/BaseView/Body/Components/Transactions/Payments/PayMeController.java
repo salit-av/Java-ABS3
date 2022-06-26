@@ -1,10 +1,9 @@
 package UI.BaseView.Body.Components.Transactions.Payments;
 
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import UI.BaseView.Body.Components.Notifications.notificationPopUpController;
-import UI.BaseView.Body.CustomerView.CustomerViewController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -30,7 +29,7 @@ public class PayMeController extends PayMeData{
     @FXML Button payAllLoanButton;
 
     private DTOLoan thisLoan;
-    private DTOprintCustomer thisBorrower;
+    private DTOCustomer thisBorrower;
     private Engine engine;
     @FXML FlowPane paymentFP;
 
@@ -45,7 +44,7 @@ public class PayMeController extends PayMeData{
         payLeftInLoanLabel.textProperty().bind(payLeftInLoanPro);
     }
 
-    public void setInfoOfLoan(DTOLoan loan, DTOprintCustomer borrower, Engine engine, FlowPane paymentFP) {
+    public void setInfoOfLoan(DTOLoan loan, DTOCustomer borrower, Engine engine, FlowPane paymentFP) {
         this.thisLoan = loan;
         this.thisBorrower = borrower;
         this.engine = engine;

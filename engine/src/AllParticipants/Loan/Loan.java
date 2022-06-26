@@ -173,8 +173,8 @@ public class Loan {
         Map<String, DTOpayments> res = new HashMap<>();
         for(Customer customer: lenders.keySet()){
             Payments payForCus = lenders.get(customer);
-            DTOpayments newPay = new DTOpayments(payForCus.fromPaymentsToDTO(), payForCus.getInvestment(),payForCus.getCapitalToPay()*numberOfPayments,
-                    payForCus.getInterestToPay()*numberOfPayments, payForCus.getCapital(), payForCus.getInterest(), payForCus.getCapitalToPay(), payForCus.getInterestToPay());
+            DTOpayments newPay = new DTOpayments(payForCus.fromPaymentsToDTO(), payForCus.getInvestment(),payForCus.getCapitalToPay(),
+                    payForCus.getInterestToPay(), payForCus.getCapital(), payForCus.getInterest(), payForCus.getCapitalToPay(), payForCus.getInterestToPay());
             res.put(customer.getName(), newPay);
         }
         return res;

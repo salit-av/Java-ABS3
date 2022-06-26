@@ -1,7 +1,7 @@
 package UI.BaseView.Body.Components.Transactions;
 
 import DTO.Customers.DTOBalace;
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import Engine.Engine;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,7 +18,7 @@ public class WithdrawController {
 
     private int money;
     private Engine engine;
-    private DTOprintCustomer customer;
+    private DTOCustomer customer;
 
     public WithdrawController() {
     }
@@ -32,7 +32,7 @@ public class WithdrawController {
         this.engine = engine;
     }
 
-    public void setCustomer(DTOprintCustomer customer) {
+    public void setCustomer(DTOCustomer customer) {
         this.customer = customer;
     }
 

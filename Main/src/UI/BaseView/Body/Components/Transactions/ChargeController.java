@@ -1,10 +1,9 @@
 package UI.BaseView.Body.Components.Transactions;
 
 import DTO.Customers.DTOBalace;
-import DTO.Customers.DTOprintCustomer;
+import DTO.Customers.DTOCustomer;
 import Engine.Engine;
 import UI.BaseView.Body.CustomerView.CustomerViewController;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +16,7 @@ public class ChargeController {
 
     private int money;
     private Engine engine;
-    private DTOprintCustomer customer;
+    private DTOCustomer customer;
     private CustomerViewController customerViewController;
 
     public ChargeController() {
@@ -32,7 +31,7 @@ public class ChargeController {
         this.engine = engine;
     }
 
-    public void setCustomer(DTOprintCustomer customer) {
+    public void setCustomer(DTOCustomer customer) {
         this.customer = customer;
     }
 

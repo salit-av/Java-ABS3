@@ -1,22 +1,15 @@
 package UI.BaseView.Body.Components.Loans.AdminView;
 
-import DTO.Loan.DTOpayment;
+import DTO.Loan.DTOLoan;
 import DTO.Loan.DTOpayments;
-import DTO.Loan.DTOprintLoan;
-import Engine.Engine;
 import Status.Status;
-import UI.BaseView.Body.Components.Transactions.Payments.PayMeController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import static UI.CommonResourcesPaths.*;
@@ -120,10 +113,10 @@ public class SingleLoanController extends SingleLoanData {
 
     }
 
-    public void setInfoOfLoan(DTOprintLoan loan) {
+    public void setInfoOfLoan(DTOLoan loan) {
         headerPro.set(loan.getId());
         idPro.set("ID: " + loan.getId());
-        ownerPro.set("Owner: " + loan.getOwner());
+        ownerPro.set("Owner: " + loan.getOwnersName());
         categoryPro.set("Category: " + loan.getCategory());
         capitalAtStartPro.set("Capital at start: " + loan.getCapitalAtStart());
         interestPerPaymentPro.set("Interest Per Payment: " + loan.getInterestPerPayment());
@@ -150,8 +143,8 @@ public class SingleLoanController extends SingleLoanData {
 
         // risk
         if (status.equals(Status.RISK)) {
-            countOfUnpaidPaymentsPro.set("Count Of Unpaid Payments: " + loan.getCountUnpaidPayments());
-            totalMoneyOfUnpaidPaymentsPro.set("Total Money Of Unpaid Payments: " + loan.getTotalUnpaidPayments());
+            countOfUnpaidPaymentsPro.set("Count Of Unpaid Payments: " + loan.getCountAllUnpaidPayments());
+            totalMoneyOfUnpaidPaymentsPro.set("Total Money Of Unpaid Payments: " + loan.getTotalAllUnpaidPayments());
             riskTree.getChildren().addAll(countOfUnpaidPaymentsLabel, totalMoneyOfUnpaidPaymentsLabel);
             treeLoan.getChildren().add(riskTree);
         }

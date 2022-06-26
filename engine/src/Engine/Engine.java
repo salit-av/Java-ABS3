@@ -33,12 +33,12 @@ public class Engine {
         descriptor.loadFromXML(path);
     }
 
-    public DTOprintAllLoans printAllLoans(){
-        return new DTOprintAllLoans(descriptor.getAllLoans());
+    public DTOLoans printAllLoans(){
+        return new DTOLoans(descriptor.getAllLoans());
     }
 
-    public DTOprintAllCustomers printAllCustomers(){
-        return new DTOprintAllCustomers(descriptor.getAllCustomers());
+    public DTOCustomers printAllCustomers(){
+        return new DTOCustomers(descriptor.getAllCustomers());
     }
 
     public void addBalanceToCustomer(DTOBalace dtoBalace) {
@@ -50,7 +50,7 @@ public class Engine {
     }
 
     public DTOactivate activate() {
-        DTOprintAllCustomers dtoAllCustomers = new DTOprintAllCustomers(descriptor.getAllCustomers());
+        DTOCustomers dtoAllCustomers = new DTOCustomers(descriptor.getAllCustomers());
         List<DTOLoan> dtoAllLoans =  fromLoansToDTO(descriptor.getAllLoans());
         DTOCategories dtoAllCategories = new DTOCategories(descriptor.getAllCategories().getCategories());
         DTOactivate dtoActivate = new DTOactivate(dtoAllCustomers, dtoAllLoans, dtoAllCategories);
@@ -68,7 +68,7 @@ public class Engine {
         return res;
     }
 
-    public Customer fromDTOcustomerToCustomer(DTOprintCustomer dtoCustomer) {
+    public Customer fromDTOcustomerToCustomer(DTOCustomer dtoCustomer) {
         return descriptor.getAllCustomers().getCustomers().get(dtoCustomer.getName());
     }
 
@@ -118,7 +118,7 @@ public class Engine {
         return res;
     }
 
-    public void distributionOfMoneyForLoans(DTOprintCustomer dtoCustomer, int investmentBalance, Map<String, DTOLoan> allInvestmentLoans) {
+    public void distributionOfMoneyForLoans(DTOCustomer dtoCustomer, int investmentBalance, Map<String, DTOLoan> allInvestmentLoans) {
         Customer customer = fromDTOcustomerToCustomer(dtoCustomer);
         List <LoanEditor> allInvestmentLoansSorted = sortAllInvestmentLoansByTheirCapital(allInvestmentLoans);
         List <LoanEditor> allInvestmentLoansAfterAlgorithm = fundingAlgorithm(allInvestmentLoansSorted, customer, investmentBalance);
@@ -186,11 +186,11 @@ public class Engine {
         return descriptor.getAllCategories().getCategories();
     }
 
-    public boolean payPaymentToLoan(DTOLoan loan, DTOprintCustomer borrower) {
+    public boolean payPaymentToLoan(DTOLoan loan, DTOCustomer borrower) {
         return descriptor.payPaymentToLoan(currentYaz.getCurrentYaz(), loan, borrower);
     }
 
-    public boolean payAllLoan(DTOLoan loan, DTOprintCustomer borrower) {
+    public boolean payAllLoan(DTOLoan loan, DTOCustomer borrower) {
         return descriptor.payAllLoan(currentYaz.getCurrentYaz(), loan, borrower);
     }
 
