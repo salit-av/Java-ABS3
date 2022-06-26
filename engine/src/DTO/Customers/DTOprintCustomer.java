@@ -55,9 +55,8 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansAsLender.getLoans().keySet()){
             lo = loansAsLender.getLoans().get(id);
-            int numOpenLoans = lo.getOwnerCus().getLoansAsBorrower().getLoans().size();
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), numOpenLoans, lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterest(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
+            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
+                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
                     lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
 
             DTOloansAsLender.put(dtoLoan.getId(), dtoLoan);
@@ -70,10 +69,9 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansAsBorrower.getLoans().keySet()){
             lo = loansAsBorrower.getLoans().get(id);
-            int numOpenLoans = lo.getOwnerCus().getLoansAsBorrower().getLoans().size();
 
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), numOpenLoans, lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterest(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
+            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
+                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
                     lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
 
             DTOloansAsBorrower.put(dtoLoan.getId(), dtoLoan);
@@ -86,10 +84,9 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansWithPayments.getLoans().keySet()){
             lo = loansWithPayments.getLoans().get(id);
-            int numOpenLoans = lo.getOwnerCus().getLoansAsBorrower().getLoans().size();
 
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), numOpenLoans, lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterest(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
+            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
+                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
                     lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
 
             DTOloansWithPayments.add(dtoLoan);

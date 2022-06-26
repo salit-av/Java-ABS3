@@ -63,9 +63,8 @@ public class Engine {
         Loan loan;
         for(String id: allLoans.getLoans().keySet()){
             loan = allLoans.getLoans().get(id);
-            int numOpenLoans = loan.getOwnerCus().getLoansAsBorrower().getLoans().size();
 
-            res.add(new DTOLoan(loan.getId(), loan.getCategory(), loan.getOwner(),numOpenLoans, loan.getTotalYazTime(), loan.getCapitalAtStart(), loan.getPaysEveryYaz(), loan.getInterestPerPayment(),
+            res.add(new DTOLoan(loan.getId(), loan.getCategory(), loan.getOwner(),loan.getNumOfOpenLoans(), loan.getTotalYazTime(), loan.getCapitalAtStart(), loan.getPaysEveryYaz(), loan.getInterestPerPayment(),
                                 loan.getCapitalAndInterest(), loan.getStatus(), loan.getLendersToDTO(), loan.getPayLeftFromPendingToActive(), loan.getNextYazToPay(),
                                 loan.getNextPayIncludesInterestAndCapital(), loan.getCountAllUnpaidPayments(), loan.getTotalAllUnpaidPayments(), loan.getYazAtFirst(), loan.getYazAtTheEnd()));
         }

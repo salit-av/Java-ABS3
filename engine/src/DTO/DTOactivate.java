@@ -2,7 +2,6 @@ package DTO;
 
 import DTO.Customers.DTOprintAllCustomers;
 import DTO.Loan.DTOLoan;
-import DTO.Loan.DTOprintAllLoans;
 
 import java.util.List;
 

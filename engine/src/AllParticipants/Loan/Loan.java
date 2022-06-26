@@ -17,6 +17,7 @@ public class Loan {
     private Customer ownerCus;
     private String category;
     private int capitalAtStart; // Money at start
+    private int interestAtStart;
     private int capitalNow; // Money now after payments
     private int investmentInLoan; // how much money left to add
     private int interestPerPayment; // Ribit percent
@@ -39,6 +40,9 @@ public class Loan {
 
     // more info
     private int capitalAndInterest; // at the beginning --> capitalAtStart + (capitalAtStart * interestPerPayment) \ 100
+    private int interestAndCapitalEveryPay;
+    private int totalInterestAndCapitalUntilNow;
+    private int capitalAndInterestAtStart;
     private int totalYazTime; // how long the lone is active
     private int nextPayIncludesInterestAndCapital; //  capitalAndInterest \ (totalYazTime \ paysEveryYaz)
     private int countAllUnpaidPayments; // how many unpaid for customer
@@ -53,6 +57,7 @@ public class Loan {
         this.status = Status.NEW;
         this.capitalAtStart = capital;
         this.capitalNow = capital;
+        this.interestAtStart = (capitalAtStart * interestPerPayment) / 100;
         this.investmentInLoan = 0;
         this.capitalAndInterest = capitalAtStart + (capitalAtStart * interestPerPayment) / 100;
         this.totalYazTime = totalYazTime;
@@ -68,6 +73,9 @@ public class Loan {
         this.countAllUnpaidPayments = 0;
         this.totalAllUnpaidPayments = 0;
         this.numberOfPayments = totalYazTime / paysEveryYaz;
+        this.interestAndCapitalEveryPay = (capitalAtStart + interestAtStart) / numberOfPayments;
+        this.totalInterestAndCapitalUntilNow = 0;
+        this.capitalAndInterestAtStart = capitalAtStart + interestAtStart;
 
     }
 
@@ -215,6 +223,21 @@ public class Loan {
         return capitalAndInterest;
     }
 
+    public int getCapitalAndInterestAtStart() {
+        return capitalAndInterestAtStart;
+    }
+
+    public int getInterestAndCapitalEveryPay() {
+        return interestAndCapitalEveryPay;
+    }
+
+    public int getTotalInterestAndCapitalUntilNow() {
+        return totalInterestAndCapitalUntilNow;
+    }
+
+    public int getNumOfOpenLoans() {
+        return ownerCus.getLoansAsBorrower().getLoans().size();
+    }
     public int getTotalYazTime() {
         return totalYazTime;
     }
@@ -303,10 +326,11 @@ public class Loan {
         Payments paymentsOfCus;
         for(Customer lender: lenders.keySet()){
             paymentsOfCus = lenders.get(lender);
-            int totalPay = capitalAndInterest;
+            int totalPay = paymentsOfCus.getInterestAndCapitalEveryPay();
             // add payment to customers payments
             paymentsOfCus.setCapital(paymentsOfCus.getCapital() + paymentsOfCus.getCapitalToPay());
             paymentsOfCus.setInterest(paymentsOfCus.getInterest() + paymentsOfCus.getInterestToPay());
+            paymentsOfCus.setTotalInterestAndCapitalUntilNow(getTotalInterestAndCapitalUntilNow() + totalPay);
             paymentsOfCus.getAllPayments().add(new Payment(currentYaz, paymentsOfCus.getInterestEveryPay(), paymentsOfCus.getCapitalEveryPay(), totalPay));
 
             // add to lender
@@ -317,14 +341,14 @@ public class Loan {
             owner.setBalance(owner.getBalance() - totalPay);
 
             // Change details of the loan
-            capitalAndInterest -= totalPay;
-            nextYazToPay += paysEveryYaz;
+            totalInterestAndCapitalUntilNow += totalPay;
+            //nextYazToPay += paysEveryYaz;   TODO check if not in mark
 
 
-            if(currentYaz >= totalYazTime && capitalAndInterest == 0 && countAllUnpaidPayments == 0){
+            if(currentYaz >= totalYazTime && totalInterestAndCapitalUntilNow == capitalAndInterestAtStart && countAllUnpaidPayments == 0){
                 status = Status.FINISHED;
                 nextYazToPay = 0;
-                nextPayIncludesInterestAndCapital = 0;
+                // nextPayIncludesInterestAndCapital = 0;  TODO check if not in mark
                 yazAtTheEnd = currentYaz;
             }
         }
@@ -355,10 +379,11 @@ public class Loan {
         Payments paymentsOfCus;
         for(Customer lender: lenders.keySet()) {
             paymentsOfCus = lenders.get(lender);
-            int totalPay = paymentsOfCus.getInterestAndCapitalEveryPay();
+            int totalPay = paymentsOfCus.getCapitalToPay() + paymentsOfCus.getInterestToPay();
             // add payment to customers payments
             paymentsOfCus.setCapital(paymentsOfCus.getCapital() + paymentsOfCus.getCapitalEveryPay());
             paymentsOfCus.setInterest(paymentsOfCus.getInterest() + paymentsOfCus.getInterestEveryPay());
+            paymentsOfCus.setTotalInterestAndCapitalUntilNow(getTotalInterestAndCapitalUntilNow() + totalPay);
             paymentsOfCus.getAllPayments().add(new Payment(currentYaz, paymentsOfCus.getInterestToPay(), paymentsOfCus.getCapitalToPay(), totalPay));
 
             // add to lender
@@ -369,7 +394,7 @@ public class Loan {
             borrower.setBalance(borrower.getBalance() - totalPay);
 
             // Change details of the loan
-            capitalAndInterest -= totalPay;
+            totalInterestAndCapitalUntilNow += totalPay;
             nextYazToPay += paysEveryYaz;
 
             status = Status.FINISHED;
@@ -381,6 +406,7 @@ public class Loan {
 
         }
     }
+
 
 }
 

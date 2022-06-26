@@ -86,6 +86,14 @@ public class Payments {
         return interestAndCapitalEveryPay;
     }
 
+    public int getTotalInterestAndCapitalUntilNow() {
+        return totalInterestAndCapitalUntilNow;
+    }
+
+    public void setTotalInterestAndCapitalUntilNow(int totalInterestAndCapitalUntilNow) {
+        this.totalInterestAndCapitalUntilNow = totalInterestAndCapitalUntilNow;
+    }
+
     public int getCapitalToPay() {
         return investment - capital;
     }

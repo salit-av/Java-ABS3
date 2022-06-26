@@ -150,7 +150,7 @@ public class Descriptor {
     public boolean payAllLoan(int currentYaz, DTOLoan dtoloan, DTOprintCustomer dtoBorrower) {
         Loan loan = allLoans.fromDTOLoanToLoan(dtoloan);
         Customer borrower = allCustomers.fromDTOCustomerToCustomer(dtoBorrower);
-        int payment = loan.getCapitalAndInterest();
+        int payment = loan.getCapitalAndInterestAtStart() - loan.getTotalInterestAndCapitalUntilNow();
 
         if(payment <= borrower.getBalance()) {
             loan.payLendersAllPay(borrower, currentYaz);
