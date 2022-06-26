@@ -13,9 +13,7 @@ public class DTOLoans {
         DTOAllLoans = new ArrayList<>();
         for(String name: allLoans.getLoans().keySet()){
             Loan lo = allLoans.getLoans().get(name);
-            DTOLoan loan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
-                    lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
+            DTOLoan loan = new DTOLoan(lo);
             DTOAllLoans.add(loan);
         }
     }

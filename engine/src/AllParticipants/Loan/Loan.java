@@ -408,6 +408,13 @@ public class Loan {
     }
 
 
+    public int getInterestAtStart() {
+        return interestAtStart;
+    }
+
+    public int getNumberOfPayments() {
+        return numberOfPayments;
+    }
 }
 
 

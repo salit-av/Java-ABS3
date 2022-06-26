@@ -24,7 +24,7 @@ public class Payments {
         this.investment = investment;
         this.capital = 0;
         this.interest = 0;
-        this.capitalEveryPay = investment / totalYazTime;
+        this.capitalEveryPay = investment / numberOfPayments;
         this.interestEveryPay = ((investment * interest) / 100) /numberOfPayments;
         this.countUnpaidPayments = 0;
         this.totalUnpaidPayments = 0;

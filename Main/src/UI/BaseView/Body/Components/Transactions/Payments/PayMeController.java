@@ -49,11 +49,11 @@ public class PayMeController extends PayMeData{
         this.thisLoan = loan;
         this.thisBorrower = borrower;
         this.engine = engine;
-        this.paymentFP =paymentFP;
+        this.paymentFP = paymentFP;
         this.idPro.set("Loan: " + loan.getId());
-        this.yazToPayPro.set("Next Yaz for payment: " + loan.getNextYazForPayment());
+        this.yazToPayPro.set("Next Yaz for payment: " + loan.getNextYazToPay());
         this.allPayPro.set("Payment: " + loan.getNextPayIncludesInterestAndCapital());
-        this.payLeftInLoanPro.set("All payment left in loan: " +  loan.getAllPayment());
+        this.payLeftInLoanPro.set("All payment left in loan: " +  (loan.getCapitalAndInterestAtStart() - loan.getTotalInterestAndCapitalUntilNow()));
     }
 
     public void payThisPayment(){

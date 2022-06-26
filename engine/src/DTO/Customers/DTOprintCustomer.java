@@ -55,10 +55,7 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansAsLender.getLoans().keySet()){
             lo = loansAsLender.getLoans().get(id);
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
-                    lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
-
+            dtoLoan = new DTOLoan(lo);
             DTOloansAsLender.put(dtoLoan.getId(), dtoLoan);
         }
     }
@@ -69,11 +66,7 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansAsBorrower.getLoans().keySet()){
             lo = loansAsBorrower.getLoans().get(id);
-
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
-                    lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
-
+            dtoLoan = new DTOLoan(lo);
             DTOloansAsBorrower.put(dtoLoan.getId(), dtoLoan);
         }
     }
@@ -84,11 +77,7 @@ public class DTOprintCustomer {
         Loan lo;
         for(String id: loansWithPayments.getLoans().keySet()){
             lo = loansWithPayments.getLoans().get(id);
-
-            dtoLoan = new DTOLoan(lo.getId(), lo.getCategory(), lo.getOwner(), lo.getNumOfOpenLoans(), lo.getTotalYazTime(), lo.getCapitalAtStart(), lo.getPaysEveryYaz(),
-                    lo.getInterestPerPayment(), lo.getCapitalAndInterestAtStart(), lo.getStatus(), lo.getLendersToDTO(), lo.getPayLeftFromPendingToActive(), lo.getNextYazToPay(), lo.getNextPayIncludesInterestAndCapital(),
-                    lo.getCountAllUnpaidPayments(), lo.getTotalAllUnpaidPayments(), lo.getYazAtFirst(), lo.getYazAtTheEnd());
-
+            dtoLoan = new DTOLoan(lo);
             DTOloansWithPayments.add(dtoLoan);
         }
     }
@@ -117,7 +106,7 @@ public class DTOprintCustomer {
         List<DTOLoan> res = new ArrayList<>();
         for(String idLoan: DTOloansAsBorrower.keySet()){
             DTOLoan loan = DTOloansAsBorrower.get(idLoan);
-            if(loan.getCountUnpaidPayments() > 0 || loan.getNextYazForPayment() <= currentYaz.getCurrentYaz()){
+            if(loan.getCountAllUnpaidPayments() > 0 || loan.getNextYazToPay() <= currentYaz.getCurrentYaz()){
                 res.add(loan);
             }
         }

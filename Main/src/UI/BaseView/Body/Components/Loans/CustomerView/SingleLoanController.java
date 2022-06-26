@@ -107,7 +107,7 @@ public class SingleLoanController extends SingleLoanData {
         paysEveryYazPro.set("Pays Every Yaz: " + loan.getPaysEveryYaz());
 
         interestPerPaymentPro.set("Interest Per Payment: " + loan.getInterestPerPayment());
-        allPaymentPro.set("All Payment: " + loan.getAllPayment());
+        allPaymentPro.set("All Payment: " + loan.getCapitalAndInterestAtStart());
         Status status = loan.getStatus();
         statusPro.set("Status: " + status.toString());
         treeLoan.getChildren().addAll(newInfo1, newInfo2, newInfo3, newInfo4, newInfo5, newInfo6, newInfo7);
@@ -121,7 +121,7 @@ public class SingleLoanController extends SingleLoanData {
 
         // active
         if(status.equals(Status.ACTIVE) || status.equals(Status.RISK)) {
-            nextYazForPaymentPro.set("Next Yaz For Payment: " + loan.getNextYazForPayment());
+            nextYazForPaymentPro.set("Next Yaz For Payment: " + loan.getNextYazToPay());
             nextPayIncludesInterestAndCapitalPro.set("Next Pay Includes Interest And Capital: " + loan.getNextPayIncludesInterestAndCapital());
             activeTree.getChildren().addAll(acInfo1, acInfo2);
             treeLoan.getChildren().addAll( activeTree);
@@ -129,8 +129,8 @@ public class SingleLoanController extends SingleLoanData {
 
         // risk
         if(status.equals(Status.RISK)) {
-            countUnpaidPaymentsPro.set("Count Of Unpaid Payments: " + loan.getCountUnpaidPayments());
-            totalUnpaidPaymentsPro.set("Total Money Of Unpaid Payments: " + loan.getTotalUnpaidPayments());
+            countUnpaidPaymentsPro.set("Count Of Unpaid Payments: " + loan.getCountAllUnpaidPayments());
+            totalUnpaidPaymentsPro.set("Total Money Of Unpaid Payments: " + loan.getTotalAllUnpaidPayments());
             riskTree.getChildren().addAll(risInfo1, risInfo2);
             treeLoan.getChildren().addAll(riskTree);
         }
