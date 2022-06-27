@@ -1,14 +1,14 @@
+/*
 package UI.BaseView.Body;
 
 import Engine.Engine;
 import UI.BaseView.BaseViewController;
-import UI.BaseView.Body.AdminView.AdminViewController;
-import UI.BaseView.Body.CustomerView.CustomerViewController;
+import AdminView.AdminViewController;
+import CustomerView.CustomerViewController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
@@ -101,3 +101,4 @@ public class BodyController {
         }
     }
 }
+*/

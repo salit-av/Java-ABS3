@@ -1,3 +1,4 @@
+/*
 package UI.BaseView;
 
 import Engine.Engine;
@@ -61,3 +62,4 @@ public class BaseViewController {
         baseVB.getChildren().addAll(headerComponent, bodyComponent);
     }
 }
+*/

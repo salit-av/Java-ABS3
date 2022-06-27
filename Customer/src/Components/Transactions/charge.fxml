@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Components.Transactions.ChargeController">
+   <children>
+      <Label fx:id="helloLabel" text="Hello!" />
+      <Label text="Please enter the amount of money requested" />
+      <TextField fx:id="moneyTF" />
+      <Button fx:id="submitButton" mnemonicParsing="false" onAction="#submit" text="submit" />
+   </children>
+</VBox>
