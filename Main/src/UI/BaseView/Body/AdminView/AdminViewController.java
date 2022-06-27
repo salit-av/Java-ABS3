@@ -79,7 +79,7 @@ public class AdminViewController extends BodyController {
 
     public boolean loadXmlAndCheckExceptions(String absolutePath) {
         try {
-            bodyController.getMainController().getEngine().loadFromXML(absolutePath);
+            bodyController.getMainController().getEngine().loadFromXML(absolutePath,"");  //TODO change name!
             return true;
         } catch (loanWhoseCustomerIsNotInSystemException | customersWithTheSameNameException | paymentRateIncorrectException | referenceToCategoryThatIsntDefinedException ex) {
             try {

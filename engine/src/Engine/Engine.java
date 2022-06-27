@@ -29,8 +29,8 @@ public class Engine {
         return currentYaz;
     }
 
-    public void loadFromXML(String path) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
-        descriptor.loadFromXML(path);
+    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
+        descriptor.loadFromXML(path, customerName);
     }
 
     public DTOLoans printAllLoans(){

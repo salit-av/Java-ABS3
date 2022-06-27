@@ -45,38 +45,22 @@ public class Descriptor {
         return allCustomers;
     }
 
-    public void setAllCustomersFromAbs(AbsCustomers customers) {
-        int i = 0;
-        AbsCustomer customer;
-        while (i < customers.getAbsCustomer().size()){
-            customer = customers.getAbsCustomer().get(i);
-            allCustomers.addCustomerFromAbs(customer.getName(), customer.getAbsBalance(), allLoans);
-            i++;
-        }
-    }
-
-    public void setAllLoansFromAbs(AbsLoans absLoans) {
-        int i = 0;
-        AbsLoan loan = new AbsLoan();
-        while (i < absLoans.getAbsLoan().size()){
-            loan = absLoans.getAbsLoan().get(i);
-            Customer ownerCus = allCustomers.getCustomers().get(loan.getAbsOwner());
-            Loan lo = new Loan(loan.getId(), loan.getAbsOwner(), ownerCus, loan.getAbsCategory(), loan.getAbsCapital(), loan.getAbsTotalYazTime(), loan.getAbsPaysEveryYaz(), loan.getAbsIntristPerPayment());
+    public void setAllLoansFromAbs(AbsLoans absLoans, Customer customer) {
+        for (AbsLoan loan:absLoans.getAbsLoan()){
+            Loan lo = new Loan(loan.getId(), customer.getName(), customer, loan.getAbsCategory(), loan.getAbsCapital(), loan.getAbsTotalYazTime(), loan.getAbsPaysEveryYaz(), loan.getAbsIntristPerPayment());
             allLoans.addLoanFromAbs(lo);
-            i++;
         }
     }
 
-    public void loadFromXML(String path) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
+    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
         XmlReader reader = new XmlReader();
-        AbsDescriptor absDescriptor = reader.openXML(path);
-        loadFromAbsDescriptor(absDescriptor);
+        AbsDescriptor absDescriptor = reader.openXML(path, allCategories, allLoans);
+        loadFromAbsDescriptor(absDescriptor, allCustomers.getCustomers().get(customerName));
     }
 
-    public void loadFromAbsDescriptor(AbsDescriptor absDescriptor) {
+    public void loadFromAbsDescriptor(AbsDescriptor absDescriptor,Customer customer) {
         setAllCategoriesFromAbs(absDescriptor.getAbsCategories());
-        setAllLoansFromAbs(absDescriptor.getAbsLoans());
-        setAllCustomersFromAbs(absDescriptor.getAbsCustomers());
+        setAllLoansFromAbs(absDescriptor.getAbsLoans(), customer);
     }
 
     public void addBalanceToCustomer(DTOBalace dtoAddBalace, Yaz currentYaz) {

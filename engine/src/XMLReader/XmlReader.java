@@ -1,5 +1,8 @@
 package XMLReader;
 
+import AllParticipants.Categories;
+import AllParticipants.Loan.Loan;
+import AllParticipants.Loan.Loans;
 import Exceptions.*;
 import jaxb.schema.generated.*;
 
@@ -18,7 +21,7 @@ public class XmlReader {
     private AbsDescriptor absDescriptor;
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.schema.generated";
 
-    public AbsDescriptor openXML(String filePath) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, paymentRateIncorrectException, customersWithTheSameNameException {
+    public AbsDescriptor openXML(String filePath, Categories allCategories, Loans allLoans) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, paymentRateIncorrectException, customersWithTheSameNameException {
         try {
             InputStream inputStream = new FileInputStream(new File(filePath));
             absDescriptor = deserializeFrom(inputStream);
@@ -27,23 +30,21 @@ public class XmlReader {
             e.printStackTrace();
         }
 
-        if(referenceToCategoryThatIsNotDefined()){
+        if(referenceToCategoryThatIsNotDefined(allCategories)){
             throw new referenceToCategoryThatIsntDefinedException();
-        }
-
-        if(loanWhoseCustomerIsNotInSystem()){
-            throw new loanWhoseCustomerIsNotInSystemException();
         }
 
         if(paymentRateIncorrect()){
             throw new paymentRateIncorrectException();
         }
 
-        if(customersWithTheSameName()){
+        if(loansWithTheSameName(allLoans)){
             throw new customersWithTheSameNameException();
         }
         return absDescriptor;
     }
+
+
 
     private AbsDescriptor deserializeFrom(InputStream inputStream) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(JAXB_XML_GAME_PACKAGE_NAME);
@@ -51,44 +52,18 @@ public class XmlReader {
         return  (AbsDescriptor) u.unmarshal(inputStream);
     }
 
-    public boolean referenceToCategoryThatIsNotDefined() {
+    public boolean referenceToCategoryThatIsNotDefined(Categories allCategories) {
         AbsLoans absLoans = absDescriptor.getAbsLoans();
         for(AbsLoan absLoan: absLoans.getAbsLoan()){
-            if(!inCategories(absLoan.getAbsCategory())){
+            if(!inCategories(absLoan.getAbsCategory(), allCategories)){
                 return true;
             }
         }
         return false;
     }
 
-    public boolean inCategories(String absCategory) {
-        AbsCategories absCategories = absDescriptor.getAbsCategories();
-        for(String category: absCategories.getAbsCategory()){
-            if(category.equals(absCategory)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean loanWhoseCustomerIsNotInSystem() {
-        AbsLoans absLoans = absDescriptor.getAbsLoans();
-        for(AbsLoan absLoan: absLoans.getAbsLoan()){
-            if(!customerInSystem(absLoan.getAbsOwner())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean customerInSystem(String absOwner) {
-        AbsCustomers absCustomers = absDescriptor.getAbsCustomers();
-        for(AbsCustomer customer: absCustomers.getAbsCustomer()){
-            if(customer.getName().equals(absOwner)){
-                return true;
-            }
-        }
-        return false;
+    public boolean inCategories(String absCategory, Categories allCategories) {
+        return absDescriptor.getAbsCategories().getAbsCategory().contains(absCategory) || allCategories.getCategories().contains(absCategory);
     }
 
     public boolean paymentRateIncorrect() {
@@ -101,19 +76,17 @@ public class XmlReader {
         return false;
     }
 
-    public boolean customersWithTheSameName() {
-        AbsCustomers absCustomers = absDescriptor.getAbsCustomers();
+    public boolean loansWithTheSameName(Loans allLoans) {
+        AbsLoans absLoans = absDescriptor.getAbsLoans();
         Set<String> allNames = new HashSet<>();
-        for (AbsCustomer customer : absCustomers.getAbsCustomer()) {
-            if (!allNames.add(customer.getName()))
+        for (AbsLoan loan : absLoans.getAbsLoan()) {
+            if (!allNames.add(loan.getId()))
+                return true;
+        }
+        for (String id : allLoans.getLoans().keySet()) {
+            if (!allNames.add(id))
                 return true;
         }
         return false;
     }
-
 }
-
-
-
-//engine\src\resources\ex1-big.xml
-//engine\src\resources\ex1-small.xml
