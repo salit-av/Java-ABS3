@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="ABSWebApp:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/ABSWebApp_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="ABSWebApp/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="ABSWebApp" />
+          <element id="module-output" name="DTO" />
+          <element id="module-output" name="Main" />
+          <element id="module-output" name="engine" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="google-gson-2" />
+          <element id="library" level="project" name="okHttp" />
+          <element id="library" level="project" name="controlsfx-8.40.141" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

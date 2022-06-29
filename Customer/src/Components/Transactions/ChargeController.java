@@ -1,23 +1,24 @@
-/*
 package Components.Transactions;
 
+import Components.CustomerView.CustomerViewController;
 import DTO.Customers.DTOBalace;
-import DTO.Customers.DTOCustomer;
 import Engine.Engine;
-import CustomerView.CustomerViewController;
+import jakarta.servlet.http.HttpServlet;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import utils.ServletUtils;
 
-public class ChargeController {
+public class ChargeController extends HttpServlet {
     @FXML Label helloLabel;
     @FXML TextField moneyTF;
     @FXML Button submitButton;
 
+    private SimpleStringProperty balancePro;
     private int money;
-    private Engine engine;
-    private DTOCustomer customer;
+    private String cusName;
     private CustomerViewController customerViewController;
 
     public ChargeController() {
@@ -28,12 +29,9 @@ public class ChargeController {
 
     }
 
-    public void setEngein(Engine engine) {
-        this.engine = engine;
-    }
 
-    public void setCustomer(DTOCustomer customer) {
-        this.customer = customer;
+    public void setCustomer(String cusName) {
+        this.cusName = cusName;
     }
 
     public void submit(){
@@ -43,8 +41,10 @@ public class ChargeController {
                 helloLabel.setText("Please enter only numbers");
             }
             else {
-                engine.addBalanceToCustomer(new DTOBalace(customer.getName(), money));
+                Engine engine = ServletUtils.getEngine(getServletContext());
+                engine.addBalanceToCustomer(new DTOBalace(cusName, money));
                 customerViewController.loadTransactions();
+                balancePro.set("Balance: " + (engine.printAllCustomers().findCustomer(cusName).getBalance() + money) );
             }
         } catch (NumberFormatException e) {
             helloLabel.setText("Please enter only numbers");
@@ -55,5 +55,8 @@ public class ChargeController {
     public void setCustomerController(CustomerViewController customerViewController) {
         this.customerViewController = customerViewController;
     }
+
+    public void setBalancePro(SimpleStringProperty balancePro) {
+        this.balancePro = balancePro;
+    }
 }
-*/

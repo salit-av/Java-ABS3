@@ -49,4 +49,11 @@ public class Customers {
         return customers.get(dtoPrintCustomer.getName());
     }
 
+    public boolean isCustomerExists(String username) {
+        return customers.containsKey(username);
+    }
+
+    public void addCustomer(String username) {
+        customers.put(username, new Customer(username, 0, new Loans()));
+    }
 }

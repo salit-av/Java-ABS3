@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ABSWebApp:Web">
+    <output-path>$PROJECT_DIR$/out/artifacts/ABSWebApp_Web</output-path>
+    <root id="archive" name="ABSWebApp_Web.war">
+      <element id="artifact" artifact-name="ABSWebApp:Web exploded" />
+    </root>
+  </artifact>
+</component>

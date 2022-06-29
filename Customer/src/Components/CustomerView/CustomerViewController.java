@@ -1,15 +1,8 @@
-/*
-package CustomerView;
+package Components.CustomerView;
 
 import AllParticipants.Notification;
-import DTO.Customers.DTOCustomer;
-import DTO.Customers.DTOtransaction;
-import DTO.DTOactivate;
-import DTO.Loan.DTOLoan;
-import Engine.Engine;
-import Status.Status;
-import UI.BaseView.Body.BodyController;
 import Components.Loans.SingleLoanController;
+import Components.Main.MainAppController;
 import Components.Notifications.NotificationAreaController;
 import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
@@ -17,8 +10,14 @@ import Components.Transactions.ChargeController;
 import Components.Transactions.Payments.PayMeController;
 import Components.Transactions.SingleTransactionController;
 import Components.Transactions.WithdrawController;
-import UI.BaseView.Body.Components.UiAdapter.UiAdapter;
-import CustomerView.Task.task;
+import DTO.Customers.DTOCustomer;
+import DTO.Customers.DTOtransaction;
+import DTO.DTOactivate;
+import DTO.Loan.DTOLoan;
+import Engine.Engine;
+import Status.Status;
+import jakarta.servlet.http.HttpServlet;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -31,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
+import utils.ServletUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,69 +40,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static UI.CommonResourcesPaths.*;
+import static main.ResourcesPath.*;
 
-public class CustomerViewController {
-    @FXML
-    Tab informationTab;
-    @FXML
-    TreeView<String> loanerLoansTV1;
-    @FXML
-    TreeView<String> lenderLoansTV;
-    @FXML
-    TreeView<String> transactionsTV;
-    @FXML
-    Button chargeButton;
-    @FXML
-    Button withdrawButton;
 
-    @FXML
-    Tab ScrambleTab;
-    @FXML
-    Label errorScrambleLabel;
+public class CustomerViewController extends HttpServlet {
+    // header
+    @FXML Label currentYazLabel;
+    @FXML Label currenBalanceLabel;
+    @FXML Label filePathLabel;
+    @FXML Button loadFileButton;
+
+    private SimpleStringProperty balancePro;
+    private SimpleStringProperty currentYazPro;
+
+    @FXML Tab informationTab;
+    @FXML TreeView<String> loanerLoansTV1;
+    @FXML TreeView<String> lenderLoansTV;
+    @FXML TreeView<String> transactionsTV;
+    @FXML Button chargeButton;
+    @FXML Button withdrawButton;
+
+    @FXML Tab ScrambleTab;
+    @FXML Label errorScrambleLabel;
     @FXML Label progressLabel;
-    @FXML ProgressBar progressBar;
-    @FXML
-    TextField investmentTF;
-    @FXML
-    TextField interestFilterTF;
-    @FXML
-    TextField yazFilterTF;
-    @FXML
-    TextField loansOpenFilterTF;
-    @FXML
-    TextField ownershipFilterTF;
-    @FXML
-    CheckComboBox<String> categoryFilterCB;
-    @FXML
-    CheckComboBox<String> loansToChoseCB;
-    @FXML
-    Button submitScrambleButton;
-    @FXML
-    Button OKScrambleButton;
+    @FXML TextField investmentTF;
+    @FXML TextField interestFilterTF;
+    @FXML TextField yazFilterTF;
+    @FXML TextField loansOpenFilterTF;
+    @FXML TextField ownershipFilterTF;
+    @FXML CheckComboBox<String> categoryFilterCB;
+    @FXML CheckComboBox<String> loansToChoseCB;
+    @FXML Button submitScrambleButton;
+    @FXML Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
 
-    @FXML
-    Tab PaymentTab;
-    @FXML
-    TreeView<String> loanerLoansTV2;
-    @FXML
-    FlowPane paymentFP;
-    @FXML
-    FlowPane notificationEP;
+    @FXML Tab PaymentTab;
+    @FXML TreeView<String> loanerLoansTV2;
+    @FXML FlowPane paymentFP;
+    @FXML FlowPane notificationEP;
 
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
 
-    @FXML
-    private BodyController bodyController;
-    private DTOCustomer customer;
-    private Engine engine;
+    private String cusName;
+    // private Engine engine;
 
+    private MainAppController mainAppController;
 
     public CustomerViewController() {
+        balancePro = new SimpleStringProperty("Balance: 0");
+        currentYazPro = new SimpleStringProperty("Current Yaz: 1");
         categoriesOL = FXCollections.observableArrayList();
         loansOL = FXCollections.observableArrayList();
         loansAfterFilter = new ArrayList<>();
@@ -110,25 +99,32 @@ public class CustomerViewController {
 
     @FXML
     public void initialize() {
+        // header
+        currenBalanceLabel.textProperty().bind(balancePro);
         // Scramble tab
         errorScrambleLabel.setVisible(false);
         categoryFilterCB.getItems().addAll(categoriesOL);
         loansToChoseCB.getItems().addAll(loansOL);
         progressLabel.setVisible(false);
-
+        setCusInfo(USERNAME);
     }
 
-    public void setBodyController(BodyController bodyController) {
-        this.bodyController = bodyController;
-    }
-
-    public void setEngine(Engine engine) {
+/*    public void setEngine(Engine engine) {
         this.engine = engine;
+    }*/
+
+    public Engine getEngine() {
+        return ServletUtils.getEngine(getServletContext());
     }
 
-    public void setCusInfo(Engine engine, String cusName) {
-        this.engine = engine;
-        this.customer = engine.printAllCustomers().findCustomer(cusName);
+    public DTOCustomer getCustomer() {
+        return getEngine().printAllCustomers().findCustomer(cusName);
+    }
+
+    public void setCusInfo(String cusName) {
+        //this.engine = engine;
+        //this.customer = engine.printAllCustomers().findCustomer(cusName);
+        this.cusName = cusName;
         setInfoInInformationTab();
         setInfoInScrambleTab();
         setInfoInPaymentTab();
@@ -142,28 +138,30 @@ public class CustomerViewController {
     }
 
     public void loadLoanerLoans() {
-        customer = engine.printAllCustomers().findCustomer(customer.getName());
-        Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
         TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans in status active or risk as a borrower");
-        if (!allLoansAsBorrower.isEmpty()) {
-            treeLoans.setValue("List of Loans in status active or risk as a borrower");
+        if (!cusName.equals(USERNAME)) {
+            DTOCustomer customer = getCustomer();
+            Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
+            if (!allLoansAsBorrower.isEmpty()) {
+                treeLoans.setValue("List of Loans in status active or risk as a borrower");
 
-            for (String loanID : allLoansAsBorrower.keySet()) {
-                DTOLoan loan = allLoansAsBorrower.get(loanID);
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
-                    fxmlLoader.setLocation(url);
-                    VBox singleLoan = fxmlLoader.load(url.openStream());
+                for (String loanID : allLoansAsBorrower.keySet()) {
+                    DTOLoan loan = allLoansAsBorrower.get(loanID);
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        VBox singleLoan = fxmlLoader.load(url.openStream());
 
-                    SingleLoanController singleLoanController = fxmlLoader.getController();
-                    singleLoanController.setInfoOfLoan(loan);
-                    singleLoanController.setEngine(bodyController.getMainController().getEngine());
+                        SingleLoanController singleLoanController = fxmlLoader.getController();
+                        singleLoanController.setInfoOfLoan(loan);
+                        singleLoanController.setEngine(getEngine());
 
-                    treeLoans.getChildren().add(singleLoanController.getRoot());
+                        treeLoans.getChildren().add(singleLoanController.getRoot());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -171,28 +169,31 @@ public class CustomerViewController {
     }
 
     public void loadLendersLoans() {
-        customer = engine.printAllCustomers().findCustomer(customer.getName());
-        Map<String, DTOLoan> allLoansAsLender = customer.getDTOloansAsLender();
         TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a lender");
-        if (!allLoansAsLender.isEmpty()) {
-            treeLoans.setValue("List of Loans as a lender");
 
-            for (String loanID : allLoansAsLender.keySet()) {
-                DTOLoan loan = allLoansAsLender.get(loanID);
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
-                    fxmlLoader.setLocation(url);
-                    VBox singleLoan = fxmlLoader.load(url.openStream());
+        if (!cusName.equals(USERNAME)) {
+            DTOCustomer customer = getCustomer();
+            Map<String, DTOLoan> allLoansAsLender = customer.getDTOloansAsLender();
+            if (!allLoansAsLender.isEmpty()) {
+                treeLoans.setValue("List of Loans as a lender");
 
-                    SingleLoanController singleLoanController = fxmlLoader.getController();
-                    singleLoanController.setInfoOfLoan(loan);
-                    singleLoanController.setEngine(bodyController.getMainController().getEngine());
+                for (String loanID : allLoansAsLender.keySet()) {
+                    DTOLoan loan = allLoansAsLender.get(loanID);
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        VBox singleLoan = fxmlLoader.load(url.openStream());
 
-                    treeLoans.getChildren().add(singleLoanController.getRoot());
+                        SingleLoanController singleLoanController = fxmlLoader.getController();
+                        singleLoanController.setInfoOfLoan(loan);
+                        singleLoanController.setEngine(getEngine());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        treeLoans.getChildren().add(singleLoanController.getRoot());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -200,25 +201,27 @@ public class CustomerViewController {
     }
 
     public void loadTransactions() {
-        customer = engine.printAllCustomers().findCustomer(customer.getName());
-        List<DTOtransaction> transactions = customer.getDTOtransactions();
         TreeItem<String> treeTransactions = new TreeItem<>("There is no list of transactions");
-        if (!transactions.isEmpty()) {
-            treeTransactions.setValue("List of transactions");
-            int i = 1;
-            for (DTOtransaction transaction : transactions) {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    URL url = getClass().getResource(SINGLE_TRANSACTION_CUSTOMERS_VIEW_FXML_RESOURCE);
-                    fxmlLoader.setLocation(url);
-                    VBox singleTran = fxmlLoader.load(url.openStream());
+        if (!cusName.equals(USERNAME)) {
+            DTOCustomer customer = getCustomer();
+            List<DTOtransaction> transactions = customer.getDTOtransactions();
+            if (!transactions.isEmpty()) {
+                treeTransactions.setValue("List of transactions");
+                int i = 1;
+                for (DTOtransaction transaction : transactions) {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(SINGLE_TRANSACTION_CUSTOMERS_VIEW_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        VBox singleTran = fxmlLoader.load(url.openStream());
 
-                    SingleTransactionController singleTransactionController = fxmlLoader.getController();
-                    singleTransactionController.setInfoOfTransaction(transaction);
-                    treeTransactions.getChildren().add(singleTransactionController.getRoot());
+                        SingleTransactionController singleTransactionController = fxmlLoader.getController();
+                        singleTransactionController.setInfoOfTransaction(transaction);
+                        treeTransactions.getChildren().add(singleTransactionController.getRoot());
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -233,8 +236,8 @@ public class CustomerViewController {
             VBox moneyVB = fxmlLoader.load(url.openStream());
             ChargeController chargeController = fxmlLoader.getController();
             chargeController.setCustomerController(this);
-            chargeController.setEngein(engine);
-            chargeController.setCustomer(customer);
+            chargeController.setCustomer(cusName);
+            chargeController.setBalancePro(balancePro);
 
             Stage popup = new Stage();
             popup.initModality(Modality.APPLICATION_MODAL);
@@ -246,6 +249,7 @@ public class CustomerViewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
     public void withdrawFromCusBalance() {
@@ -255,8 +259,9 @@ public class CustomerViewController {
             fxmlLoader.setLocation(url);
             VBox moneyVB = fxmlLoader.load(url.openStream());
             WithdrawController withdrawController = fxmlLoader.getController();
-            withdrawController.setEngein(engine);
-            withdrawController.setCustomer(customer);
+            withdrawController.setCustomerController(this);
+            withdrawController.setCustomer(cusName);
+            withdrawController.setBalancePro(balancePro);
 
             Stage popup = new Stage();
             popup.initModality(Modality.APPLICATION_MODAL);
@@ -268,6 +273,7 @@ public class CustomerViewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
 
@@ -277,12 +283,16 @@ public class CustomerViewController {
     }
 
     public void addToCategoryFilterCB() {
-        List<String> categories = engine.getCategories();
-        for (String category : categories) {
-            categoriesOL.add(category);
+        if (!cusName.equals(USERNAME)) {
+            List<String> categories = getEngine().getCategories();
+            for (String category : categories) {
+                categoriesOL.add(category);
+            }
+            categoryFilterCB.getItems().addAll(categoriesOL);
         }
-        categoryFilterCB.getItems().addAll(categoriesOL);
     }
+
+
 
     public void selectInfo() {
     }
@@ -317,7 +327,7 @@ public class CustomerViewController {
         errorScrambleLabel.setVisible(false);
 
         loansToChoseCB.getItems().clear();
-        DTOactivate activate = engine.activate();
+        DTOactivate activate = getEngine().activate();
         investment = getInvestment();
         List<String> categories = getCategoriesFromFilter();
         int minInterest = getMinInterestFromFilter();
@@ -325,62 +335,11 @@ public class CustomerViewController {
         int maxLoansOpen = getMaxLoansOpenFromFilter();
         int maxOwnership = getMaxOwnershipFromFilter();
 
-        UiAdapter uiAdapter = createUiAdapter();
-
         if (errorScrambleLabel.getText().equals("ERROR")) {
-            progressLabel.setVisible(true);
-            progressLabel.setText("Finding loans for you....");
-
-            loansAfterFilter = engine.filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, customer.getName());
-
-
-            task scrambleTask = new task(engine, activate.getDtoAllLoans(), customer.getName(), investment, categories, minInterest, minYaz, maxLoansOpen, uiAdapter);
-            progressBar.progressProperty().bind(scrambleTask.progressProperty());
-            new Thread(scrambleTask).start();
-
+            loansAfterFilter = getEngine().filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, cusName);
             progressLabel.setText("Now please chose loan below and click OK");
-
             setLoansInCCB(loansAfterFilter);
         }
-
-
-
-
-
-
-        */
-/*
-        loansOL.clear();
-        errorScrambleLabel.setText("ERROR");
-        errorScrambleLabel.setVisible(false);
-
-        //UIAdapter uiAdapter = createUIAdapter();
-
-        //engine.runTask(uiAdapter);
-
-        loansToChoseCB.getItems().clear();
-        DTOactivate activate = engine.activate();
-        investment = getInvestment();
-        List<String> categories = getCategoriesFromFilter();
-        int minInterest = getMinInterestFromFilter();
-        int minYaz = getMinYazFromFilter();
-        int maxLoansOpen = getMaxLoansOpenFromFilter();
-        int maxOwnership = getMaxOwnershipFromFilter();
-
-        if (errorScrambleLabel.getText().equals("ERROR")) {
-            errorScrambleLabel.setText("Now please chose loan below and click OK");
-            errorScrambleLabel.setVisible(true);
-
-            loansAfterFilter = engine.filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, customer.getName());
-            setLoansInCCB(loansAfterFilter);
-        }*//*
-
-    }
-
-    private UiAdapter createUiAdapter(){
-        return new UiAdapter(
-                loanData -> {
-                });
 
     }
 
@@ -397,7 +356,7 @@ public class CustomerViewController {
         int money = 0;
         try {
             money = Integer.parseInt(investmentTF.getText());
-            if (money > customer.getBalance() || money < 0) {
+            if (money > getCustomer().getBalance() || money < 0) {
                 errorScrambleLabel.setText("Sorry you do not have enough money!");
                 errorScrambleLabel.setVisible(true);
             }
@@ -497,7 +456,7 @@ public class CustomerViewController {
 
         String mess = "Scramble did not passed successfully";
         if (!loansToSend.isEmpty()) {
-            engine.distributionOfMoneyForLoans(customer, investment, loansToSend);
+            getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
             mess = "Scramble passed successfully";
         }
 
@@ -529,46 +488,51 @@ public class CustomerViewController {
     }
 
     public void setInfoInPaymentFP() {
-        List<DTOLoan> allLoansWithPayment = customer.getDTOloansWithPayments();
-        for (DTOLoan loan : allLoansWithPayment) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
-                fxmlLoader.setLocation(url);
-                VBox singlePayMe = fxmlLoader.load(url.openStream());
+        if (!cusName.equals(USERNAME)) {
 
-                PayMeController payMeController = fxmlLoader.getController();
-                payMeController.setInfoOfLoan(loan, customer, engine, paymentFP);
-                paymentFP.getChildren().add(singlePayMe);
-            } catch (IOException e) {
-                e.printStackTrace();
+            List<DTOLoan> allLoansWithPayment = getCustomer().getDTOloansWithPayments();
+            for (DTOLoan loan : allLoansWithPayment) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
+                    fxmlLoader.setLocation(url);
+                    VBox singlePayMe = fxmlLoader.load(url.openStream());
+
+                    PayMeController payMeController = fxmlLoader.getController();
+                    payMeController.setInfoOfLoan(loan, getCustomer(), getEngine(), paymentFP);
+                    paymentFP.getChildren().add(singlePayMe);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public void loadLoanerLoansInPayment() {
-        customer = engine.printAllCustomers().findCustomer(customer.getName());
-        Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
         TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower");
-        if (!allLoansAsBorrower.isEmpty()) {
-            for (String loanID : allLoansAsBorrower.keySet()) {
-                DTOLoan loan = allLoansAsBorrower.get(loanID);
-                if (loan.getStatus().equals(Status.ACTIVE) || loan.getStatus().equals(Status.RISK)) {
-                    treeLoans.setValue("List of Loans as a borrower");
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
-                        fxmlLoader.setLocation(url);
-                        VBox singleLoan = fxmlLoader.load(url.openStream());
+        if(!cusName.equals(USERNAME)) {
+            DTOCustomer customer = getCustomer();
+            Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
+            if (!allLoansAsBorrower.isEmpty()) {
+                for (String loanID : allLoansAsBorrower.keySet()) {
+                    DTOLoan loan = allLoansAsBorrower.get(loanID);
+                    if (loan.getStatus().equals(Status.ACTIVE) || loan.getStatus().equals(Status.RISK)) {
+                        treeLoans.setValue("List of Loans as a borrower");
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
+                            fxmlLoader.setLocation(url);
+                            VBox singleLoan = fxmlLoader.load(url.openStream());
 
-                        SingleLoanController singleLoanController = fxmlLoader.getController();
-                        singleLoanController.setInfoOfLoan(loan);
-                        singleLoanController.setEngine(engine);
+                            SingleLoanController singleLoanController = fxmlLoader.getController();
+                            singleLoanController.setInfoOfLoan(loan);
+                            singleLoanController.setEngine(getEngine());
 
-                        treeLoans.getChildren().add(singleLoanController.getRoot());
+                            treeLoans.getChildren().add(singleLoanController.getRoot());
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -577,23 +541,28 @@ public class CustomerViewController {
     }
 
     public void loadNotifications() {
-        List<Notification> cusNotifi = customer.getNotificationList();
-        for (Notification notification : cusNotifi) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                URL url = getClass().getResource(NOTIFICATION_AREA_FXML_RESOURCE);
-                fxmlLoader.setLocation(url);
-                VBox singleInfo = fxmlLoader.load(url.openStream());
+        if(!cusName.equals(USERNAME)) {
+            List<Notification> cusNotifi = getCustomer().getNotificationList();
+            for (Notification notification : cusNotifi) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    URL url = getClass().getResource(NOTIFICATION_AREA_FXML_RESOURCE);
+                    fxmlLoader.setLocation(url);
+                    VBox singleInfo = fxmlLoader.load(url.openStream());
 
-                NotificationAreaController notificationAreaController = fxmlLoader.getController();
-                notificationAreaController.setInfoNoti(notification.getTitle(), notification.getContent(), notification.getEnd());
+                    NotificationAreaController notificationAreaController = fxmlLoader.getController();
+                    notificationAreaController.setInfoNoti(notification.getTitle(), notification.getContent(), notification.getEnd());
 
-                notificationEP.getChildren().add(singleInfo);
+                    notificationEP.getChildren().add(singleInfo);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
+    public void setMainController(MainAppController mainAppController) {
+        this.mainAppController = mainAppController;
+    }
 }
-*/

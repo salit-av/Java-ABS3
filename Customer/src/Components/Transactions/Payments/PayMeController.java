@@ -1,4 +1,3 @@
-/*
 package Components.Transactions.Payments;
 
 import DTO.Customers.DTOCustomer;
@@ -18,7 +17,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-import static UI.CommonResourcesPaths.POPUP_NOTIFICATION_FXML_RESOURCE;
+import static main.ResourcesPath.POPUP_NOTIFICATION_FXML_RESOURCE;
 
 
 public class PayMeController extends PayMeData{
@@ -90,4 +89,3 @@ public class PayMeController extends PayMeData{
         }
     }
 }
-*/

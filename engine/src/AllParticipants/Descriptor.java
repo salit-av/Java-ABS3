@@ -163,5 +163,13 @@ public class Descriptor {
             }
         }
     }
+
+    public boolean isCustomerExists(String username) {
+        return allCustomers.isCustomerExists(username);
+    }
+
+    public void addCustomer(String username) {
+        allCustomers.addCustomer(username);
+    }
 }
 

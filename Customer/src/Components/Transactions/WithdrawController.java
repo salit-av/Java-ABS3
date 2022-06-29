@@ -1,14 +1,17 @@
 package Components.Transactions;
 
+import Components.CustomerView.CustomerViewController;
 import DTO.Customers.DTOBalace;
-import DTO.Customers.DTOCustomer;
 import Engine.Engine;
+import jakarta.servlet.http.HttpServlet;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import utils.ServletUtils;
 
-public class WithdrawController {
+public class WithdrawController extends HttpServlet {
     @FXML
     Label helloLabel;
     @FXML
@@ -16,9 +19,11 @@ public class WithdrawController {
     @FXML
     Button submitButton;
 
+    private SimpleStringProperty balancePro;
     private int money;
     private Engine engine;
-    private DTOCustomer customer;
+    private String cusName;
+    private CustomerViewController customerViewController;
 
     public WithdrawController() {
     }
@@ -27,27 +32,33 @@ public class WithdrawController {
     public void initialize(){
 
     }
-
-    public void setEngein(Engine engine) {
-        this.engine = engine;
+    public void setCustomerController(CustomerViewController customerViewController) {
+        this.customerViewController = customerViewController;
     }
 
-    public void setCustomer(DTOCustomer customer) {
-        this.customer = customer;
+    public void setCustomer(String cusName) {
+        this.cusName = cusName;
     }
 
     public void submit(){
         try {
+            Engine engine = ServletUtils.getEngine(getServletContext());
             money = Integer.parseInt(moneyTF.getText());
-            if(money > customer.getBalance() || money < 0){
+            int balance = engine.printAllCustomers().findCustomer(cusName).getBalance();
+            if(money > balance || money < 0){
                 helloLabel.setText("Sorry you do not have enough money!");
             }
             else {
-                engine.removeBalanceToCustomer(new DTOBalace(customer.getName(), money));
+                engine.removeBalanceToCustomer(new DTOBalace(cusName, money));
+                customerViewController.loadTransactions();
+                balancePro.set("Balance: " + (balance - money) );
             }
         } catch (NumberFormatException e) {
             helloLabel.setText("Please enter only numbers");
         }
     }
 
+    public void setBalancePro(SimpleStringProperty balancePro) {
+        this.balancePro = balancePro;
+    }
 }

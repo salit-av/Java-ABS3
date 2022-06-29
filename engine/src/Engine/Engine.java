@@ -198,4 +198,11 @@ public class Engine {
         descriptor.setLoansWithPaymentsInCustomers(currentYaz.getCurrentYaz());
     }
 
+    public boolean isCustomerExists(String username) {
+        return descriptor.isCustomerExists(username);
+    }
+
+    public void addCustomer(String username) {
+        descriptor.addCustomer(username);
+    }
 }

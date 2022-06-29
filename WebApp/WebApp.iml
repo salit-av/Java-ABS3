@@ -7,11 +7,10 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="DTO" />
-    <orderEntry type="module" module-name="engine" />
-    <orderEntry type="library" name="google-gson-2" level="project" />
     <orderEntry type="library" name="okHttp" level="project" />
-    <orderEntry type="library" name="controlsfx-8.40.14" level="project" />
+    <orderEntry type="library" name="google-gson-2" level="project" />
+    <orderEntry type="module" module-name="engine" />
+    <orderEntry type="module" module-name="DTO" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -21,6 +20,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="ABSWebApp" />
   </component>
 </module>
