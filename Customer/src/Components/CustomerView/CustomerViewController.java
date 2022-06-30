@@ -1,6 +1,7 @@
 package Components.CustomerView;
 
 import AllParticipants.Notification;
+import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
 import Components.Main.MainAppController;
 import Components.Notifications.NotificationAreaController;
@@ -17,6 +18,7 @@ import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import Status.Status;
 import jakarta.servlet.http.HttpServlet;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,11 +29,19 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
 import org.controlsfx.control.CheckComboBox;
+import org.jetbrains.annotations.NotNull;
 import utils.ServletUtils;
+import utils.http.HttpClientUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,6 +62,7 @@ public class CustomerViewController extends HttpServlet {
 
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
+    private Stage primaryStage;
 
     @FXML Tab informationTab;
     @FXML TreeView<String> loanerLoansTV1;
@@ -565,4 +576,102 @@ public class CustomerViewController extends HttpServlet {
     public void setMainController(MainAppController mainAppController) {
         this.mainAppController = mainAppController;
     }
+
+    // Header
+    @FXML
+    public void openFileButtonAction() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select xml file");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml files", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(primaryStage);
+        if (selectedFile == null) {
+            return;
+        }
+        String absolutePath = selectedFile.getAbsolutePath();
+        loadXmlAndCheckExceptions(absolutePath);
+
+    }
+
+
+    public void loadXmlAndCheckExceptions(String absolutePath) {
+        String finalUrl = HttpUrl
+                .parse(LOAD_FILE)
+                .newBuilder()
+                .addQueryParameter("username", cusName)
+                .addQueryParameter("path_xml", absolutePath)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(EXCEPTIONS_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        HBox exceptionHB = fxmlLoader.load(url.openStream());
+                        ExceptionsController exceptionsController = fxmlLoader.getController();
+                        exceptionsController.setExceptionMessage(e.getMessage());
+
+                        Stage popup = new Stage();
+                        popup.initModality(Modality.APPLICATION_MODAL);
+
+                        Scene popUpScene = new Scene(exceptionHB, 700, 300);
+                        popup.setScene(popUpScene);
+                        popup.show();
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.code() != 200) {
+                    String responseBody = response.body().string();
+                    Platform.runLater(() ->
+                            filePathLabel.setText("Something went wrong: " + responseBody)
+                    );
+                } else {
+                    Platform.runLater(() -> {
+                        loadFileInfo();
+                    });
+                }
+            }
+        });
+
+        /*try {
+            getEngine().loadFromXML(absolutePath,"");
+            return true;
+        } catch (loansWithTheSameNameException | paymentRateIncorrectException | referenceToCategoryThatIsntDefinedException ex) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                URL url = getClass().getResource(EXCEPTIONS_FXML_RESOURCE);
+                fxmlLoader.setLocation(url);
+                HBox exceptionHB = fxmlLoader.load(url.openStream());
+                ExceptionsController exceptionsController = fxmlLoader.getController();
+                exceptionsController.setExceptionMessage(ex.getMessage());
+
+                Stage popup = new Stage();
+                popup.initModality(Modality.APPLICATION_MODAL);
+
+                Scene popUpScene = new Scene(exceptionHB, 700, 300);
+                popup.setScene(popUpScene);
+                popup.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }*/
+    }
+
+    public void loadFileInfo() {
+        filePathLabel.setText("Proper file uploaded successfully");
+        setCusInfo(cusName);
+    }
+
 }

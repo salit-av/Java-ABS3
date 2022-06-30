@@ -1,6 +1,6 @@
-/*
-package Components.Loans;
+package Components.Loans.SingleLoanView;
 
+import Components.Loans.LendersList.LendersListController;
 import DTO.Loan.DTOLoan;
 import DTO.Loan.DTOpayments;
 import Status.Status;
@@ -13,7 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
-import static UI.CommonResourcesPaths.*;
+import static main.ResourcesPaths.LENDERS_LIST_FXML_RESOURCE;
+
 
 public class SingleLoanController extends SingleLoanData {
     @FXML
@@ -190,4 +191,3 @@ public class SingleLoanController extends SingleLoanData {
         return treeLoan;
     }
 }
-*/

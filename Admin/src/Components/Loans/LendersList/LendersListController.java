@@ -1,10 +1,10 @@
-package Components.Loans;
+package Components.Loans.LendersList;
 
 import DTO.Loan.DTOpayment;
 import DTO.Loan.DTOpayments;
-import Status.Status;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 import java.util.List;
 
@@ -99,58 +99,5 @@ public class LendersListController extends LendersListData {
         return cusTree;
     }
 
-
-
-    /*
-        @FXML
-    public void setLendersList(Map<String, DTOpayments> lenders) {
-        if (!lenders.isEmpty()) {
-            treeLenders.setValue("List of all lenders");
-
-            for (String name : lenders.keySet()) {
-                DTOpayments paymentsOfCus = lenders.get(name);
-
-                TreeItem<String> cusTree = new TreeItem<>("Customer's name: " + name);
-                treeLenders.getChildren().add(cusTree);
-
-                TreeItem<String> invTree = new TreeItem<>("Privet invesment: " + paymentsOfCus.getInvestment());
-                cusTree.getChildren().add(invTree);
-
-                List<DTOpayment> allPayments = paymentsOfCus.getAllPayments();
-
-                if (allPayments == null || allPayments.isEmpty()) {
-                    TreeItem<String> payTree = new TreeItem<>("There is no list of payments!");
-                    cusTree.getChildren().add(payTree);
-
-                } else {
-                    TreeItem<String> payTree = new TreeItem<>("List of payments");
-                    cusTree.getChildren().add(payTree);
-                    int i = 1;
-                    for (DTOpayment payment : allPayments) {
-                        TreeItem<String> paymentInfo1 = new TreeItem<>("Yaz of payment: " + payment.getYazPayment());
-                        TreeItem<String> paymentInfo2 = new TreeItem<>("Interest per payment: " + payment.getInterestPerPayment());
-                        TreeItem<String> paymentInfo3 = new TreeItem<>("Capital per payment: " + payment.getCapitalPerPayment());
-                        TreeItem<String> paymentInfo4 = new TreeItem<>("Total payment (interest + capital): " + payment.getTotalPayment());
-
-                        if (payment.getTotalPayment() == 0) {   // ->TODO risk
-                            System.out.println("-Unpaid Payment!!!-");
-                        }
-                        TreeItem<String> currPayment = new TreeItem<>("Payment number " + i);
-                        i++;
-                        currPayment.getChildren().addAll(paymentInfo1, paymentInfo2, paymentInfo3, paymentInfo4);
-                        payTree.getChildren().add(currPayment);
-                    }
-                    TreeItem<String> paymentsOfCusInfo1 = new TreeItem<>("Capital until now: " + paymentsOfCus.getCapitalUntilNow());
-                    TreeItem<String> paymentsOfCusInfo2 = new TreeItem<>("Interest until now: " + paymentsOfCus.getInterestUntilNow());
-                    TreeItem<String> paymentsOfCusInfo3 = new TreeItem<>("Capital left to pay: " + (paymentsOfCus.getCapital() - paymentsOfCus.getCapitalUntilNow()));
-                    TreeItem<String> paymentsOfCusInfo4 = new TreeItem<>("Interest left to pay: " + (paymentsOfCus.getInterest() - paymentsOfCus.getInterestUntilNow()));
-                    cusTree.getChildren().addAll(paymentsOfCusInfo1, paymentsOfCusInfo2, paymentsOfCusInfo3, paymentsOfCusInfo4);
-
-                }
-
-            }
-        }
-    }
-     */
 }
 

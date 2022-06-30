@@ -1,4 +1,4 @@
-package Components.Loans;
+package Components.Loans.LendersList;
 
 import javafx.beans.property.SimpleStringProperty;
 

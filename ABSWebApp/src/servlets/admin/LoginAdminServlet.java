@@ -1,4 +1,4 @@
-package servlets;
+package servlets.admin;
 
 import Engine.Engine;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,8 +10,8 @@ import utils.SessionUtils;
 
 import java.io.IOException;
 
-@WebServlet(name="=loginShortResponse", urlPatterns = {"/loginShortResponse"})
-public class LightweightLoginServlet extends HttpServlet {
+@WebServlet(name="=LoginAdminServlet", urlPatterns = {"/loginAdminServlet"})
+public class LoginAdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain;charset=UTF-8");
@@ -31,29 +31,22 @@ public class LightweightLoginServlet extends HttpServlet {
                 //normalize the username value
                 usernameFromParameter = usernameFromParameter.trim();
 
-                /*
-                One can ask why not enclose all the synchronizations inside the userManager object ?
-                Well, the atomic action we need to perform here includes both the question (isUserExists) and (potentially) the insertion
-                of a new user (addUser). These two actions needs to be considered atomic, and synchronizing only each one of them, solely, is not enough.
-                (of course there are other more sophisticated and performable means for that (atomic objects etc) but these are not in our scope)
-
-                The synchronized is on this instance (the servlet).
-                As the servlet is singleton - it is promised that all threads will be synchronized on the very same instance (crucial here)
-
-                A better code would be to perform only as little and as necessary things we need here inside the synchronized block and avoid
-                do here other not related actions (such as response setup. this is shown here in that manner just to stress this issue
-                 */
                 synchronized (this) {
+                    String errorMessage = "error";
+                    if (engine.isAdminExists(usernameFromParameter)) {
+                        errorMessage = "Admin already exists.";
+                    }
                     if (engine.isCustomerExists(usernameFromParameter)) {
-                        String errorMessage = "Username " + usernameFromParameter + " already exists. Please enter a different username.";
-
+                        errorMessage = "Username " + usernameFromParameter + " already exists. Please enter a different username.";
+                    }
+                    if (!errorMessage.equals("error")) {
                         // stands for unauthorized as there is already such user with this name
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getOutputStream().print(errorMessage);
                     }
                     else {
                         //add the new user to the users list
-                        engine.addCustomer(usernameFromParameter);
+                        engine.addAdmin(usernameFromParameter);
                         //set the username in a session so it will be available on each request
                         //the true parameter means that if a session object does not exists yet
                         //create a new one

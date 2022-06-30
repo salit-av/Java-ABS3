@@ -1,10 +1,13 @@
 package XMLReader;
 
 import AllParticipants.Categories;
-import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.Loans;
-import Exceptions.*;
-import jaxb.schema.generated.*;
+import Exceptions.loansWithTheSameNameException;
+import Exceptions.paymentRateIncorrectException;
+import Exceptions.referenceToCategoryThatIsntDefinedException;
+import jaxb.schema.generated.AbsDescriptor;
+import jaxb.schema.generated.AbsLoan;
+import jaxb.schema.generated.AbsLoans;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -21,7 +24,7 @@ public class XmlReader {
     private AbsDescriptor absDescriptor;
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "jaxb.schema.generated";
 
-    public AbsDescriptor openXML(String filePath, Categories allCategories, Loans allLoans) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, paymentRateIncorrectException, customersWithTheSameNameException {
+    public AbsDescriptor openXML(String filePath, Categories allCategories, Loans allLoans) throws referenceToCategoryThatIsntDefinedException, paymentRateIncorrectException, loansWithTheSameNameException {
         try {
             InputStream inputStream = new FileInputStream(new File(filePath));
             absDescriptor = deserializeFrom(inputStream);
@@ -39,7 +42,7 @@ public class XmlReader {
         }
 
         if(loansWithTheSameName(allLoans)){
-            throw new customersWithTheSameNameException();
+            throw new loansWithTheSameNameException();
         }
         return absDescriptor;
     }

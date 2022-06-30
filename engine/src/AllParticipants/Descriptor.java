@@ -17,12 +17,14 @@ public class Descriptor {
     private Categories allCategories;
     private Loans allLoans;
     private Customers allCustomers;
+    private Admin admin;
 
 
     public Descriptor() {
         allCategories = new Categories();
         allLoans = new Loans();
         allCustomers = new Customers();
+        admin = new Admin();
     }
 
     public Categories getAllCategories() {
@@ -52,7 +54,7 @@ public class Descriptor {
         }
     }
 
-    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
+    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loansWithTheSameNameException, paymentRateIncorrectException {
         XmlReader reader = new XmlReader();
         AbsDescriptor absDescriptor = reader.openXML(path, allCategories, allLoans);
         loadFromAbsDescriptor(absDescriptor, allCustomers.getCustomers().get(customerName));
@@ -170,6 +172,14 @@ public class Descriptor {
 
     public void addCustomer(String username) {
         allCustomers.addCustomer(username);
+    }
+
+    public boolean isAdminExists(String username) {
+        return admin.isLogIn();
+    }
+
+    public void addAdmin(String username) {
+        admin = new Admin(username, true, allLoans,allCustomers);
     }
 }
 

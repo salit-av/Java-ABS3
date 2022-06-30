@@ -29,7 +29,7 @@ public class Engine {
         return currentYaz;
     }
 
-    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loanWhoseCustomerIsNotInSystemException, customersWithTheSameNameException, paymentRateIncorrectException {
+    public void loadFromXML(String path, String customerName) throws referenceToCategoryThatIsntDefinedException, loansWithTheSameNameException, paymentRateIncorrectException {
         descriptor.loadFromXML(path, customerName);
     }
 
@@ -204,5 +204,13 @@ public class Engine {
 
     public void addCustomer(String username) {
         descriptor.addCustomer(username);
+    }
+
+    public boolean isAdminExists(String username) {
+        return descriptor.isAdminExists(username);
+    }
+
+    public void addAdmin(String username) {
+        descriptor.addAdmin(username);
     }
 }
