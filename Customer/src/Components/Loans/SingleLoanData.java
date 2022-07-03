@@ -2,7 +2,7 @@ package Components.Loans;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class SingleLoanData implements singleLoanInterface{
+public class SingleLoanData {
     protected SimpleStringProperty headerPro;
     protected SimpleStringProperty idPro;
     protected SimpleStringProperty categoryPro;

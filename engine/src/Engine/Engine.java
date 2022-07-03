@@ -213,4 +213,16 @@ public class Engine {
     public void addAdmin(String username) {
         descriptor.addAdmin(username);
     }
+
+    public DTOLoans getCustomersLoansAsBorrower(String username) {
+        return descriptor.getCustomersLoansAsBorrower(username);
+    }
+
+    public DTOLoans getCustomersLoansAsLender(String username) {
+        return descriptor.getCustomersLoansAsLender(username);
+    }
+
+    public DTOLoan getDTOLoan(String id) {
+        return descriptor.getDTOLoan(id);
+    }
 }

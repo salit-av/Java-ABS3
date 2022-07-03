@@ -4,6 +4,7 @@ import AllParticipants.Loan.*;
 import DTO.Customers.DTOBalace;
 import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
+import DTO.Loan.DTOLoans;
 import Engine.Yaz;
 import Exceptions.*;
 import Status.Status;
@@ -51,6 +52,7 @@ public class Descriptor {
         for (AbsLoan loan:absLoans.getAbsLoan()){
             Loan lo = new Loan(loan.getId(), customer.getName(), customer, loan.getAbsCategory(), loan.getAbsCapital(), loan.getAbsTotalYazTime(), loan.getAbsPaysEveryYaz(), loan.getAbsIntristPerPayment());
             allLoans.addLoanFromAbs(lo);
+            customer.getLoansAsBorrower().getLoans().put(lo.getId(), lo);
         }
     }
 
@@ -180,6 +182,18 @@ public class Descriptor {
 
     public void addAdmin(String username) {
         admin = new Admin(username, true, allLoans,allCustomers);
+    }
+
+    public DTOLoans getCustomersLoansAsBorrower(String username) {
+        return allCustomers.getCustomersLoansAsBorrower(username);
+    }
+
+    public DTOLoans getCustomersLoansAsLender(String username) {
+        return allCustomers.getCustomersLoansAsLender(username);
+    }
+
+    public DTOLoan getDTOLoan(String id) {
+        return new DTOLoan(allLoans.getLoans().get(id));
     }
 }
 

@@ -1,7 +1,7 @@
 package Components.Main;
 
-import Components.CustomerView.CustomerViewController;
-import Components.Login.LoginCustomersController;
+import AdminView.AdminViewController;
+import Login.LoginAdminController;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.net.URL;
 
-import static main.ResourcesPath.CUSTOMERS_LOGIN_FXML;
-import static main.ResourcesPath.CUSTOMER_VIEW_FXML;
+import static main.ResourcesPaths.ADMIN_LOGIN_FXML;
+import static main.ResourcesPaths.ADMIN_VIEW_FXML;
 
 public class MainAppController {
     @FXML VBox mainVbox;
@@ -26,10 +26,10 @@ public class MainAppController {
     private final StringProperty currentUserName;
 
     private GridPane loginComponent;
-    private LoginCustomersController loginCustomersController;
+    private LoginAdminController loginAdminController;
 
-    private VBox customerComponent;
-    private CustomerViewController customerViewController;
+    private GridPane adminComponent;
+    private AdminViewController adminViewController;
 
     public MainAppController() {
         currentUserName = new SimpleStringProperty("welcome to ABS!");
@@ -41,7 +41,7 @@ public class MainAppController {
 
         // prepare components
         loadLoginPage();
-        loadCustomerPage();
+        loadAdminPage();
     }
 
     public void updateUserName(String userName) {
@@ -54,37 +54,36 @@ public class MainAppController {
     }
 
     private void loadLoginPage() {
-        URL loginPageUrl = getClass().getResource(CUSTOMERS_LOGIN_FXML);
+        URL loginPageUrl = getClass().getResource(ADMIN_LOGIN_FXML);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(loginPageUrl);
             loginComponent = fxmlLoader.load();
-            loginCustomersController = fxmlLoader.getController();
-            loginCustomersController.setMainController(this);
+            loginAdminController = fxmlLoader.getController();
+            loginAdminController.setMainController(this);
             setMainPanelTo(loginComponent);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadCustomerPage() {
-        URL loginPageUrl = getClass().getResource(CUSTOMER_VIEW_FXML);
+    private void loadAdminPage() {
+        URL loginPageUrl = getClass().getResource(ADMIN_VIEW_FXML);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(loginPageUrl);
-            customerComponent = fxmlLoader.load();
-            customerViewController = fxmlLoader.getController();
-            customerViewController.setMainController(this);
+            adminComponent = fxmlLoader.load();
+            adminViewController = fxmlLoader.getController();
+            adminViewController.setMainController(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void switchToCustomerPage(String userName) {
+    public void switchToAdminPage(String userName) {
         currentUserName.set(userName);
-        customerViewController.setCusName(userName);
-        setMainPanelTo(customerComponent);
+        setMainPanelTo(adminComponent);
     }
 
     public void switchToLogin() {

@@ -39,6 +39,8 @@ public class Loans {
     public Loan fromDTOLoanToLoan(DTOLoan dtoLoan){
        return loans.get(dtoLoan.getId());
     }
+
+
 }
 
 

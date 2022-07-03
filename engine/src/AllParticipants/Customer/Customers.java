@@ -4,6 +4,7 @@ import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.Loans;
 import AllParticipants.Notification;
 import DTO.Customers.DTOCustomer;
+import DTO.Loan.DTOLoans;
 
 import java.util.*;
 
@@ -55,5 +56,14 @@ public class Customers {
 
     public void addCustomer(String username) {
         customers.put(username, new Customer(username, 0, new Loans()));
+    }
+
+    public DTOLoans getCustomersLoansAsBorrower(String username) {
+        return new DTOLoans(customers.get(username).getLoansAsBorrower());
+    }
+
+    public DTOLoans getCustomersLoansAsLender(String username) {
+        return new DTOLoans(customers.get(username).getLoansAsLender());
+
     }
 }

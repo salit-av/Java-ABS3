@@ -9,7 +9,7 @@ public class ResourcesPath {
     public final static String CUSTOMER_VIEW_FXML = "/Components/CustomerView/customerView.fxml";
 
     public final static String EXCEPTIONS_FXML_RESOURCE = "/UI/Exceptions/exceptions.fxml";
-    public final static String SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE = "/Components/Loans/CustomerView/singleLoan.fxml";
+    public final static String SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE = "/Components/Loans/singleLoan.fxml";
     public final static String CHARGE_VIEW_FXML_RESOURCE = "/Components/Transactions/charge.fxml";
     public final static String WITHDRAW_VIEW_FXML_RESOURCE = "/Components/Transactions/withdraw.fxml";
     public final static String PAYME_VIEW_FXML_RESOURCE = "/Components/Transactions/Payments/payMe.fxml";
@@ -33,6 +33,11 @@ public class ResourcesPath {
 
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginShortResponse";
     public final static String LOAD_FILE = FULL_SERVER_PATH + "/loadFile";
+    //info
+    public final static String LIST_LOANS_AS_BORROWER = FULL_SERVER_PATH + "/listLoansAsBorrower";
+    public final static String LIST_LOANS_AS_LENDER = FULL_SERVER_PATH + "/listLoansAsLender";
+
+
     public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";
     public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
     public final static String CHAT_LINES_LIST = FULL_SERVER_PATH + "/chat";

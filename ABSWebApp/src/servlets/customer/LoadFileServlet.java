@@ -21,8 +21,8 @@ import static constants.Constants.USERNAME;
 public class LoadFileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       // response.setContentType("text/plain;charset=UTF-8");
-        response.setContentType("application/json");
+        response.setContentType("text/plain;charset=UTF-8");
+        //response.setContentType("application/json");
 
         Engine engine = ServletUtils.getEngine(getServletContext());
         String usernameFromParameter = request.getParameter(USERNAME);

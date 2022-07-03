@@ -1,24 +1,18 @@
 package Components.CustomerView;
 
-import AllParticipants.Notification;
+import Components.CustomerView.Refresher.ListLoansAsBorrowerRefresher;
+import Components.CustomerView.Refresher.ListLoansAsLenderRefresher;
 import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
 import Components.Main.MainAppController;
-import Components.Notifications.NotificationAreaController;
 import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
 import Components.Transactions.ChargeController;
-import Components.Transactions.Payments.PayMeController;
-import Components.Transactions.SingleTransactionController;
 import Components.Transactions.WithdrawController;
-import DTO.Customers.DTOCustomer;
-import DTO.Customers.DTOtransaction;
-import DTO.DTOactivate;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
-import Status.Status;
-import jakarta.servlet.http.HttpServlet;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,59 +32,86 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.controlsfx.control.CheckComboBox;
 import org.jetbrains.annotations.NotNull;
-import utils.ServletUtils;
 import utils.http.HttpClientUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static main.ResourcesPath.*;
 
 
-public class CustomerViewController extends HttpServlet {
+public class CustomerViewController extends CustomerViewData {
     // header
-    @FXML Label currentYazLabel;
-    @FXML Label currenBalanceLabel;
-    @FXML Label filePathLabel;
-    @FXML Button loadFileButton;
+    @FXML
+    Label currentYazLabel;
+    @FXML
+    Label currenBalanceLabel;
+    @FXML
+    Label filePathLabel;
+    @FXML
+    Button loadFileButton;
+    @FXML
+    ToggleButton autoUpdateButton;
 
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
-    private Stage primaryStage;
+    private SimpleBooleanProperty autoUpdatePro;
+    private Timer timer;
+    private TimerTask listAsBorrowerRefresher;
+    private TimerTask listAsLenderRefresher;
 
-    @FXML Tab informationTab;
-    @FXML TreeView<String> loanerLoansTV1;
-    @FXML TreeView<String> lenderLoansTV;
-    @FXML TreeView<String> transactionsTV;
-    @FXML Button chargeButton;
-    @FXML Button withdrawButton;
+    @FXML
+    Tab informationTab;
+    @FXML
+    TreeView<String> loanerLoansTV1;
+    @FXML
+    TreeView<String> lenderLoansTV;
+    @FXML
+    TreeView<String> transactionsTV;
+    @FXML
+    Button chargeButton;
+    @FXML
+    Button withdrawButton;
 
-    @FXML Tab ScrambleTab;
-    @FXML Label errorScrambleLabel;
-    @FXML Label progressLabel;
-    @FXML TextField investmentTF;
-    @FXML TextField interestFilterTF;
-    @FXML TextField yazFilterTF;
-    @FXML TextField loansOpenFilterTF;
-    @FXML TextField ownershipFilterTF;
-    @FXML CheckComboBox<String> categoryFilterCB;
-    @FXML CheckComboBox<String> loansToChoseCB;
-    @FXML Button submitScrambleButton;
-    @FXML Button OKScrambleButton;
+    @FXML
+    Tab ScrambleTab;
+    @FXML
+    Label errorScrambleLabel;
+    @FXML
+    Label progressLabel;
+    @FXML
+    TextField investmentTF;
+    @FXML
+    TextField interestFilterTF;
+    @FXML
+    TextField yazFilterTF;
+    @FXML
+    TextField loansOpenFilterTF;
+    @FXML
+    TextField ownershipFilterTF;
+    @FXML
+    CheckComboBox<String> categoryFilterCB;
+    @FXML
+    CheckComboBox<String> loansToChoseCB;
+    @FXML
+    Button submitScrambleButton;
+    @FXML
+    Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
 
-    @FXML Tab PaymentTab;
-    @FXML TreeView<String> loanerLoansTV2;
-    @FXML FlowPane paymentFP;
-    @FXML FlowPane notificationEP;
+    @FXML
+    Tab PaymentTab;
+    @FXML
+    TreeView<String> loanerLoansTV2;
+    @FXML
+    FlowPane paymentFP;
+    @FXML
+    FlowPane notificationEP;
 
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
@@ -99,8 +120,11 @@ public class CustomerViewController extends HttpServlet {
     // private Engine engine;
 
     private MainAppController mainAppController;
+    private Stage primaryStage;
 
     public CustomerViewController() {
+        super(null, null);
+        autoUpdatePro = new SimpleBooleanProperty();
         balancePro = new SimpleStringProperty("Balance: 0");
         currentYazPro = new SimpleStringProperty("Current Yaz: 1");
         categoriesOL = FXCollections.observableArrayList();
@@ -112,6 +136,8 @@ public class CustomerViewController extends HttpServlet {
     public void initialize() {
         // header
         currenBalanceLabel.textProperty().bind(balancePro);
+        autoUpdateButton.selectedProperty().set(true);
+        autoUpdatePro.bind(autoUpdateButton.selectedProperty());
         // Scramble tab
         errorScrambleLabel.setVisible(false);
         categoryFilterCB.getItems().addAll(categoriesOL);
@@ -125,12 +151,12 @@ public class CustomerViewController extends HttpServlet {
     }*/
 
     public Engine getEngine() {
-        return ServletUtils.getEngine(getServletContext());
+        return null; //ServletUtils.getEngine(getServletContext());
     }
 
-    public DTOCustomer getCustomer() {
+/*    public DTOCustomer getCustomer() {
         return getEngine().printAllCustomers().findCustomer(cusName);
-    }
+    }*/
 
     public void setCusInfo(String cusName) {
         //this.engine = engine;
@@ -149,47 +175,59 @@ public class CustomerViewController extends HttpServlet {
     }
 
     public void loadLoanerLoans() {
-        TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans in status active or risk as a borrower");
-        if (!cusName.equals(USERNAME)) {
-            DTOCustomer customer = getCustomer();
-            Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
-            if (!allLoansAsBorrower.isEmpty()) {
-                treeLoans.setValue("List of Loans in status active or risk as a borrower");
+        if(!cusName.equals(USERNAME)) {
+            listAsBorrowerRefresher = new ListLoansAsBorrowerRefresher(cusName, this::updateListLoansAsBorrower, autoUpdatePro);
+            timer = new Timer();
+            timer.schedule(listAsBorrowerRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+        else {
+            loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
+        }
+    }
 
-                for (String loanID : allLoansAsBorrower.keySet()) {
-                    DTOLoan loan = allLoansAsBorrower.get(loanID);
+    public void updateListLoansAsBorrower(List<DTOLoan> allLoansAsBorrower) {
+        Platform.runLater(() -> {
+            if (allLoansAsBorrower.isEmpty()) {
+                loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
+            } else {
+                TreeItem<String> treeLoans = new TreeItem<>("List of loans in as a borrower");
+                for (DTOLoan loan : allLoansAsBorrower) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
                         fxmlLoader.setLocation(url);
                         VBox singleLoan = fxmlLoader.load(url.openStream());
-
                         SingleLoanController singleLoanController = fxmlLoader.getController();
                         singleLoanController.setInfoOfLoan(loan);
-                        singleLoanController.setEngine(getEngine());
-
                         treeLoans.getChildren().add(singleLoanController.getRoot());
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                loanerLoansTV1.setRoot(treeLoans);
             }
-        }
-        loanerLoansTV1.setRoot(treeLoans);
+        });
     }
 
     public void loadLendersLoans() {
-        TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a lender");
-
-        if (!cusName.equals(USERNAME)) {
-            DTOCustomer customer = getCustomer();
-            Map<String, DTOLoan> allLoansAsLender = customer.getDTOloansAsLender();
-            if (!allLoansAsLender.isEmpty()) {
-                treeLoans.setValue("List of Loans as a lender");
-
-                for (String loanID : allLoansAsLender.keySet()) {
-                    DTOLoan loan = allLoansAsLender.get(loanID);
+        if(!cusName.equals(USERNAME)) {
+            listAsLenderRefresher = new ListLoansAsLenderRefresher(cusName, this::updateListLoansAsLender, autoUpdatePro);
+            timer = new Timer();
+            timer.schedule(listAsLenderRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+        else{
+            lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
+        }
+    }
+    
+    public void updateListLoansAsLender(List<DTOLoan> allLoansAsLender) {
+        Platform.runLater(() -> {
+            if (allLoansAsLender.isEmpty()) {
+                lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
+            } else {
+                TreeItem<String> treeLoans = new TreeItem<>("List of Loans as a lender");
+                for (DTOLoan loan : allLoansAsLender) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
@@ -198,7 +236,7 @@ public class CustomerViewController extends HttpServlet {
 
                         SingleLoanController singleLoanController = fxmlLoader.getController();
                         singleLoanController.setInfoOfLoan(loan);
-                        singleLoanController.setEngine(getEngine());
+                        //singleLoanController.setEngine(getEngine());
 
                         treeLoans.getChildren().add(singleLoanController.getRoot());
 
@@ -206,13 +244,13 @@ public class CustomerViewController extends HttpServlet {
                         e.printStackTrace();
                     }
                 }
+                lenderLoansTV.setRoot(treeLoans);
             }
-        }
-        lenderLoansTV.setRoot(treeLoans);
+        });
     }
 
     public void loadTransactions() {
-        TreeItem<String> treeTransactions = new TreeItem<>("There is no list of transactions");
+        /*TreeItem<String> treeTransactions = new TreeItem<>("There is no list of transactions");
         if (!cusName.equals(USERNAME)) {
             DTOCustomer customer = getCustomer();
             List<DTOtransaction> transactions = customer.getDTOtransactions();
@@ -236,7 +274,7 @@ public class CustomerViewController extends HttpServlet {
                 }
             }
         }
-        transactionsTV.setRoot(treeTransactions);
+        transactionsTV.setRoot(treeTransactions);*/
     }
 
     public void chargeToCusBalance() {
@@ -260,7 +298,7 @@ public class CustomerViewController extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        balancePro.set("Balance: " + getCustomer().getBalance());
+        //balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
     public void withdrawFromCusBalance() {
@@ -284,7 +322,7 @@ public class CustomerViewController extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        balancePro.set("Balance: " + getCustomer().getBalance());
+        //balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
 
@@ -294,13 +332,13 @@ public class CustomerViewController extends HttpServlet {
     }
 
     public void addToCategoryFilterCB() {
-        if (!cusName.equals(USERNAME)) {
+       /* if (!cusName.equals(USERNAME)) {
             List<String> categories = getEngine().getCategories();
             for (String category : categories) {
                 categoriesOL.add(category);
             }
             categoryFilterCB.getItems().addAll(categoriesOL);
-        }
+        }*/
     }
 
 
@@ -338,7 +376,7 @@ public class CustomerViewController extends HttpServlet {
         errorScrambleLabel.setVisible(false);
 
         loansToChoseCB.getItems().clear();
-        DTOactivate activate = getEngine().activate();
+        //DTOactivate activate = getEngine().activate();
         investment = getInvestment();
         List<String> categories = getCategoriesFromFilter();
         int minInterest = getMinInterestFromFilter();
@@ -347,7 +385,7 @@ public class CustomerViewController extends HttpServlet {
         int maxOwnership = getMaxOwnershipFromFilter();
 
         if (errorScrambleLabel.getText().equals("ERROR")) {
-            loansAfterFilter = getEngine().filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, cusName);
+            //loansAfterFilter = getEngine().filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, cusName);
             progressLabel.setText("Now please chose loan below and click OK");
             setLoansInCCB(loansAfterFilter);
         }
@@ -364,7 +402,7 @@ public class CustomerViewController extends HttpServlet {
     }
 
     public int getInvestment() {
-        int money = 0;
+        /*int money = 0;
         try {
             money = Integer.parseInt(investmentTF.getText());
             if (money > getCustomer().getBalance() || money < 0) {
@@ -375,7 +413,8 @@ public class CustomerViewController extends HttpServlet {
             errorScrambleLabel.setText("Please enter correct investment!");
             errorScrambleLabel.setVisible(true);
         }
-        return money;
+        return money;*/
+        return 0;
     }
 
     public int getMinInterestFromFilter() {
@@ -467,7 +506,7 @@ public class CustomerViewController extends HttpServlet {
 
         String mess = "Scramble did not passed successfully";
         if (!loansToSend.isEmpty()) {
-            getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
+           // getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
             mess = "Scramble passed successfully";
         }
 
@@ -499,8 +538,7 @@ public class CustomerViewController extends HttpServlet {
     }
 
     public void setInfoInPaymentFP() {
-        if (!cusName.equals(USERNAME)) {
-
+        /*if (!cusName.equals(USERNAME)) {
             List<DTOLoan> allLoansWithPayment = getCustomer().getDTOloansWithPayments();
             for (DTOLoan loan : allLoansWithPayment) {
                 try {
@@ -510,17 +548,17 @@ public class CustomerViewController extends HttpServlet {
                     VBox singlePayMe = fxmlLoader.load(url.openStream());
 
                     PayMeController payMeController = fxmlLoader.getController();
-                    payMeController.setInfoOfLoan(loan, getCustomer(), getEngine(), paymentFP);
+                    //payMeController.setInfoOfLoan(loan, getCustomer(), getEngine(), paymentFP);
                     paymentFP.getChildren().add(singlePayMe);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
     public void loadLoanerLoansInPayment() {
-        TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower");
+       /* TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower");
         if(!cusName.equals(USERNAME)) {
             DTOCustomer customer = getCustomer();
             Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
@@ -537,7 +575,7 @@ public class CustomerViewController extends HttpServlet {
 
                             SingleLoanController singleLoanController = fxmlLoader.getController();
                             singleLoanController.setInfoOfLoan(loan);
-                            singleLoanController.setEngine(getEngine());
+                            //singleLoanController.setEngine(getEngine());
 
                             treeLoans.getChildren().add(singleLoanController.getRoot());
 
@@ -548,11 +586,11 @@ public class CustomerViewController extends HttpServlet {
                 }
             }
         }
-        loanerLoansTV2.setRoot(treeLoans);
+        loanerLoansTV2.setRoot(treeLoans);*/
     }
 
     public void loadNotifications() {
-        if(!cusName.equals(USERNAME)) {
+        /*if(!cusName.equals(USERNAME)) {
             List<Notification> cusNotifi = getCustomer().getNotificationList();
             for (Notification notification : cusNotifi) {
                 try {
@@ -570,7 +608,7 @@ public class CustomerViewController extends HttpServlet {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
     public void setMainController(MainAppController mainAppController) {
@@ -636,9 +674,7 @@ public class CustomerViewController extends HttpServlet {
                             filePathLabel.setText("Something went wrong: " + responseBody)
                     );
                 } else {
-                    Platform.runLater(() -> {
-                        loadFileInfo();
-                    });
+                    Platform.runLater(() -> { loadFileInfo();});
                 }
             }
         });
@@ -674,4 +710,9 @@ public class CustomerViewController extends HttpServlet {
         setCusInfo(cusName);
     }
 
+    public void setCusName(String userName) {
+        this.cusName = userName;
+    }
 }
+
+
