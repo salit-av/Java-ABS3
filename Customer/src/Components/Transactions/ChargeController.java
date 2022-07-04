@@ -68,13 +68,7 @@ public class ChargeController extends HttpServlet {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         Platform.runLater(() -> {
-                            try {
-                                String balance = response.body().string();
                                 helloLabel.setText(" Balance updated ");
-                                //balancePro.set("Balance: " + balance);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         });
                     }
 
