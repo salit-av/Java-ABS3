@@ -37,6 +37,9 @@ public class ResourcesPath {
     public final static String BALANCE = FULL_SERVER_PATH + "/balance";
     public final static String LIST_LOANS_AS_BORROWER = FULL_SERVER_PATH + "/listLoansAsBorrower";
     public final static String LIST_LOANS_AS_LENDER = FULL_SERVER_PATH + "/listLoansAsLender";
+    public final static String LIST_TRANSACTIONS = FULL_SERVER_PATH + "/listTransactions";
+    public final static String CHARGE_BALANCE = FULL_SERVER_PATH + "/chargeBalance";
+
     public final static String ADD_LOAN = FULL_SERVER_PATH + "/addLoan";
 
     public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";

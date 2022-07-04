@@ -3,6 +3,7 @@ import AllParticipants.Customer.*;
 import AllParticipants.Loan.*;
 import DTO.Customers.DTOBalace;
 import DTO.Customers.DTOCustomer;
+import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoan;
 import DTO.Loan.DTOLoans;
 import Engine.Yaz;
@@ -208,6 +209,10 @@ public class Descriptor {
         else{
             return res;
         }
+    }
+
+    public List<DTOtransaction> getCustomersTransactions(String username) {
+        return allCustomers.getCustomersTransactions(username);
     }
 }
 

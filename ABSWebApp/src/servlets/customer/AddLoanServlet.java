@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static constants.Constants.USERNAME;
 
-@WebServlet(name="=AddLoanServlet", urlPatterns = {"/addLoan"})
+@WebServlet(name="=AddLoan", urlPatterns = {"/addLoan"})
 public class AddLoanServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

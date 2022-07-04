@@ -233,4 +233,8 @@ public class Engine {
     public String addLoan(String cusName, String id, String category, int capital, int totalYazTime, int paysEveryYaz, int internistPerPayment) {
         return descriptor.addLoan(cusName, id, category, capital, totalYazTime, paysEveryYaz, internistPerPayment);
     }
+
+    public List<DTOtransaction> getCustomersTransactions(String username) {
+        return descriptor.getCustomersTransactions(username);
+    }
 }

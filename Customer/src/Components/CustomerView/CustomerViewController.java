@@ -1,14 +1,18 @@
 package Components.CustomerView;
 
+import Components.CustomerView.Refresher.BalanceRefresher;
 import Components.CustomerView.Refresher.ListLoansAsBorrowerRefresher;
 import Components.CustomerView.Refresher.ListLoansAsLenderRefresher;
+import Components.CustomerView.Refresher.ListTransactionsRefresher;
 import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
 import Components.Main.MainAppController;
 import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
 import Components.Transactions.ChargeController;
+import Components.Transactions.SingleTransactionController;
 import Components.Transactions.WithdrawController;
+import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import javafx.application.Platform;
@@ -32,7 +36,6 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.controlsfx.control.CheckComboBox;
 import org.jetbrains.annotations.NotNull;
-import Components.CustomerView.Refresher.BalanceRefresher;
 import utils.http.HttpClientUtil;
 
 import java.io.File;
@@ -55,7 +58,10 @@ public class CustomerViewController extends CustomerViewData {
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
     private SimpleBooleanProperty autoUpdatePro;
-    private Timer timer;
+    private Timer timer1;
+    private Timer timer2;
+    private Timer timer3;
+    private Timer timer4;
     private TimerTask balanceRefresher;
     private TimerTask listAsBorrowerRefresher;
     private TimerTask listAsLenderRefresher;
@@ -159,8 +165,8 @@ public class CustomerViewController extends CustomerViewData {
     public void setBalance() {
         if(!cusName.equals(USERNAME)) {
             balanceRefresher = new BalanceRefresher(cusName, this::updateBalance, autoUpdatePro);
-            timer = new Timer();
-            timer.schedule(balanceRefresher, REFRESH_RATE, REFRESH_RATE);
+            timer1 = new Timer();
+            timer1.schedule(balanceRefresher, REFRESH_RATE, REFRESH_RATE);
         }
     }
 
@@ -183,8 +189,8 @@ public class CustomerViewController extends CustomerViewData {
     public void loadLoanerLoans() {
         if(!cusName.equals(USERNAME)) {
             listAsBorrowerRefresher = new ListLoansAsBorrowerRefresher(cusName, this::updateListLoansAsBorrower, autoUpdatePro);
-            timer = new Timer();
-            timer.schedule(listAsBorrowerRefresher, REFRESH_RATE, REFRESH_RATE);
+            timer2 = new Timer();
+            timer2.schedule(listAsBorrowerRefresher, REFRESH_RATE, REFRESH_RATE);
         }
         else {
             loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
@@ -219,8 +225,8 @@ public class CustomerViewController extends CustomerViewData {
     public void loadLendersLoans() {
         if(!cusName.equals(USERNAME)) {
             listAsLenderRefresher = new ListLoansAsLenderRefresher(cusName, this::updateListLoansAsLender, autoUpdatePro);
-            timer = new Timer();
-            timer.schedule(listAsLenderRefresher, REFRESH_RATE, REFRESH_RATE);
+            timer3 = new Timer();
+            timer3.schedule(listAsLenderRefresher, REFRESH_RATE, REFRESH_RATE);
         }
         else{
             lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
@@ -256,21 +262,21 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadTransactions() {
-/*        if (!cusName.equals(USERNAME)) {
+        if (!cusName.equals(USERNAME)) {
             listTransactionsRefresher = new ListTransactionsRefresher(cusName, this::updateTransactions, autoUpdatePro);
-            timer = new Timer();
-            timer.schedule(listTransactionsRefresher, REFRESH_RATE, REFRESH_RATE);
+            timer4 = new Timer();
+            timer4.schedule(listTransactionsRefresher, REFRESH_RATE, REFRESH_RATE);
         } else {
-            lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
-        }*/
+            transactionsTV.setRoot(new TreeItem<>("There is no list of transactions"));
+        }
     }
 
-        /*TreeItem<String> treeTransactions = new TreeItem<>("There is no list of transactions");
-        if (!cusName.equals(USERNAME)) {
-            DTOCustomer customer = getCustomer();
-            List<DTOtransaction> transactions = customer.getDTOtransactions();
-            if (!transactions.isEmpty()) {
-                treeTransactions.setValue("List of transactions");
+    public void updateTransactions(List<DTOtransaction> transactions){
+        Platform.runLater(() -> {
+            if (transactions.isEmpty()) {
+                transactionsTV.setRoot(new TreeItem<>("There is no list of transactions"));
+            } else {
+                TreeItem<String> treeTransactions = new TreeItem<>("List of transactions");
                 int i = 1;
                 for (DTOtransaction transaction : transactions) {
                     try {
@@ -287,9 +293,9 @@ public class CustomerViewController extends CustomerViewData {
                         e.printStackTrace();
                     }
                 }
+                transactionsTV.setRoot(treeTransactions);
             }
-        }
-        transactionsTV.setRoot(treeTransactions);*/
+        });
     }
 
     public void chargeToCusBalance() {

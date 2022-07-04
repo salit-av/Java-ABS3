@@ -4,6 +4,7 @@ import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.Loans;
 import AllParticipants.Notification;
 import DTO.Customers.DTOCustomer;
+import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoans;
 
 import java.util.*;
@@ -65,5 +66,14 @@ public class Customers {
     public DTOLoans getCustomersLoansAsLender(String username) {
         return new DTOLoans(customers.get(username).getLoansAsLender());
 
+    }
+
+    public List<DTOtransaction> getCustomersTransactions(String username) {
+        List<DTOtransaction> res = new ArrayList<>();
+        List<Transaction> transactions = customers.get(username).getTransactions();
+        for(Transaction transaction:transactions){
+            res.add(new DTOtransaction(transaction.getYaz(), transaction.getPay(), transaction.getInOrOut(), transaction.getBeforeTran(), transaction.getAfterTran()));
+        }
+        return res;
     }
 }
