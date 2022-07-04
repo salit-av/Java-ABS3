@@ -195,5 +195,19 @@ public class Descriptor {
     public DTOLoan getDTOLoan(String id) {
         return new DTOLoan(allLoans.getLoans().get(id));
     }
+
+    public String addLoan(String cusName, String id, String category, int capital, int totalYazTime, int paysEveryYaz, int internistPerPayment) {
+        String res = new XmlReader().addLoan(cusName, id, category, capital, totalYazTime, paysEveryYaz, internistPerPayment, allLoans, allCategories);
+        if(res.equals("true")){
+            Customer customer = allCustomers.getCustomers().get(cusName);
+            Loan loan = new Loan(id, cusName, customer, category, capital, totalYazTime, paysEveryYaz, internistPerPayment);
+            allLoans.getLoans().put(id, loan);
+            customer.getLoansAsBorrower().getLoans().put(id, loan);
+            return "Loan added successfully";
+        }
+        else{
+            return res;
+        }
+    }
 }
 

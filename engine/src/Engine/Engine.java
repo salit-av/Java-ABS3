@@ -225,4 +225,12 @@ public class Engine {
     public DTOLoan getDTOLoan(String id) {
         return descriptor.getDTOLoan(id);
     }
+
+    public DTOCustomer getDTOCustomer(String username) {
+        return printAllCustomers().findCustomer(username);
+    }
+
+    public String addLoan(String cusName, String id, String category, int capital, int totalYazTime, int paysEveryYaz, int internistPerPayment) {
+        return descriptor.addLoan(cusName, id, category, capital, totalYazTime, paysEveryYaz, internistPerPayment);
+    }
 }

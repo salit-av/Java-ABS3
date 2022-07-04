@@ -32,6 +32,7 @@ import okhttp3.HttpUrl;
 import okhttp3.Response;
 import org.controlsfx.control.CheckComboBox;
 import org.jetbrains.annotations.NotNull;
+import Components.CustomerView.Refresher.BalanceRefresher;
 import utils.http.HttpClientUtil;
 
 import java.io.File;
@@ -45,73 +46,63 @@ import static main.ResourcesPath.*;
 
 public class CustomerViewController extends CustomerViewData {
     // header
-    @FXML
-    Label currentYazLabel;
-    @FXML
-    Label currenBalanceLabel;
-    @FXML
-    Label filePathLabel;
-    @FXML
-    Button loadFileButton;
-    @FXML
-    ToggleButton autoUpdateButton;
+    @FXML Label currentYazLabel;
+    @FXML Label currenBalanceLabel;
+    @FXML Label filePathLabel;
+    @FXML Button loadFileButton;
+    @FXML ToggleButton autoUpdateButton;
 
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
     private SimpleBooleanProperty autoUpdatePro;
     private Timer timer;
+    private TimerTask balanceRefresher;
     private TimerTask listAsBorrowerRefresher;
     private TimerTask listAsLenderRefresher;
+    private TimerTask listTransactionsRefresher;
 
-    @FXML
-    Tab informationTab;
-    @FXML
-    TreeView<String> loanerLoansTV1;
-    @FXML
-    TreeView<String> lenderLoansTV;
-    @FXML
-    TreeView<String> transactionsTV;
-    @FXML
-    Button chargeButton;
-    @FXML
-    Button withdrawButton;
+    // information
+    @FXML Tab informationTab;
+    @FXML TreeView<String> loanerLoansTV1;
+    @FXML TreeView<String> lenderLoansTV;
+    @FXML TreeView<String> transactionsTV;
+    @FXML Button chargeButton;
+    @FXML Button withdrawButton;
 
-    @FXML
-    Tab ScrambleTab;
-    @FXML
-    Label errorScrambleLabel;
-    @FXML
-    Label progressLabel;
-    @FXML
-    TextField investmentTF;
-    @FXML
-    TextField interestFilterTF;
-    @FXML
-    TextField yazFilterTF;
-    @FXML
-    TextField loansOpenFilterTF;
-    @FXML
-    TextField ownershipFilterTF;
-    @FXML
-    CheckComboBox<String> categoryFilterCB;
-    @FXML
-    CheckComboBox<String> loansToChoseCB;
-    @FXML
-    Button submitScrambleButton;
-    @FXML
-    Button OKScrambleButton;
+    // addLoan
+    @FXML Tab addLoanTab;
+    @FXML Label errorAddLoanLabel;
+    @FXML TextField idTF;
+    @FXML TextField categoryTF;
+    @FXML TextField capitalTF;
+    @FXML TextField totalYazTimeTF;
+    @FXML TextField paysEveryYazTF;
+    @FXML TextField internistPerPaymentTF;
+    @FXML Button submitAddLoanButton;
+
+
+    // Scramble
+    @FXML Tab ScrambleTab;
+    @FXML Label errorScrambleLabel;
+    @FXML Label progressLabel;
+    @FXML TextField investmentTF;
+    @FXML TextField interestFilterTF;
+    @FXML TextField yazFilterTF;
+    @FXML TextField loansOpenFilterTF;
+    @FXML TextField ownershipFilterTF;
+    @FXML CheckComboBox<String> categoryFilterCB;
+    @FXML CheckComboBox<String> loansToChoseCB;
+    @FXML Button submitScrambleButton;
+    @FXML Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
 
-    @FXML
-    Tab PaymentTab;
-    @FXML
-    TreeView<String> loanerLoansTV2;
-    @FXML
-    FlowPane paymentFP;
-    @FXML
-    FlowPane notificationEP;
+    // Payment
+    @FXML Tab PaymentTab;
+    @FXML TreeView<String> loanerLoansTV2;
+    @FXML FlowPane paymentFP;
+    @FXML FlowPane notificationEP;
 
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
@@ -146,25 +137,40 @@ public class CustomerViewController extends CustomerViewData {
         setCusInfo(USERNAME);
     }
 
-/*    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }*/
-
     public Engine getEngine() {
         return null; //ServletUtils.getEngine(getServletContext());
     }
-
-/*    public DTOCustomer getCustomer() {
-        return getEngine().printAllCustomers().findCustomer(cusName);
-    }*/
 
     public void setCusInfo(String cusName) {
         //this.engine = engine;
         //this.customer = engine.printAllCustomers().findCustomer(cusName);
         this.cusName = cusName;
+        setHeader();
         setInfoInInformationTab();
         setInfoInScrambleTab();
         setInfoInPaymentTab();
+    }
+
+    public void setHeader() {
+        setBalance();
+        setCurrentYaz();
+    }
+
+    public void setBalance() {
+        if(!cusName.equals(USERNAME)) {
+            balanceRefresher = new BalanceRefresher(cusName, this::updateBalance, autoUpdatePro);
+            timer = new Timer();
+            timer.schedule(balanceRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateBalance(int currBalance) {
+        Platform.runLater(() -> {
+            balancePro.set("Balance: " + currBalance);
+        });
+    }
+
+    public void setCurrentYaz() {
     }
 
     // Information TAB
@@ -250,6 +256,15 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadTransactions() {
+/*        if (!cusName.equals(USERNAME)) {
+            listTransactionsRefresher = new ListTransactionsRefresher(cusName, this::updateTransactions, autoUpdatePro);
+            timer = new Timer();
+            timer.schedule(listTransactionsRefresher, REFRESH_RATE, REFRESH_RATE);
+        } else {
+            lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
+        }*/
+    }
+
         /*TreeItem<String> treeTransactions = new TreeItem<>("There is no list of transactions");
         if (!cusName.equals(USERNAME)) {
             DTOCustomer customer = getCustomer();
@@ -323,6 +338,51 @@ public class CustomerViewController extends CustomerViewData {
             e.printStackTrace();
         }
         //balancePro.set("Balance: " + getCustomer().getBalance());
+    }
+
+    //addLoan
+    @FXML
+    public void submitAddLoan(){
+        try {
+            String id = idTF.getText();
+            String category = categoryTF.getText();
+            int capital = Integer.parseInt(capitalTF.getText());
+            int totalYazTime = Integer.parseInt(totalYazTimeTF.getText());
+            int paysEveryYaz = Integer.parseInt(paysEveryYazTF.getText());
+            int internistPerPayment = Integer.parseInt(internistPerPaymentTF.getText());
+
+            String finalUrl = HttpUrl
+                    .parse(ADD_LOAN)
+                    .newBuilder()
+                    .addQueryParameter("username", cusName)
+                    .addQueryParameter("id", id)
+                    .addQueryParameter("category", category)
+                    .addQueryParameter("capital", String.valueOf(capital))
+                    .addQueryParameter("totalYazTime", String.valueOf(totalYazTime))
+                    .addQueryParameter("paysEveryYaz", String.valueOf(paysEveryYaz))
+                    .addQueryParameter("internistPerPayment", String.valueOf(internistPerPayment))
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> {
+                        errorAddLoanLabel.setText(e.getMessage());
+                    });
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    Platform.runLater(() ->
+                            errorAddLoanLabel.setText("Loan " + id + " successfully added")
+                    );
+                }
+            });
+        } catch (NumberFormatException e) {
+            errorAddLoanLabel.setText("Please enter Integer!");
+        }
     }
 
 

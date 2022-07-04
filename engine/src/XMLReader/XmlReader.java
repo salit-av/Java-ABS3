@@ -92,4 +92,34 @@ public class XmlReader {
         }
         return false;
     }
+
+    public String addLoan(String cusName, String id, String category, int capital, int totalYazTime, int paysEveryYaz, int internistPerPayment, Loans allLoans, Categories allCategories) {
+        boolean categoryBool = categoryThatIsNotDefined(category,allCategories);
+        boolean paymentBool = paymentRate(totalYazTime, paysEveryYaz);
+        boolean idBool = loanWithTheSameID(id, allLoans);
+        if(categoryBool && paymentBool && !idBool){
+            return "true";
+        }
+        else if(!categoryBool){
+            return "There is no such category in the system";
+        }
+        else if (!paymentBool){
+            return "The rate of payments is not fully divided";
+        }
+        else {
+            return "There is a loan with the id name in the system";
+        }
+    }
+
+    public boolean categoryThatIsNotDefined(String category, Categories allCategories) {
+        return allCategories.getCategories().contains(category);
+    }
+
+    public boolean paymentRate(int totalYazTime, int paysEveryYaz) {
+        return totalYazTime % paysEveryYaz == 0;
+    }
+
+    public boolean loanWithTheSameID(String id, Loans allLoans) {
+        return allLoans.getLoans().containsKey(id);
+    }
 }

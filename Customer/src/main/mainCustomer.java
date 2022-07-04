@@ -29,7 +29,7 @@ public class mainCustomer extends Application {
             MainAppController mainAppController = fxmlLoader.getController();
             mainAppController.switchToLogin();
 
-            Scene scene = new Scene(root, 1200, 800);
+            Scene scene = new Scene(root, 1500, 800);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

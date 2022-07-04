@@ -34,9 +34,10 @@ public class ResourcesPath {
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginShortResponse";
     public final static String LOAD_FILE = FULL_SERVER_PATH + "/loadFile";
     //info
+    public final static String BALANCE = FULL_SERVER_PATH + "/balance";
     public final static String LIST_LOANS_AS_BORROWER = FULL_SERVER_PATH + "/listLoansAsBorrower";
     public final static String LIST_LOANS_AS_LENDER = FULL_SERVER_PATH + "/listLoansAsLender";
-
+    public final static String ADD_LOAN = FULL_SERVER_PATH + "/addLoan";
 
     public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";
     public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";
