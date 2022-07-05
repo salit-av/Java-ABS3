@@ -149,8 +149,10 @@ public class CustomerViewController extends CustomerViewData {
 
     private Timer timer5;
     private Timer timer6;
+    private Timer timer7;
     private TimerTask listLoansAsBorrowerInPaymentRefresher;
     private TimerTask listNotificationsRefresher;
+    private TimerTask listLoansWithPaymentRefresher;
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
 
@@ -642,6 +644,16 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void setInfoInPaymentFP() {
+        if (!cusName.equals(USERNAME)) {
+            listLoansWithPaymentRefresher = new ListLoansWithPaymentRefresher(cusName, this::updateListLoansWithPaymentRefresher, autoUpdatePro);
+            timer7 = new Timer();
+            timer7.schedule(listLoansWithPaymentRefresher, REFRESH_RATE, REFRESH_RATE);
+        } else {
+            loanerLoansTV2.setRoot(new TreeItem<>("There is no list of loans as a borrower with status Active or Risk"));
+        }
+    }
+
+    public void updateListLoansWithPaymentRefresher(List<DTOLoan> allLoansWithPayment){
         /*if (!cusName.equals(USERNAME)) {
             List<DTOLoan> allLoansWithPayment = getCustomer().getDTOloansWithPayments();
             for (DTOLoan loan : allLoansWithPayment) {

@@ -242,4 +242,5 @@ public class Engine {
     public List<Notification> getCustomersNotifications(String username) {
         return descriptor. getCustomersNotifications(username);
     }
+
 }

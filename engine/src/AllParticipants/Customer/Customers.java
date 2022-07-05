@@ -7,7 +7,10 @@ import DTO.Customers.DTOCustomer;
 import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoans;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Customers {
     private Map<String, Customer> customers;
@@ -83,4 +86,6 @@ public class Customers {
     public List<Notification> getCustomersNotifications(String username) {
         return customers.get(username).getNotificationsList();
     }
+
+
 }

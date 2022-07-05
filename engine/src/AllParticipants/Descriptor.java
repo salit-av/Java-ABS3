@@ -218,5 +218,7 @@ public class Descriptor {
     public List<Notification> getCustomersNotifications(String username) {
         return allCustomers.getCustomersNotifications(username);
     }
+
+
 }
 
