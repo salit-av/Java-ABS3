@@ -1,12 +1,11 @@
 package Components.CustomerView;
 
-import Components.CustomerView.Refresher.BalanceRefresher;
-import Components.CustomerView.Refresher.ListLoansAsBorrowerRefresher;
-import Components.CustomerView.Refresher.ListLoansAsLenderRefresher;
-import Components.CustomerView.Refresher.ListTransactionsRefresher;
+import AllParticipants.Notification;
+import Components.CustomerView.Refresher.*;
 import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
 import Components.Main.MainAppController;
+import Components.Notifications.NotificationAreaController;
 import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
 import Components.Transactions.ChargeController;
@@ -44,16 +43,23 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static Status.Status.ACTIVE;
+import static Status.Status.RISK;
 import static main.ResourcesPath.*;
 
 
 public class CustomerViewController extends CustomerViewData {
     // header
-    @FXML Label currentYazLabel;
-    @FXML Label currenBalanceLabel;
-    @FXML Label filePathLabel;
-    @FXML Button loadFileButton;
-    @FXML ToggleButton autoUpdateButton;
+    @FXML
+    Label currentYazLabel;
+    @FXML
+    Label currenBalanceLabel;
+    @FXML
+    Label filePathLabel;
+    @FXML
+    Button loadFileButton;
+    @FXML
+    ToggleButton autoUpdateButton;
 
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
@@ -68,48 +74,83 @@ public class CustomerViewController extends CustomerViewData {
     private TimerTask listTransactionsRefresher;
 
     // information
-    @FXML Tab informationTab;
-    @FXML TreeView<String> loanerLoansTV1;
-    @FXML TreeView<String> lenderLoansTV;
-    @FXML TreeView<String> transactionsTV;
-    @FXML Button chargeButton;
-    @FXML Button withdrawButton;
+    @FXML
+    Tab informationTab;
+    @FXML
+    TreeView<String> loanerLoansTV1;
+    @FXML
+    TreeView<String> lenderLoansTV;
+    @FXML
+    TreeView<String> transactionsTV;
+    @FXML
+    Button chargeButton;
+    @FXML
+    Button withdrawButton;
 
     // addLoan
-    @FXML Tab addLoanTab;
-    @FXML Label errorAddLoanLabel;
-    @FXML TextField idTF;
-    @FXML TextField categoryTF;
-    @FXML TextField capitalTF;
-    @FXML TextField totalYazTimeTF;
-    @FXML TextField paysEveryYazTF;
-    @FXML TextField internistPerPaymentTF;
-    @FXML Button submitAddLoanButton;
+    @FXML
+    Tab addLoanTab;
+    @FXML
+    Label errorAddLoanLabel;
+    @FXML
+    TextField idTF;
+    @FXML
+    TextField categoryTF;
+    @FXML
+    TextField capitalTF;
+    @FXML
+    TextField totalYazTimeTF;
+    @FXML
+    TextField paysEveryYazTF;
+    @FXML
+    TextField internistPerPaymentTF;
+    @FXML
+    Button submitAddLoanButton;
 
 
     // Scramble
-    @FXML Tab ScrambleTab;
-    @FXML Label errorScrambleLabel;
-    @FXML Label progressLabel;
-    @FXML TextField investmentTF;
-    @FXML TextField interestFilterTF;
-    @FXML TextField yazFilterTF;
-    @FXML TextField loansOpenFilterTF;
-    @FXML TextField ownershipFilterTF;
-    @FXML CheckComboBox<String> categoryFilterCB;
-    @FXML CheckComboBox<String> loansToChoseCB;
-    @FXML Button submitScrambleButton;
-    @FXML Button OKScrambleButton;
+    @FXML
+    Tab ScrambleTab;
+    @FXML
+    Label errorScrambleLabel;
+    @FXML
+    Label progressLabel;
+    @FXML
+    TextField investmentTF;
+    @FXML
+    TextField interestFilterTF;
+    @FXML
+    TextField yazFilterTF;
+    @FXML
+    TextField loansOpenFilterTF;
+    @FXML
+    TextField ownershipFilterTF;
+    @FXML
+    CheckComboBox<String> categoryFilterCB;
+    @FXML
+    CheckComboBox<String> loansToChoseCB;
+    @FXML
+    Button submitScrambleButton;
+    @FXML
+    Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
 
     // Payment
-    @FXML Tab PaymentTab;
-    @FXML TreeView<String> loanerLoansTV2;
-    @FXML FlowPane paymentFP;
-    @FXML FlowPane notificationEP;
+    @FXML
+    Tab PaymentTab;
+    @FXML
+    TreeView<String> loanerLoansTV2;
+    @FXML
+    FlowPane paymentFP;
+    @FXML
+    FlowPane notificationEP;
 
+    private Timer timer5;
+    private Timer timer6;
+    private TimerTask listLoansAsBorrowerInPaymentRefresher;
+    private TimerTask listNotificationsRefresher;
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
 
@@ -163,7 +204,7 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void setBalance() {
-        if(!cusName.equals(USERNAME)) {
+        if (!cusName.equals(USERNAME)) {
             balanceRefresher = new BalanceRefresher(cusName, this::updateBalance, autoUpdatePro);
             timer1 = new Timer();
             timer1.schedule(balanceRefresher, REFRESH_RATE, REFRESH_RATE);
@@ -187,12 +228,11 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadLoanerLoans() {
-        if(!cusName.equals(USERNAME)) {
+        if (!cusName.equals(USERNAME)) {
             listAsBorrowerRefresher = new ListLoansAsBorrowerRefresher(cusName, this::updateListLoansAsBorrower, autoUpdatePro);
             timer2 = new Timer();
             timer2.schedule(listAsBorrowerRefresher, REFRESH_RATE, REFRESH_RATE);
-        }
-        else {
+        } else {
             loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
         }
     }
@@ -223,16 +263,15 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadLendersLoans() {
-        if(!cusName.equals(USERNAME)) {
+        if (!cusName.equals(USERNAME)) {
             listAsLenderRefresher = new ListLoansAsLenderRefresher(cusName, this::updateListLoansAsLender, autoUpdatePro);
             timer3 = new Timer();
             timer3.schedule(listAsLenderRefresher, REFRESH_RATE, REFRESH_RATE);
-        }
-        else{
+        } else {
             lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
         }
     }
-    
+
     public void updateListLoansAsLender(List<DTOLoan> allLoansAsLender) {
         Platform.runLater(() -> {
             if (allLoansAsLender.isEmpty()) {
@@ -271,7 +310,7 @@ public class CustomerViewController extends CustomerViewData {
         }
     }
 
-    public void updateTransactions(List<DTOtransaction> transactions){
+    public void updateTransactions(List<DTOtransaction> transactions) {
         Platform.runLater(() -> {
             if (transactions.isEmpty()) {
                 transactionsTV.setRoot(new TreeItem<>("There is no list of transactions"));
@@ -348,7 +387,7 @@ public class CustomerViewController extends CustomerViewData {
 
     //addLoan
     @FXML
-    public void submitAddLoan(){
+    public void submitAddLoan() {
         try {
             String id = idTF.getText();
             String category = categoryTF.getText();
@@ -406,7 +445,6 @@ public class CustomerViewController extends CustomerViewData {
             categoryFilterCB.getItems().addAll(categoriesOL);
         }*/
     }
-
 
 
     public void selectInfo() {
@@ -572,7 +610,7 @@ public class CustomerViewController extends CustomerViewData {
 
         String mess = "Scramble did not passed successfully";
         if (!loansToSend.isEmpty()) {
-           // getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
+            // getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
             mess = "Scramble passed successfully";
         }
 
@@ -624,25 +662,29 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadLoanerLoansInPayment() {
-       /* TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower");
-        if(!cusName.equals(USERNAME)) {
-            DTOCustomer customer = getCustomer();
-            Map<String, DTOLoan> allLoansAsBorrower = customer.getDTOloansAsBorrower();
+        if (!cusName.equals(USERNAME)) {
+            listLoansAsBorrowerInPaymentRefresher = new ListLoansAsBorrowerRefresher(cusName, this::updateListLoansAsBorrowerInPayment, autoUpdatePro);
+            timer6 = new Timer();
+            timer6.schedule(listLoansAsBorrowerInPaymentRefresher, REFRESH_RATE, REFRESH_RATE);
+        } else {
+            loanerLoansTV2.setRoot(new TreeItem<>("There is no list of loans as a borrower with status Active or Risk"));
+        }
+    }
+
+    public void updateListLoansAsBorrowerInPayment(List<DTOLoan> allLoansAsBorrower){
+        Platform.runLater(() -> {
+            TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower with status Active or Risk");
             if (!allLoansAsBorrower.isEmpty()) {
-                for (String loanID : allLoansAsBorrower.keySet()) {
-                    DTOLoan loan = allLoansAsBorrower.get(loanID);
-                    if (loan.getStatus().equals(Status.ACTIVE) || loan.getStatus().equals(Status.RISK)) {
-                        treeLoans.setValue("List of Loans as a borrower");
+                for (DTOLoan loan : allLoansAsBorrower) {
+                    if (loan.getStatus().equals(ACTIVE) || loan.getStatus().equals(RISK)) {
+                        treeLoans.setValue("List of loans as a borrower with status Active or Risk");
                         try {
                             FXMLLoader fxmlLoader = new FXMLLoader();
                             URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
                             fxmlLoader.setLocation(url);
                             VBox singleLoan = fxmlLoader.load(url.openStream());
-
                             SingleLoanController singleLoanController = fxmlLoader.getController();
                             singleLoanController.setInfoOfLoan(loan);
-                            //singleLoanController.setEngine(getEngine());
-
                             treeLoans.getChildren().add(singleLoanController.getRoot());
 
                         } catch (IOException e) {
@@ -650,15 +692,22 @@ public class CustomerViewController extends CustomerViewData {
                         }
                     }
                 }
+                loanerLoansTV2.setRoot(treeLoans);
             }
-        }
-        loanerLoansTV2.setRoot(treeLoans);*/
+        });
     }
 
     public void loadNotifications() {
-        /*if(!cusName.equals(USERNAME)) {
-            List<Notification> cusNotifi = getCustomer().getNotificationList();
-            for (Notification notification : cusNotifi) {
+        if (!cusName.equals(USERNAME)) {
+            listNotificationsRefresher = new ListNotificationsRefresher(cusName, this::updateNotification, autoUpdatePro);
+            timer5 = new Timer();
+            timer5.schedule(listNotificationsRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateNotification(List<Notification> notifications) {
+        Platform.runLater(() -> {
+            for (Notification notification : notifications) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     URL url = getClass().getResource(NOTIFICATION_AREA_FXML_RESOURCE);
@@ -674,8 +723,10 @@ public class CustomerViewController extends CustomerViewData {
                     e.printStackTrace();
                 }
             }
-        }*/
+        });
     }
+
+
 
     public void setMainController(MainAppController mainAppController) {
         this.mainAppController = mainAppController;
@@ -740,35 +791,11 @@ public class CustomerViewController extends CustomerViewData {
                             filePathLabel.setText("Something went wrong: " + responseBody)
                     );
                 } else {
-                    Platform.runLater(() -> { loadFileInfo();});
+                    Platform.runLater(() -> {
+                        loadFileInfo();});
                 }
             }
         });
-
-        /*try {
-            getEngine().loadFromXML(absolutePath,"");
-            return true;
-        } catch (loansWithTheSameNameException | paymentRateIncorrectException | referenceToCategoryThatIsntDefinedException ex) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                URL url = getClass().getResource(EXCEPTIONS_FXML_RESOURCE);
-                fxmlLoader.setLocation(url);
-                HBox exceptionHB = fxmlLoader.load(url.openStream());
-                ExceptionsController exceptionsController = fxmlLoader.getController();
-                exceptionsController.setExceptionMessage(ex.getMessage());
-
-                Stage popup = new Stage();
-                popup.initModality(Modality.APPLICATION_MODAL);
-
-                Scene popUpScene = new Scene(exceptionHB, 700, 300);
-                popup.setScene(popUpScene);
-                popup.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return false;
-        }*/
     }
 
     public void loadFileInfo() {

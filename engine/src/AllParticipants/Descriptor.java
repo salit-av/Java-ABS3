@@ -214,5 +214,9 @@ public class Descriptor {
     public List<DTOtransaction> getCustomersTransactions(String username) {
         return allCustomers.getCustomersTransactions(username);
     }
+
+    public List<Notification> getCustomersNotifications(String username) {
+        return allCustomers.getCustomersNotifications(username);
+    }
 }
 

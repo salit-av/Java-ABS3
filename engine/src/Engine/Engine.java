@@ -5,6 +5,7 @@ import AllParticipants.Descriptor;
 import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.LoanEditor;
 import AllParticipants.Loan.Loans;
+import AllParticipants.Notification;
 import DTO.Loan.*;
 import DTO.Customers.*;
 import DTO.*;
@@ -236,5 +237,9 @@ public class Engine {
 
     public List<DTOtransaction> getCustomersTransactions(String username) {
         return descriptor.getCustomersTransactions(username);
+    }
+
+    public List<Notification> getCustomersNotifications(String username) {
+        return descriptor. getCustomersNotifications(username);
     }
 }

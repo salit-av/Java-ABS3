@@ -56,7 +56,10 @@ public class Customers {
     }
 
     public void addCustomer(String username) {
-        customers.put(username, new Customer(username, 0, new Loans()));
+        Customer customer = new Customer(username, 0, new Loans());
+        customers.put(username, customer);
+        customer.getNotificationsList().add(new Notification("WELCOME!", "We are excited to have you in our system!", "Have FUN!"));
+
     }
 
     public DTOLoans getCustomersLoansAsBorrower(String username) {
@@ -75,5 +78,9 @@ public class Customers {
             res.add(new DTOtransaction(transaction.getYaz(), transaction.getPay(), transaction.getInOrOut(), transaction.getBeforeTran(), transaction.getAfterTran()));
         }
         return res;
+    }
+
+    public List<Notification> getCustomersNotifications(String username) {
+        return customers.get(username).getNotificationsList();
     }
 }
