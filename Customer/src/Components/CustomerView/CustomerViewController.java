@@ -192,8 +192,6 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void setCusInfo(String cusName) {
-        //this.engine = engine;
-        //this.customer = engine.printAllCustomers().findCustomer(cusName);
         this.cusName = cusName;
         setHeader();
         setInfoInInformationTab();

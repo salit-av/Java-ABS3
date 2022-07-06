@@ -1,5 +1,7 @@
 package main;
 
+import com.google.gson.Gson;
+
 public class ResourcesPaths {
     // fxml
     public final static String MAIN_APP_FXML = "/Components/Main/mainApp.fxml";
@@ -16,8 +18,15 @@ public class ResourcesPaths {
     private final static String FULL_SERVER_PATH = BASE_URL + CONTEXT_PATH;
 
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginAdminServlet";
+    public final static String LIST_LOANS_ADMIN = FULL_SERVER_PATH + "/listLoansAdmin";
+    public final static String LIST_CUSTOMERS_ADMIN = FULL_SERVER_PATH + "/listCustomersAdmin";
+
 
     // global constants
     public final static String LINE_SEPARATOR = System.getProperty("line.separator");
     public final static String USERNAME = "username";
+    public final static int REFRESH_RATE = 2000;
+
+    // GSON instance
+    public final static Gson GSON_INSTANCE = new Gson();
 }

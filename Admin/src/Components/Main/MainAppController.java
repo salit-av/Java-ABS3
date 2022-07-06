@@ -83,6 +83,8 @@ public class MainAppController {
 
     public void switchToAdminPage(String userName) {
         currentUserName.set(userName);
+        adminViewController.setAdminName(userName);
+        adminViewController.loadAdmin();
         setMainPanelTo(adminComponent);
     }
 

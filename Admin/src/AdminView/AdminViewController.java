@@ -1,23 +1,25 @@
 package AdminView;
 
+import AdminView.Refresher.ListCustomersRefresher;
+import AdminView.Refresher.ListLoansRefresher;
 import Components.Customers.SingleCustomerController;
 import Components.Loans.SingleLoanView.SingleLoanController;
 import Components.Main.MainAppController;
 import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
-import Engine.Engine;
 import jakarta.servlet.http.HttpServlet;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static main.ResourcesPaths.*;
 
@@ -27,19 +29,31 @@ public class AdminViewController extends HttpServlet {
     @FXML TreeView<String> loansTV;
     @FXML TreeView<String> customersTV;
     @FXML Label currentYazLabel;
+    @FXML ToggleButton autoUpdateButton;
 
-    private String username;
+    private SimpleBooleanProperty autoUpdatePro;
+    private String adminName;
     private boolean isAdminLogin;
     private MainAppController mainAppController;
+    private Timer timer1;
+    private Timer timer2;
+    private TimerTask listLoansRefresher;
+    private TimerTask listCustomersRefresher;
 
     public AdminViewController() {
-        loadAdmin();
+        this.adminName = USERNAME;
+        autoUpdatePro = new SimpleBooleanProperty();
         isAdminLogin = false;
-        this.username = USERNAME;
+
     }
 
 @FXML
-    public void initialize() {}
+    public void initialize() {
+    autoUpdateButton.selectedProperty().set(true);
+    autoUpdatePro.bind(autoUpdateButton.selectedProperty());
+    loadAdmin();
+
+}
 
     public void loadAdmin(){
         loadLoans();
@@ -47,12 +61,22 @@ public class AdminViewController extends HttpServlet {
     }
 
     public void loadLoans() {
-        TreeItem<String> treeLoans = new TreeItem<>("There is not list of Loans");
-        if(getEngine()!=null) {
-            List<DTOLoan> allLoansToPrint = getEngine().printAllLoans().getDTOAllLoans();
-            if (!allLoansToPrint.isEmpty()) {
+        if (!adminName.equals(USERNAME)) {
+            listLoansRefresher = new ListLoansRefresher(adminName, this::updateListLoans, autoUpdatePro);
+            timer1 = new Timer();
+            timer1.schedule(listLoansRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+        else{
+            loansTV.setRoot(new TreeItem<>("There is not list of Loans"));
+        }
+    }
+
+    public void updateListLoans(List<DTOLoan> allLoans) {
+        Platform.runLater(() -> {
+            TreeItem<String> treeLoans = new TreeItem<>("There is not list of Loans");
+            if (!allLoans.isEmpty()) {
                 treeLoans.setValue("List of Loans");
-                for (DTOLoan loan : allLoansToPrint) {
+                for (DTOLoan loan : allLoans) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         URL url = getClass().getResource(SINGLE_LOAN_ADMIN_VIEW_FXML_RESOURCE);
@@ -69,17 +93,27 @@ public class AdminViewController extends HttpServlet {
                     }
                 }
             }
-        }
-        loansTV.setRoot(treeLoans);
+            loansTV.setRoot(treeLoans);
+        });
     }
 
     public void loadCustomers() {
-        TreeItem<String> treeCustomers = new TreeItem<>("There is not list of Customers");
-        if(getEngine()!=null) {
-            List<DTOCustomer> allCustomersToPrint = getEngine().printAllCustomers().getAllCustomersToPrint();
-            if (!allCustomersToPrint.isEmpty()) {
+        if (!adminName.equals(USERNAME)) {
+            listCustomersRefresher = new ListCustomersRefresher(adminName, this::updateListCustomers, autoUpdatePro);
+            timer2 = new Timer();
+            timer2.schedule(listCustomersRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+        else{
+            customersTV.setRoot(new TreeItem<>("There is not list of Customers"));
+        }
+    }
+
+    public void updateListCustomers(List<DTOCustomer> allCustomers) {
+        Platform.runLater(() -> {
+            TreeItem<String> treeCustomers = new TreeItem<>("There is not list of Customers");
+            if (!allCustomers.isEmpty()) {
                 treeCustomers.setValue("List of Customers");
-                for (DTOCustomer cus : allCustomersToPrint) {
+                for (DTOCustomer cus : allCustomers) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         URL url = getClass().getResource(SINGLE_CUSTOMER_ADMIN_VIEW_FXML_RESOURCE);
@@ -96,13 +130,16 @@ public class AdminViewController extends HttpServlet {
                     }
                 }
             }
-        }
-        customersTV.setRoot(treeCustomers);
-
+            customersTV.setRoot(treeCustomers);
+        });
     }
 
     public void setMainController(MainAppController mainAppController) {
         this.mainAppController = mainAppController;
+    }
+
+    public void setAdminName(String userName) {
+        this.adminName = userName;
     }
 /*
     @FXML
