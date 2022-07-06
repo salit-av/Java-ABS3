@@ -42,6 +42,8 @@ public class ResourcesPath {
     public final static String WITHDRAW_BALANCE = FULL_SERVER_PATH + "/withdrawBalance";
     public final static String LIST_NOTIFICATIONS = FULL_SERVER_PATH + "/listNotifications";
     public final static String LIST_LOANS_WITH_PAYMENT = FULL_SERVER_PATH + "/listLoansWithPayment";
+    public final static String PAY_THIS_PAYMENT = FULL_SERVER_PATH + "/payThisPayment";
+    public final static String PAY_ALL_LOAN = FULL_SERVER_PATH + "/payAllLoan";
 
 
 

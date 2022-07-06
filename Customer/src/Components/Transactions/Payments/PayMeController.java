@@ -1,23 +1,27 @@
 package Components.Transactions.Payments;
 
-import DTO.Customers.DTOCustomer;
-import DTO.Loan.DTOLoan;
-import Engine.Engine;
 import Components.Notifications.notificationPopUpController;
+import DTO.Loan.DTOLoan;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
+import utils.http.HttpClientUtil;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static main.ResourcesPath.POPUP_NOTIFICATION_FXML_RESOURCE;
+import static main.ResourcesPath.*;
 
 
 public class PayMeController extends PayMeData{
@@ -29,9 +33,7 @@ public class PayMeController extends PayMeData{
     @FXML Button payAllLoanButton;
 
     private DTOLoan thisLoan;
-    private DTOCustomer thisBorrower;
-    private Engine engine;
-    @FXML FlowPane paymentFP;
+    private String borrowerName;
 
     public PayMeController() {
         super(" ", "","","");
@@ -44,11 +46,9 @@ public class PayMeController extends PayMeData{
         payLeftInLoanLabel.textProperty().bind(payLeftInLoanPro);
     }
 
-    public void setInfoOfLoan(DTOLoan loan, DTOCustomer borrower, Engine engine, FlowPane paymentFP) {
+    public void setInfoOfLoan(DTOLoan loan, String borrowerName) {
         this.thisLoan = loan;
-        this.thisBorrower = borrower;
-        this.engine = engine;
-        this.paymentFP = paymentFP;
+        this.borrowerName = borrowerName;
         this.idPro.set("Loan: " + loan.getId());
         this.yazToPayPro.set("Next Yaz for payment: " + loan.getNextYazToPay());
         this.allPayPro.set("Payment: " + loan.getNextPayIncludesInterestAndCapital());
@@ -56,12 +56,57 @@ public class PayMeController extends PayMeData{
     }
 
     public void payThisPayment(){
-        boolean done = engine.payPaymentToLoan(thisLoan, thisBorrower);
-        popUpInformation(done);
+        String finalUrl = HttpUrl
+                .parse(PAY_THIS_PAYMENT)
+                .newBuilder()
+                .addQueryParameter("username", borrowerName)
+                .addQueryParameter("id", thisLoan.getId())
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    popUpInformation(false);
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Platform.runLater(() ->
+                        popUpInformation(true)
+                );
+            }
+        });
     }
+
     public void payAllLoan(){
-        boolean done =  engine.payAllLoan(thisLoan, thisBorrower);
-        popUpInformation(done);
+        String finalUrl = HttpUrl
+                .parse(PAY_ALL_LOAN)
+                .newBuilder()
+                .addQueryParameter("username", borrowerName)
+                .addQueryParameter("id", thisLoan.getId())
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    popUpInformation(false);
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Platform.runLater(() ->
+                        popUpInformation(true)
+                );
+            }
+        });
     }
 
     private void popUpInformation(boolean done) {

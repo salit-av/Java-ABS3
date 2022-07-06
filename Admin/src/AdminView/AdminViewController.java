@@ -41,10 +41,6 @@ public class AdminViewController extends HttpServlet {
 @FXML
     public void initialize() {}
 
-    public Engine getEngine() {
-        return null; //ServletUtils.getEngine(getServletContext());
-    }
-
     public void loadAdmin(){
         loadLoans();
         loadCustomers();

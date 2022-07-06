@@ -1,6 +1,6 @@
 package main;
 
-import AdminView.AdminViewController;
+import Components.Main.MainAppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-import static main.ResourcesPaths.ADMIN_VIEW_FXML;
+import static main.ResourcesPaths.MAIN_APP_FXML;
 
 public class mainAdmin extends Application {
     public static void main(String[] args) {
@@ -21,14 +21,15 @@ public class mainAdmin extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Login as Admin");
 
-        URL loginPage = getClass().getResource(ADMIN_VIEW_FXML);
+        URL loginPage = getClass().getResource(MAIN_APP_FXML);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(loginPage);
             ScrollPane root = fxmlLoader.load();
-            AdminViewController mainAppController = fxmlLoader.getController();
+            MainAppController mainAppController = fxmlLoader.getController();
+            mainAppController.switchToLogin();
 
-            Scene scene = new Scene(root, 700, 600);
+            Scene scene = new Scene(root, 1500, 800);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

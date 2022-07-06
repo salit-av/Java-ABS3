@@ -9,6 +9,7 @@ import Components.Notifications.NotificationAreaController;
 import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
 import Components.Transactions.ChargeController;
+import Components.Transactions.Payments.PayMeController;
 import Components.Transactions.SingleTransactionController;
 import Components.Transactions.WithdrawController;
 import DTO.Customers.DTOtransaction;
@@ -653,25 +654,23 @@ public class CustomerViewController extends CustomerViewData {
         }
     }
 
-    public void updateListLoansWithPaymentRefresher(List<DTOLoan> allLoansWithPayment){
-        /*if (!cusName.equals(USERNAME)) {
-            List<DTOLoan> allLoansWithPayment = getCustomer().getDTOloansWithPayments();
-            for (DTOLoan loan : allLoansWithPayment) {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
-                    fxmlLoader.setLocation(url);
-                    VBox singlePayMe = fxmlLoader.load(url.openStream());
+    public void updateListLoansWithPaymentRefresher(List<DTOLoan> allLoansWithPayment) {
+        for (DTOLoan loan : allLoansWithPayment) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
+                fxmlLoader.setLocation(url);
+                VBox singlePayMe = fxmlLoader.load(url.openStream());
 
-                    PayMeController payMeController = fxmlLoader.getController();
-                    //payMeController.setInfoOfLoan(loan, getCustomer(), getEngine(), paymentFP);
-                    paymentFP.getChildren().add(singlePayMe);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                PayMeController payMeController = fxmlLoader.getController();
+                payMeController.setInfoOfLoan(loan, cusName);
+                paymentFP.getChildren().add(singlePayMe);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }*/
+        }
     }
+
 
     public void loadLoanerLoansInPayment() {
         if (!cusName.equals(USERNAME)) {
