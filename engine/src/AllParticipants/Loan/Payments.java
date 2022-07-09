@@ -44,6 +44,8 @@ public class Payments {
         return investment;
     }
 
+    public void setInvestment(int investment){ this.investment = investment;}
+
     public int getCapital() {
         return capital;
     }

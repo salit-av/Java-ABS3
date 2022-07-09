@@ -58,6 +58,8 @@ public class ResourcesPath {
     public final static String LOANS_FOR_SALE = FULL_SERVER_PATH + "/loansForSale";
     public final static String SALE_LOAN = FULL_SERVER_PATH + "/saleLoan";
     public final static String LOANS_FOR_BUY = FULL_SERVER_PATH + "/loansForBuy";
+    public final static String BUY_LOAN = FULL_SERVER_PATH + "/buyLoan";
+
 
 
 

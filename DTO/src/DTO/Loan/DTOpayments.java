@@ -1,7 +1,5 @@
 package DTO.Loan;
 
-import AllParticipants.Loan.Payment;
-
 import java.util.List;
 
 public class DTOpayments {
@@ -13,9 +11,9 @@ public class DTOpayments {
     private int interesUntilNowt;  // Ribit until now
     private int capitalToPay;  // Keren needs to pay
     private int interestToPay;  // Ribit needs to pay
+    private boolean isInBuyingList;
 
-
-    public DTOpayments(List<DTOpayment> allPayments, int investment, int capital, int interest, int capitalUntilNow, int interesUntilNowt, int capitalToPay, int interestToPay) {
+    public DTOpayments(List<DTOpayment> allPayments, int investment, int capital, int interest, int capitalUntilNow, int interesUntilNowt, int capitalToPay, int interestToPay, boolean isInBuyingList) {
         this.allPayments = allPayments;
         this.investment = investment;
         this.capital = capital;
@@ -24,6 +22,7 @@ public class DTOpayments {
         this.interesUntilNowt = interesUntilNowt;
         this.capitalToPay = capitalToPay;
         this.interestToPay = interestToPay;
+        this.isInBuyingList = isInBuyingList;
     }
 
     public List<DTOpayment> getAllPayments() {
@@ -56,5 +55,13 @@ public class DTOpayments {
 
     public int getInterest() {
         return interest;
+    }
+
+    public int getInteresUntilNowt() {
+        return interesUntilNowt;
+    }
+
+    public boolean isInBuyingList() {
+        return isInBuyingList;
     }
 }

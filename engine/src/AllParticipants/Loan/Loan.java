@@ -171,7 +171,7 @@ public class Loan {
         for(Customer customer: lenders.keySet()){
             Payments payForCus = lenders.get(customer);
             DTOpayments newPay = new DTOpayments(payForCus.fromPaymentsToDTO(), payForCus.getInvestment(),payForCus.getCapitalToPay(),
-                    payForCus.getInterestToPay(), payForCus.getCapital(), payForCus.getInterest(), payForCus.getCapitalToPay(), payForCus.getInterestToPay());
+                    payForCus.getInterestToPay(), payForCus.getCapital(), payForCus.getInterest(), payForCus.getCapitalToPay(), payForCus.getInterestToPay(), payForCus.isInBuyingList());
             res.put(customer.getName(), newPay);
         }
         return res;

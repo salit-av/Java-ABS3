@@ -3,12 +3,13 @@ package AllParticipants.Loan;
 import AllParticipants.Customer.Customer;
 import DTO.Loan.DTOLoan;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Loans {
     private Map<String, Loan> loans;  // String - id of loan
-
     public Loans() {
         this.loans = new HashMap<>();
     }
@@ -43,6 +44,16 @@ public class Loans {
 
     public void saleLoan(Customer lender, String loanID) {
         loans.get(loanID).saleLoan(lender);
+    }
+
+    public List<DTOLoan> getDTOLoansInBuyingList() {
+        List<DTOLoan> res = new ArrayList<>();
+        for(Loan loan:loans.values()){
+            if(loan.isLoanInBuyingList()){
+                res.add(new DTOLoan(loan));
+            }
+        }
+        return res;
     }
 }
 

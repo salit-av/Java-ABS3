@@ -4,6 +4,7 @@ import AllParticipants.Notification;
 import Components.CustomerView.Refresher.*;
 import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
+import Components.Loans.singleLoanForBuy.SingleLoanForBuyController;
 import Components.Loans.singleLoanForSale.SingleLoanForSaleController;
 import Components.Main.MainAppController;
 import Components.Notifications.NotificationAreaController;
@@ -14,6 +15,7 @@ import Components.Transactions.SingleTransactionController;
 import Components.Transactions.WithdrawController;
 import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoan;
+import DTO.Loan.DTOpayments;
 import Engine.Engine;
 import com.google.gson.Gson;
 import javafx.application.Platform;
@@ -689,12 +691,12 @@ public class CustomerViewController extends CustomerViewData {
     @FXML
     public void distributionOfMoneyForLoans() {
         List<String> loansChosen = loansToChoseCB.getCheckModel().getCheckedItems().stream().collect(Collectors.toList());
-        List<DTOLoan> loansToSend = new ArrayList<>();
+       /* List<DTOLoan> loansToSend = new ArrayList<>();
         for (DTOLoan loan : loansAfterFilter) {
             if (loansChosen.contains(loan.getId())) {
                 loansToSend.add(loan);
             }
-        }
+        }*/
 
         Gson gson = new Gson();
         String finalUrl = HttpUrl
@@ -982,7 +984,7 @@ public class CustomerViewController extends CustomerViewData {
         if (!cusName.equals(USERNAME)) {
             loansForBuyRefresher = new LoansForBuyRefresher(cusName, this::updateLoansForBuyInBS, autoUpdatePro);
             timer9 = new Timer();
-            timer9.schedule(loansForSaleRefresher, REFRESH_RATE, REFRESH_RATE);
+            timer9.schedule(loansForBuyRefresher, REFRESH_RATE, REFRESH_RATE);
         }
     }
 
@@ -993,17 +995,23 @@ public class CustomerViewController extends CustomerViewData {
                 buyLoansFP.getChildren().removeAll();
 
                 for (DTOLoan loan : loansForBuy) {
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        URL url = getClass().getResource(SINGLE_LOAN_FOR_BUY_FXML_RESOURCE);
-                        fxmlLoader.setLocation(url);
-                        VBox singleLoan = fxmlLoader.load(url.openStream());
-                        SingleLoanForBuyController singleLoanController = fxmlLoader.getController();
-                        singleLoanController.setInfoOfLoan(loan);
-                        buyLoansFP.getChildren().add(singleLoan);
+                    Map<String, DTOpayments> lenders = loan.getLenders();
+                    for (String lenderName : lenders.keySet()) {
+                        DTOpayments payments = lenders.get(lenderName);
+                        if (payments.isInBuyingList()) {
+                            try {
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                URL url = getClass().getResource(SINGLE_LOAN_FOR_BUY_FXML_RESOURCE);
+                                fxmlLoader.setLocation(url);
+                                VBox singleLoan = fxmlLoader.load(url.openStream());
+                                SingleLoanForBuyController singleLoanController = fxmlLoader.getController();
+                                singleLoanController.setLoanInfo(loan, lenderName, cusName, errorBuyLoansPro);
+                                buyLoansFP.getChildren().add(singleLoan);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }

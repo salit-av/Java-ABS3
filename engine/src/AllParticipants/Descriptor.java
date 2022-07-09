@@ -223,5 +223,42 @@ public class Descriptor {
     public void saleLoan(String lendersName, String loanID) {
         allLoans.saleLoan(allCustomers.getCustomers().get(lendersName), loanID);
     }
+
+    public List<DTOLoan> getDTOLoansInBuyingList() {
+        return allLoans.getDTOLoansInBuyingList();
+    }
+
+    public boolean buyLoan(String buyerName, String sellersName, String loanID) {
+        Customer buyerCus = allCustomers.getCustomers().get(buyerName);
+        Customer sellersCus = allCustomers.getCustomers().get(sellersName);
+        Loan loan = allLoans.getLoans().get(loanID);
+        Payments payments = loan.getLenders().get(sellersCus);
+
+        // buyer doesn't have enough  money
+        if(payments.getCapitalToPay() > buyerCus.getBalance()){
+            return false;
+        }
+
+        else {
+            // change balance
+            buyerCus.setBalance(buyerCus.getBalance() - payments.getCapitalToPay());
+            sellersCus.setBalance(sellersCus.getBalance() + payments.getCapitalToPay());
+
+            // if buyer is already in lenders -> add to payments
+            if (loan.getLenders().containsKey(buyerCus)) {
+                Payments buyerPayments = loan.getLenders().get(buyerCus);
+                buyerPayments.setInvestment(buyerPayments.getInvestment() + payments.getInvestment());
+                buyerPayments.setInterest((buyerPayments.getInvestment() * loan.getInterestPerPayment()) / 100);
+                buyerPayments.getAllPayments().addAll(payments.getAllPayments());
+                buyerPayments.setIsInBuyingList(false);
+                loan.getLenders().remove(sellersCus);
+            } else {
+                loan.getLenders().remove(sellersCus);
+                loan.getLenders().put(buyerCus, payments);
+                payments.setIsInBuyingList(false);
+            }
+        }
+        return true;
+    }
 }
 

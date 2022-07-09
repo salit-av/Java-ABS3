@@ -245,4 +245,12 @@ public class Engine {
     public void saleLoan(String lendersName, String loanID) {
         descriptor.saleLoan(lendersName, loanID);
     }
+
+    public List<DTOLoan> getDTOLoansInBuyingList() {
+        return descriptor.getDTOLoansInBuyingList();
+    }
+
+    public boolean buyLoan(String buyerName, String sellersName, String loanID) {
+        return descriptor.buyLoan(buyerName, sellersName, loanID);
+    }
 }
