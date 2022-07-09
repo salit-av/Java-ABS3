@@ -18,6 +18,13 @@ public class DTOLoans {
         }
     }
 
+    public DTOLoans(List<Loan> allLoans) {
+        DTOAllLoans = new ArrayList<>();
+        for(Loan loan: allLoans){
+            DTOAllLoans.add(new DTOLoan(loan));
+        }
+    }
+
     public List<DTOLoan> getDTOAllLoans() {
         return DTOAllLoans;
     }

@@ -73,24 +73,26 @@ public class Engine {
         return descriptor.getAllCustomers().getCustomers().get(dtoCustomer.getName());
     }
 
-    public List<DTOLoan> filterAllInvestmentLoans(List<DTOLoan> dtoAllLoans, List<String> filterCategories, int minimumInterest, int minimumYazForAllLoan, int maxLoansOpen, String cusName) {
+    public DTOLoans filterAllInvestmentLoans(List<String> filterCategories, int minimumInterest, int minimumYazForAllLoan, int maxLoansOpen, String cusName) {
         Customer customer = descriptor.getAllCustomers().getCustomers().get(cusName);
-
+        List<Loan> allLoansAsList = descriptor.getAllLoans().getLoans().values().stream().collect(Collectors.toList());
+        List<Loan> res;
         if(maxLoansOpen > 0) {
-            return dtoAllLoans.stream().filter(dtoLoan -> !dtoLoan.getOwnersName().equals(customer.getName())).
-                    filter(dtoLoan -> dtoLoan.getStatus().equals(Status.PENDING) ||dtoLoan.getStatus().equals(Status.NEW)).
-                    filter(dtoLoan -> isInLoansList(dtoLoan.getCategory(), filterCategories)).
-                    filter(dtoLoan -> dtoLoan.getInterestPerPayment() >= minimumInterest).
-                    filter(dtoLoan -> dtoLoan.getNumOfOpenLoans() <= maxLoansOpen).
-                    filter(dtoLoan -> dtoLoan.getTotalYazTime() >= minimumYazForAllLoan).collect(Collectors.toList());
+             res = allLoansAsList.stream().filter(loan -> !loan.getOwner().equals(customer.getName())).
+                    filter(loan -> loan.getStatus().equals(Status.PENDING) ||loan.getStatus().equals(Status.NEW)).
+                    filter(loan -> isInLoansList(loan.getCategory(), filterCategories)).
+                    filter(loan -> loan.getInterestPerPayment() >= minimumInterest).
+                    filter(loan -> loan.getNumOfOpenLoans() <= maxLoansOpen).
+                    filter(loan -> loan.getTotalYazTime() >= minimumYazForAllLoan).collect(Collectors.toList());
         }
         else{
-            return dtoAllLoans.stream().filter(dtoLoan -> !dtoLoan.getOwnersName().equals(customer.getName())).
+            res = allLoansAsList.stream().filter(dtoLoan -> !dtoLoan.getOwner().equals(customer.getName())).
                     filter(dtoLoan -> dtoLoan.getStatus().equals(Status.PENDING) ||dtoLoan.getStatus().equals(Status.NEW)).
                     filter(dtoLoan -> isInLoansList(dtoLoan.getCategory(), filterCategories)).
                     filter(dtoLoan -> dtoLoan.getInterestPerPayment() >= minimumInterest).
                     filter(dtoLoan -> dtoLoan.getTotalYazTime() >= minimumYazForAllLoan).collect(Collectors.toList());
         }
+        return new DTOLoans(res);
     }
 
     public boolean isInLoansList(String category, List<String> filterCategories) {
@@ -119,7 +121,7 @@ public class Engine {
         return res;
     }
 
-    public void distributionOfMoneyForLoans(DTOCustomer dtoCustomer, int investmentBalance, Map<String, DTOLoan> allInvestmentLoans) {
+    public void distributionOfMoneyForLoans(DTOCustomer dtoCustomer, int investmentBalance, List<DTOLoan> allInvestmentLoans) {
         Customer customer = fromDTOcustomerToCustomer(dtoCustomer);
         List <LoanEditor> allInvestmentLoansSorted = sortAllInvestmentLoansByTheirCapital(allInvestmentLoans);
         List <LoanEditor> allInvestmentLoansAfterAlgorithm = fundingAlgorithm(allInvestmentLoansSorted, customer, investmentBalance);
@@ -163,13 +165,10 @@ public class Engine {
         }
     }
 
-    public List<LoanEditor> sortAllInvestmentLoansByTheirCapital(Map<String, DTOLoan> allInvestmentLoans) {
+    public List<LoanEditor> sortAllInvestmentLoansByTheirCapital(List<DTOLoan> allInvestmentLoans) {
         List<LoanEditor> allInvestmentLoansSorted = new ArrayList<>();
-        Loans allLoans = descriptor.getAllLoans();
-        Loan loan;
-        for(String loanId: allInvestmentLoans.keySet()){
-            loan = allLoans.getLoans().get(loanId);
-            allInvestmentLoansSorted.add(new LoanEditor(loanId, loan.getOwner(), loan.getCapitalNow()));
+        for(DTOLoan loan: allInvestmentLoans){
+            allInvestmentLoansSorted.add(new LoanEditor(loan.getId(), loan.getOwnersName(), loan.getCapitalNow()));
         }
 
         return allInvestmentLoansSorted.stream().sorted(Comparator.comparingInt(LoanEditor::getCapitalNow)).collect(Collectors.toList());

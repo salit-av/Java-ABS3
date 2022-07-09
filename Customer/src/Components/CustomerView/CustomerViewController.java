@@ -6,7 +6,6 @@ import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
 import Components.Main.MainAppController;
 import Components.Notifications.NotificationAreaController;
-import Components.Notifications.ScrambleAreaController;
 import Components.Notifications.notificationPopUpController;
 import Components.Transactions.ChargeController;
 import Components.Transactions.Payments.PayMeController;
@@ -15,6 +14,7 @@ import Components.Transactions.WithdrawController;
 import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
+import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -110,33 +110,23 @@ public class CustomerViewController extends CustomerViewData {
 
 
     // Scramble
-    @FXML
-    Tab ScrambleTab;
-    @FXML
-    Label errorScrambleLabel;
-    @FXML
-    Label progressLabel;
-    @FXML
-    TextField investmentTF;
-    @FXML
-    TextField interestFilterTF;
-    @FXML
-    TextField yazFilterTF;
-    @FXML
-    TextField loansOpenFilterTF;
-    @FXML
-    TextField ownershipFilterTF;
-    @FXML
-    CheckComboBox<String> categoryFilterCB;
-    @FXML
-    CheckComboBox<String> loansToChoseCB;
-    @FXML
-    Button submitScrambleButton;
-    @FXML
-    Button OKScrambleButton;
+    @FXML Tab ScrambleTab;
+    @FXML Label errorScrambleLabel;
+    @FXML Label progressLabel;
+    @FXML TextField investmentTF;
+    @FXML Button OKInvestmentButton;
+    @FXML TextField interestFilterTF;
+    @FXML TextField yazFilterTF;
+    @FXML TextField loansOpenFilterTF;
+    @FXML TextField ownershipFilterTF;
+    @FXML CheckComboBox<String> categoryFilterCB;
+    @FXML CheckComboBox<String> loansToChoseCB;
+    @FXML Button submitScrambleButton;
+    @FXML Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
+    private String[] categories;
 
     // Payment
     @FXML
@@ -195,7 +185,6 @@ public class CustomerViewController extends CustomerViewData {
         this.cusName = cusName;
         setHeader();
         setInfoInInformationTab();
-        setInfoInScrambleTab();
         setInfoInPaymentTab();
     }
 
@@ -421,6 +410,7 @@ public class CustomerViewController extends CustomerViewData {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    response.body().string();
                     Platform.runLater(() ->
                             errorAddLoanLabel.setText("Loan " + id + " successfully added")
                     );
@@ -433,45 +423,79 @@ public class CustomerViewController extends CustomerViewData {
 
 
     // Scramble TAB
-    public void setInfoInScrambleTab() {
-        addToCategoryFilterCB();
+    @FXML
+    public void getInvestment() {
+        try {
+            investment = Integer.parseInt(investmentTF.getText());
+
+            String finalUrl = HttpUrl
+                    .parse(SCRAMBLE_LOAD_INVESTMENT)
+                    .newBuilder()
+                    .addQueryParameter("username", cusName)
+                    .addQueryParameter("investment", String.valueOf(investment))
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> {
+                        errorScrambleLabel.setText("Sorry you do not have enough money!");
+                        errorScrambleLabel.setVisible(true);
+                    });
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    response.body().string();
+                    Platform.runLater(()-> {
+                        errorScrambleLabel.setText("Now please choose filters");
+                        errorScrambleLabel.setVisible(true);
+                        addToCategoryFilterCB();
+                    });
+                }
+            });
+
+        } catch (NumberFormatException e) {
+            errorScrambleLabel.setText("Please enter correct investment!");
+            errorScrambleLabel.setVisible(true);
+        }
     }
 
     public void addToCategoryFilterCB() {
-       /* if (!cusName.equals(USERNAME)) {
-            List<String> categories = getEngine().getCategories();
-            for (String category : categories) {
-                categoriesOL.add(category);
+        String finalUrl = HttpUrl
+                .parse(SCRAMBLE_ADD_TO_CATEGORY_FILTER)
+                .newBuilder()
+                .addQueryParameter("username", cusName)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    errorScrambleLabel.setText("Something went wrong...");
+                    errorScrambleLabel.setVisible(true);
+                });
             }
-            categoryFilterCB.getItems().addAll(categoriesOL);
-        }*/
-    }
 
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Platform.runLater(()-> {
+                    try {
+                        String jsonArrayOfCategories = response.body().string();
+                        categories = GSON_INSTANCE.fromJson(jsonArrayOfCategories, String[].class);
+                        categoriesOL.addAll(categories);
+                        categoryFilterCB.getItems().addAll(categoriesOL);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-    public void selectInfo() {
-    }
-
-    public void selectPay() {
-    }
-
-    public void selectScramble() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            URL url = getClass().getResource(SCRAMBLE_AREA_VIEW_FXML_RESOURCE);
-            fxmlLoader.setLocation(url);
-            VBox scrambleVB = fxmlLoader.load(url.openStream());
-            ScrambleAreaController scrambleAreaController = fxmlLoader.getController();
-
-            Stage popup = new Stage();
-            popup.initModality(Modality.APPLICATION_MODAL);
-
-            Scene popUpScene = new Scene(scrambleVB, 350, 150);
-            popup.setScene(popUpScene);
-            popup.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                });
+            }
+        });
     }
 
     @FXML
@@ -481,20 +505,55 @@ public class CustomerViewController extends CustomerViewData {
         errorScrambleLabel.setVisible(false);
 
         loansToChoseCB.getItems().clear();
-        //DTOactivate activate = getEngine().activate();
-        investment = getInvestment();
-        List<String> categories = getCategoriesFromFilter();
+        List<String> categoriesAfterFilter = getCategoriesFromFilter();
         int minInterest = getMinInterestFromFilter();
         int minYaz = getMinYazFromFilter();
         int maxLoansOpen = getMaxLoansOpenFromFilter();
         int maxOwnership = getMaxOwnershipFromFilter();
 
         if (errorScrambleLabel.getText().equals("ERROR")) {
-            //loansAfterFilter = getEngine().filterAllInvestmentLoans(activate.getDtoAllLoans(), categories, minInterest, minYaz, maxLoansOpen, cusName);
-            progressLabel.setText("Now please chose loan below and click OK");
-            setLoansInCCB(loansAfterFilter);
-        }
+            Gson gson = new Gson();
 
+            String finalUrl = HttpUrl
+                    .parse(SCRAMBLE_FILTER_ALL_LOANS)
+                    .newBuilder()
+                    .addQueryParameter("username", cusName)
+                    .addQueryParameter("investment", String.valueOf(investment))
+                    .addQueryParameter("categoriesAfterFilter", gson.toJson(categoriesAfterFilter))
+                    .addQueryParameter("minInterest", String.valueOf(minInterest))
+                    .addQueryParameter("minYaz", String.valueOf(minYaz))
+                    .addQueryParameter("maxLoansOpen", String.valueOf(maxLoansOpen))
+                    .addQueryParameter("maxOwnership", String.valueOf(maxOwnership))
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    Platform.runLater(() -> {
+                        errorScrambleLabel.setText("Something went wrong...");
+                        errorScrambleLabel.setVisible(true);
+                    });
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    Platform.runLater(()-> {
+                        try {
+                            String jsonArrayOfLoansAfterFilter = response.body().string();
+                            loansAfterFilter = Arrays.stream(GSON_INSTANCE.fromJson(jsonArrayOfLoansAfterFilter, DTOLoan[].class)).collect(Collectors.toList());
+                            progressLabel.setText("Now please chose loan below and click OK");
+                            progressLabel.setVisible(true);
+                            setLoansInCCB(loansAfterFilter);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    });
+                }
+            });
+        }
     }
 
     public List<String> getCategoriesFromFilter() {
@@ -504,22 +563,6 @@ public class CustomerViewController extends CustomerViewData {
         } else {
             return res;
         }
-    }
-
-    public int getInvestment() {
-        /*int money = 0;
-        try {
-            money = Integer.parseInt(investmentTF.getText());
-            if (money > getCustomer().getBalance() || money < 0) {
-                errorScrambleLabel.setText("Sorry you do not have enough money!");
-                errorScrambleLabel.setVisible(true);
-            }
-        } catch (NumberFormatException e) {
-            errorScrambleLabel.setText("Please enter correct investment!");
-            errorScrambleLabel.setVisible(true);
-        }
-        return money;*/
-        return 0;
     }
 
     public int getMinInterestFromFilter() {
@@ -602,36 +645,73 @@ public class CustomerViewController extends CustomerViewData {
     @FXML
     public void distributionOfMoneyForLoans() {
         List<String> loansChosen = loansToChoseCB.getCheckModel().getCheckedItems().stream().collect(Collectors.toList());
-        Map<String, DTOLoan> loansToSend = new HashMap<>();
+        List<DTOLoan> loansToSend = new ArrayList<>();
         for (DTOLoan loan : loansAfterFilter) {
             if (loansChosen.contains(loan.getId())) {
-                loansToSend.put(loan.getId(), loansAfterFilter.stream().filter(dtoLoan -> dtoLoan.getId().equals(loan.getId())).collect(Collectors.toList()).stream().findFirst().get());
+                loansToSend.add(loan);
             }
         }
 
-        String mess = "Scramble did not passed successfully";
-        if (!loansToSend.isEmpty()) {
-            // getEngine().distributionOfMoneyForLoans(getCustomer(), investment, loansToSend);
-            mess = "Scramble passed successfully";
-        }
+        Gson gson = new Gson();
+        String finalUrl = HttpUrl
+                .parse(SCRAMBLE_DISTRIBUTION)
+                .newBuilder()
+                .addQueryParameter("username", cusName)
+                .addQueryParameter("investment", String.valueOf(investment))
+                .addQueryParameter("loansChosen", gson.toJson(loansChosen))
+                .build()
+                .toString();
 
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            URL url = getClass().getResource(POPUP_NOTIFICATION_FXML_RESOURCE);
-            fxmlLoader.setLocation(url);
-            HBox notiHB = fxmlLoader.load(url.openStream());
-            notificationPopUpController notificationController = fxmlLoader.getController();
-            notificationController.setNotificationMessage(mess);
-            Stage popup = new Stage();
-            popup.initModality(Modality.APPLICATION_MODAL);
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
 
-            Scene popUpScene = new Scene(notiHB, 300, 200);
-            popup.setScene(popUpScene);
-            popup.show();
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Platform.runLater(() -> {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(POPUP_NOTIFICATION_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        HBox notiHB = fxmlLoader.load(url.openStream());
+                        notificationPopUpController notificationController = fxmlLoader.getController();
+                        notificationController.setNotificationMessage("Scramble did not passed successfully");
+                        Stage popup = new Stage();
+                        popup.initModality(Modality.APPLICATION_MODAL);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                        Scene popUpScene = new Scene(notiHB, 300, 200);
+                        popup.setScene(popUpScene);
+                        popup.show();
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                response.body().string();
+                Platform.runLater(()-> {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(POPUP_NOTIFICATION_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        HBox notiHB = fxmlLoader.load(url.openStream());
+                        notificationPopUpController notificationController = fxmlLoader.getController();
+                        notificationController.setNotificationMessage("Scramble passed successfully");
+                        Stage popup = new Stage();
+                        popup.initModality(Modality.APPLICATION_MODAL);
+
+                        Scene popUpScene = new Scene(notiHB, 300, 200);
+                        popup.setScene(popUpScene);
+                        popup.show();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                });
+            }
+        });
     }
 
 
@@ -800,6 +880,7 @@ public class CustomerViewController extends CustomerViewData {
                             filePathLabel.setText("Something went wrong: " + responseBody)
                     );
                 } else {
+                    response.body().string();
                     Platform.runLater(() -> {
                         loadFileInfo();});
                 }

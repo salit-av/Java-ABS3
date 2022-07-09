@@ -74,6 +74,7 @@ public class WithdrawController extends HttpServlet {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        response.body().string();
                         Platform.runLater(() -> {
                                 helloLabel.setText(" Balance updated ");
                         });

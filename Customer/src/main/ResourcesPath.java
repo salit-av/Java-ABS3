@@ -45,11 +45,16 @@ public class ResourcesPath {
     public final static String PAY_THIS_PAYMENT = FULL_SERVER_PATH + "/payThisPayment";
     public final static String PAY_ALL_LOAN = FULL_SERVER_PATH + "/payAllLoan";
 
-
-
-
-
     public final static String ADD_LOAN = FULL_SERVER_PATH + "/addLoan";
+
+    public final static String SCRAMBLE_LOAD_INVESTMENT = FULL_SERVER_PATH + "/scrambleLoadInvestment";
+    public final static String SCRAMBLE_ADD_TO_CATEGORY_FILTER = FULL_SERVER_PATH + "/scrambleAddToCategoryFilter";
+    public final static String SCRAMBLE_FILTER_ALL_LOANS = FULL_SERVER_PATH + "/scrambleFilterAllLoans";
+    public final static String SCRAMBLE_DISTRIBUTION = FULL_SERVER_PATH + "/scrambleDistribution";
+
+
+
+
 
     public final static String LOGOUT = FULL_SERVER_PATH + "/chat/logout";
     public final static String SEND_CHAT_LINE = FULL_SERVER_PATH + "/pages/chatroom/sendChat";

@@ -40,3 +40,27 @@
     -fx-background-radius: 5;
     -fx-padding: 3;
 }
+
+.text-field{
+    -fx-background-color: white;
+    -fx-border-color:  lightseagreen;
+    -fx-border-width: 3;
+    -fx-font-size: 16px;
+    -fx-font-style: Ariel;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 3;
+}
+
+.combo-box{
+    -fx-background-color: white;
+    -fx-border-color:  lightseagreen;
+    -fx-border-width: 3;
+    -fx-font-size: 16px;
+    -fx-font-style: Ariel;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 3;
+}

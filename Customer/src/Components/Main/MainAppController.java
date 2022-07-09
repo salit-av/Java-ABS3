@@ -84,6 +84,7 @@ public class MainAppController {
     public void switchToCustomerPage(String userName) {
         currentUserName.set(userName);
         customerViewController.setCusName(userName);
+        customerViewController.setCusInfo(userName);
         setMainPanelTo(customerComponent);
     }
 

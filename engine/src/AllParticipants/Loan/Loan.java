@@ -1,14 +1,13 @@
 package AllParticipants.Loan;
 
-import AllParticipants.Customer.*;
+import AllParticipants.Customer.Customer;
+import AllParticipants.Customer.Transaction;
 import AllParticipants.Notification;
 import DTO.Loan.DTOpayments;
 import Engine.Yaz;
 import Status.Status;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Loan {
@@ -419,6 +418,7 @@ public class Loan {
     public boolean isRiskOrActive() {
        return status.equals(Status.RISK) || status.equals(Status.ACTIVE);
     }
+
 }
 
 
