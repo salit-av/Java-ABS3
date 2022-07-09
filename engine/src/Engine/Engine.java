@@ -242,4 +242,7 @@ public class Engine {
         return descriptor. getCustomersNotifications(username);
     }
 
+    public void saleLoan(String lendersName, String loanID) {
+        descriptor.saleLoan(lendersName, loanID);
+    }
 }

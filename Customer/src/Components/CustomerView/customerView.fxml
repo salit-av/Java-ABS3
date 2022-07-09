@@ -481,14 +481,16 @@
                               </Label>
                               <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3">
                                  <content>
-                                    <FlowPane prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
+                                    <FlowPane fx:id="buyLoansFP" prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
                                  </content>
                               </ScrollPane>
                               <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3">
                                  <content>
-                                    <FlowPane prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
+                                    <FlowPane fx:id="saleLoansFP" prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
                                  </content>
                               </ScrollPane>
+                              <Label fx:id="errorBuyLoansLabel" text="errorBuyLoansLabel" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                              <Label fx:id="errorSaleLoansLabel" text="errorSaleLoansLabel" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                      </children></AnchorPane>

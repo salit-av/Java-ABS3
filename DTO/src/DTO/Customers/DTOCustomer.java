@@ -8,11 +8,10 @@ import AllParticipants.Loan.Loans;
 import AllParticipants.Notification;
 import DTO.Loan.DTOLoan;
 import Engine.Yaz;
+import Status.Status;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DTOCustomer {
     private String name;
@@ -114,5 +113,9 @@ public class DTOCustomer {
     }
     public List<DTOLoan> getDTOloansWithPayments(){
         return DTOloansWithPayments;
+    }
+
+    public List<DTOLoan> getDTOloansForSale() {
+        return DTOloansAsLender.values().stream().filter(dtoLoan -> dtoLoan.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList());
     }
 }

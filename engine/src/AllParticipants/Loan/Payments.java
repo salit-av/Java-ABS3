@@ -18,6 +18,7 @@ public class Payments {
     private int totalInterestAndCapitalUntilNow;
     private int capitalAndInterestAtStart;
     private int totalYazTime;
+    private boolean isInBuyingList;
 
     public Payments(int investment, int interest, int totalYazTime, int numberOfPayments) {
         this.allPayments = new ArrayList<>();
@@ -32,6 +33,7 @@ public class Payments {
         this.totalInterestAndCapitalUntilNow = 0;
         this.capitalAndInterestAtStart = investment + (investment * interest) / 100;
         this.totalYazTime = totalYazTime;
+        this.isInBuyingList = false;
     }
 
     public List<Payment> getAllPayments() {
@@ -108,5 +110,13 @@ public class Payments {
             res.add(new DTOpayment(payment.getYazPayment(), payment.getInterestPerPayment(), payment.getCapitalPerPayment(), payment.getTotalPayment()));
         }
         return res;
+    }
+
+    public boolean isInBuyingList() {
+        return isInBuyingList;
+    }
+
+    public void setIsInBuyingList(boolean b) {
+        this.isInBuyingList = b;
     }
 }

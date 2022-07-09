@@ -41,6 +41,9 @@ public class Loans {
     }
 
 
+    public void saleLoan(Customer lender, String loanID) {
+        loans.get(loanID).saleLoan(lender);
+    }
 }
 
 

@@ -17,6 +17,10 @@ public class ResourcesPath {
     public final static String SINGLE_TRANSACTION_CUSTOMERS_VIEW_FXML_RESOURCE = "/Components/Transactions/singleTransaction.fxml";
     public final static String POPUP_NOTIFICATION_FXML_RESOURCE = "/Components/Notifications/notificationPopUp.fxml";
     public final static String NOTIFICATION_AREA_FXML_RESOURCE = "/Components/Notifications/notificationArea.fxml";
+    public final static String SINGLE_LOAN_FOR_SALE_FXML_RESOURCE = "/Components/Loans/singleLoanForSale/singleLoanForSale.fxml";
+    public final static String SINGLE_LOAN_FOR_BUY_FXML_RESOURCE = "/Components/Loans/singleLoanForBuy/singleLoanForBuy.fxml";
+
+
 
 
     // global constants
@@ -51,6 +55,11 @@ public class ResourcesPath {
     public final static String SCRAMBLE_ADD_TO_CATEGORY_FILTER = FULL_SERVER_PATH + "/scrambleAddToCategoryFilter";
     public final static String SCRAMBLE_FILTER_ALL_LOANS = FULL_SERVER_PATH + "/scrambleFilterAllLoans";
     public final static String SCRAMBLE_DISTRIBUTION = FULL_SERVER_PATH + "/scrambleDistribution";
+    public final static String LOANS_FOR_SALE = FULL_SERVER_PATH + "/loansForSale";
+    public final static String SALE_LOAN = FULL_SERVER_PATH + "/saleLoan";
+    public final static String LOANS_FOR_BUY = FULL_SERVER_PATH + "/loansForBuy";
+
+
 
 
 

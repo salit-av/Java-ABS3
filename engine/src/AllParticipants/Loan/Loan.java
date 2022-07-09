@@ -47,7 +47,6 @@ public class Loan {
     private int countAllUnpaidPayments; // how many unpaid for customer
     private int totalAllUnpaidPayments; // unpaid money for customer
 
-
     public Loan(String id, String owner, Customer ownerCus, String category, int capital, int totalYazTime, int paysEveryYaz, int interestPerPayment) {
         this.id = id;
         this.owner = owner;
@@ -75,7 +74,6 @@ public class Loan {
         this.interestAndCapitalEveryPay = (capitalAtStart + interestAtStart) / numberOfPayments;
         this.totalInterestAndCapitalUntilNow = 0;
         this.capitalAndInterestAtStart = capitalAtStart + interestAtStart;
-
     }
 
 
@@ -419,6 +417,28 @@ public class Loan {
        return status.equals(Status.RISK) || status.equals(Status.ACTIVE);
     }
 
+    public boolean isLoanInBuyingList(){
+        for(Payments payments: lenders.values()){
+            if(payments.isInBuyingList()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeFromBuyingList() {
+        for (Customer lender : lenders.keySet()) {
+            Payments payments = lenders.get(lender);
+            if (payments.isInBuyingList()) {
+                lender.getNotificationsList().add(new Notification("Attention!", id, "remove from buying list"));
+                payments.setIsInBuyingList(false);
+            }
+        }
+    }
+
+    public void saleLoan(Customer lender) {
+        lenders.get(lender).setIsInBuyingList(true);
+    }
 }
 
 

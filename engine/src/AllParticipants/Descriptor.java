@@ -220,5 +220,8 @@ public class Descriptor {
     }
 
 
+    public void saleLoan(String lendersName, String loanID) {
+        allLoans.saleLoan(allCustomers.getCustomers().get(lendersName), loanID);
+    }
 }
 

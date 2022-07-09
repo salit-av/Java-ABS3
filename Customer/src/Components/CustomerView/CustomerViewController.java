@@ -4,6 +4,7 @@ import AllParticipants.Notification;
 import Components.CustomerView.Refresher.*;
 import Components.Exceptions.ExceptionsController;
 import Components.Loans.SingleLoanController;
+import Components.Loans.singleLoanForSale.SingleLoanForSaleController;
 import Components.Main.MainAppController;
 import Components.Notifications.NotificationAreaController;
 import Components.Notifications.notificationPopUpController;
@@ -110,19 +111,32 @@ public class CustomerViewController extends CustomerViewData {
 
 
     // Scramble
-    @FXML Tab ScrambleTab;
-    @FXML Label errorScrambleLabel;
-    @FXML Label progressLabel;
-    @FXML TextField investmentTF;
-    @FXML Button OKInvestmentButton;
-    @FXML TextField interestFilterTF;
-    @FXML TextField yazFilterTF;
-    @FXML TextField loansOpenFilterTF;
-    @FXML TextField ownershipFilterTF;
-    @FXML CheckComboBox<String> categoryFilterCB;
-    @FXML CheckComboBox<String> loansToChoseCB;
-    @FXML Button submitScrambleButton;
-    @FXML Button OKScrambleButton;
+    @FXML
+    Tab ScrambleTab;
+    @FXML
+    Label errorScrambleLabel;
+    @FXML
+    Label progressLabel;
+    @FXML
+    TextField investmentTF;
+    @FXML
+    Button OKInvestmentButton;
+    @FXML
+    TextField interestFilterTF;
+    @FXML
+    TextField yazFilterTF;
+    @FXML
+    TextField loansOpenFilterTF;
+    @FXML
+    TextField ownershipFilterTF;
+    @FXML
+    CheckComboBox<String> categoryFilterCB;
+    @FXML
+    CheckComboBox<String> loansToChoseCB;
+    @FXML
+    Button submitScrambleButton;
+    @FXML
+    Button OKScrambleButton;
 
     private List<DTOLoan> loansAfterFilter;
     private int investment;
@@ -147,6 +161,24 @@ public class CustomerViewController extends CustomerViewData {
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
 
+    // Buying/Selling a loan
+    @FXML
+    FlowPane buyLoansFP;
+    @FXML
+    FlowPane saleLoansFP;
+    @FXML
+    Label errorBuyLoansLabel;
+    @FXML
+    Label errorSaleLoansLabel;
+
+    private SimpleStringProperty errorBuyLoansPro;
+    private SimpleStringProperty errorSaleLoansPro;
+    private Timer timer8;
+    private Timer timer9;
+    private TimerTask loansForBuyRefresher;
+    private TimerTask loansForSaleRefresher;
+    List<DTOLoan> loansForSale;
+    List<DTOLoan> loansForBuy;
     private String cusName;
     // private Engine engine;
 
@@ -161,6 +193,10 @@ public class CustomerViewController extends CustomerViewData {
         categoriesOL = FXCollections.observableArrayList();
         loansOL = FXCollections.observableArrayList();
         loansAfterFilter = new ArrayList<>();
+        errorBuyLoansPro = new SimpleStringProperty();
+        errorSaleLoansPro = new SimpleStringProperty();
+        loansForSale = new ArrayList<>();
+        loansForBuy = new ArrayList<>();
     }
 
     @FXML
@@ -174,7 +210,14 @@ public class CustomerViewController extends CustomerViewData {
         categoryFilterCB.getItems().addAll(categoriesOL);
         loansToChoseCB.getItems().addAll(loansOL);
         progressLabel.setVisible(false);
+        // Buying/Selling a loan
+        errorBuyLoansLabel.textProperty().bind(errorBuyLoansPro);
+        errorBuyLoansLabel.setVisible(false);
+        errorSaleLoansLabel.textProperty().bind(errorSaleLoansPro);
+        errorSaleLoansLabel.setVisible(false);
+
         setCusInfo(USERNAME);
+
     }
 
     public Engine getEngine() {
@@ -186,6 +229,7 @@ public class CustomerViewController extends CustomerViewData {
         setHeader();
         setInfoInInformationTab();
         setInfoInPaymentTab();
+        setBS();
     }
 
     public void setHeader() {
@@ -449,7 +493,7 @@ public class CustomerViewController extends CustomerViewData {
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     response.body().string();
-                    Platform.runLater(()-> {
+                    Platform.runLater(() -> {
                         errorScrambleLabel.setText("Now please choose filters");
                         errorScrambleLabel.setVisible(true);
                         addToCategoryFilterCB();
@@ -483,7 +527,7 @@ public class CustomerViewController extends CustomerViewData {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Platform.runLater(()-> {
+                Platform.runLater(() -> {
                     try {
                         String jsonArrayOfCategories = response.body().string();
                         categories = GSON_INSTANCE.fromJson(jsonArrayOfCategories, String[].class);
@@ -539,7 +583,7 @@ public class CustomerViewController extends CustomerViewData {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    Platform.runLater(()-> {
+                    Platform.runLater(() -> {
                         try {
                             String jsonArrayOfLoansAfterFilter = response.body().string();
                             loansAfterFilter = Arrays.stream(GSON_INSTANCE.fromJson(jsonArrayOfLoansAfterFilter, DTOLoan[].class)).collect(Collectors.toList());
@@ -690,7 +734,7 @@ public class CustomerViewController extends CustomerViewData {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 response.body().string();
-                Platform.runLater(()-> {
+                Platform.runLater(() -> {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader();
                         URL url = getClass().getResource(POPUP_NOTIFICATION_FXML_RESOURCE);
@@ -760,7 +804,7 @@ public class CustomerViewController extends CustomerViewData {
         }
     }
 
-    public void updateListLoansAsBorrowerInPayment(List<DTOLoan> allLoansAsBorrower){
+    public void updateListLoansAsBorrowerInPayment(List<DTOLoan> allLoansAsBorrower) {
         Platform.runLater(() -> {
             TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower with status Active or Risk");
             if (!allLoansAsBorrower.isEmpty()) {
@@ -814,7 +858,6 @@ public class CustomerViewController extends CustomerViewData {
             }
         });
     }
-
 
 
     public void setMainController(MainAppController mainAppController) {
@@ -882,7 +925,8 @@ public class CustomerViewController extends CustomerViewData {
                 } else {
                     response.body().string();
                     Platform.runLater(() -> {
-                        loadFileInfo();});
+                        loadFileInfo();
+                    });
                 }
             }
         });
@@ -895,6 +939,75 @@ public class CustomerViewController extends CustomerViewData {
 
     public void setCusName(String userName) {
         this.cusName = userName;
+    }
+
+
+    // Buying/Selling a loan ---> BS
+    public void setBS(){
+        loadLoansForSaleInBS();
+        loadLoansForBuyInBS();
+    }
+    public void loadLoansForSaleInBS() {
+        if (!cusName.equals(USERNAME)) {
+            loansForSaleRefresher = new LoansForSaleRefresher(cusName, this::updateLoansForSaleInBS, autoUpdatePro);
+            timer8 = new Timer();
+            timer8.schedule(loansForSaleRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateLoansForSaleInBS(List<DTOLoan> loansForSaleFromEngine) {
+        Platform.runLater(() -> {
+            if (loansForSale.size() != loansForSaleFromEngine.size()) {
+                loansForSale = loansForSaleFromEngine;
+                saleLoansFP.getChildren().removeAll();
+
+                for (DTOLoan loan : loansForSale) {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(SINGLE_LOAN_FOR_SALE_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        VBox singleLoan = fxmlLoader.load(url.openStream());
+                        SingleLoanForSaleController singleLoanController = fxmlLoader.getController();
+                        singleLoanController.setLoanInfo(loan, cusName, errorSaleLoansPro);
+                        saleLoansFP.getChildren().add(singleLoan);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+    public void loadLoansForBuyInBS() {
+        if (!cusName.equals(USERNAME)) {
+            loansForBuyRefresher = new LoansForBuyRefresher(cusName, this::updateLoansForBuyInBS, autoUpdatePro);
+            timer9 = new Timer();
+            timer9.schedule(loansForSaleRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateLoansForBuyInBS(List<DTOLoan> loansForBuyFromEngine) {
+        Platform.runLater(() -> {
+            if (loansForBuy.size() != loansForBuyFromEngine.size()) {
+                loansForBuy = loansForBuyFromEngine;
+                buyLoansFP.getChildren().removeAll();
+
+                for (DTOLoan loan : loansForBuy) {
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        URL url = getClass().getResource(SINGLE_LOAN_FOR_BUY_FXML_RESOURCE);
+                        fxmlLoader.setLocation(url);
+                        VBox singleLoan = fxmlLoader.load(url.openStream());
+                        SingleLoanForBuyController singleLoanController = fxmlLoader.getController();
+                        singleLoanController.setInfoOfLoan(loan);
+                        buyLoansFP.getChildren().add(singleLoan);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }
 
