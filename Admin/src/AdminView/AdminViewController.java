@@ -8,6 +8,7 @@ import Components.Loans.SingleLoanView.SingleLoanController;
 import Components.Main.MainAppController;
 import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
+import http.HttpClientUtil;
 import jakarta.servlet.http.HttpServlet;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,6 +17,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,11 +33,16 @@ import static main.ResourcesPaths.*;
 
 
 public class AdminViewController extends HttpServlet {
-    @FXML Button increaseYazButton;
-    @FXML TreeView<String> loansTV;
-    @FXML TreeView<String> customersTV;
-    @FXML Label currentYazLabel;
-    @FXML ToggleButton autoUpdateButton;
+    @FXML
+    Button increaseYazButton;
+    @FXML
+    TreeView<String> loansTV;
+    @FXML
+    TreeView<String> customersTV;
+    @FXML
+    Label currentYazLabel;
+    @FXML
+    ToggleButton autoUpdateButton;
 
     private SimpleStringProperty currYazPro;
     private SimpleBooleanProperty autoUpdatePro;
@@ -53,15 +64,15 @@ public class AdminViewController extends HttpServlet {
 
     }
 
-@FXML
+    @FXML
     public void initialize() {
-    currentYazLabel.textProperty().bind(currYazPro);
-    autoUpdateButton.selectedProperty().set(true);
-    autoUpdatePro.bind(autoUpdateButton.selectedProperty());
-    loadAdmin();
-}
+        currentYazLabel.textProperty().bind(currYazPro);
+        autoUpdateButton.selectedProperty().set(true);
+        autoUpdatePro.bind(autoUpdateButton.selectedProperty());
+        loadAdmin();
+    }
 
-    public void loadAdmin(){
+    public void loadAdmin() {
         loadHeader();
         loadLoans();
         loadCustomers();
@@ -91,8 +102,7 @@ public class AdminViewController extends HttpServlet {
             listLoansRefresher = new ListLoansRefresher(adminName, this::updateListLoans, autoUpdatePro);
             timer1 = new Timer();
             timer1.schedule(listLoansRefresher, REFRESH_RATE, REFRESH_RATE);
-        }
-        else{
+        } else {
             loansTV.setRoot(new TreeItem<>("There is not list of Loans"));
         }
     }
@@ -128,8 +138,7 @@ public class AdminViewController extends HttpServlet {
             listCustomersRefresher = new ListCustomersRefresher(adminName, this::updateListCustomers, autoUpdatePro);
             timer2 = new Timer();
             timer2.schedule(listCustomersRefresher, REFRESH_RATE, REFRESH_RATE);
-        }
-        else{
+        } else {
             customersTV.setRoot(new TreeItem<>("There is not list of Customers"));
         }
     }
@@ -167,13 +176,27 @@ public class AdminViewController extends HttpServlet {
     public void setAdminName(String userName) {
         this.adminName = userName;
     }
-/*
-    @FXML
-    public void increaseYaz(){
-       Yaz currYaz = getEngine().getCurrentYaz();
-       engine.promoteYaz();
-       bodyController.getMainController().getHeaderComponentController().currentYazTimeProperty().set("Current Yaz: " + currYaz.getCurrentYaz());
-       engine.setLoansWithPaymentsInCustomers();
-    }*/
 
+    @FXML
+    public void increaseYaz() {
+        String finalUrl = HttpUrl
+                .parse(INCREASE_YAZ)
+                .newBuilder()
+                .addQueryParameter("username", adminName)
+                .build()
+                .toString();
+
+        HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                System.out.println("Ended with failure...");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                response.body().string();
+            }
+        });
+    }
 }

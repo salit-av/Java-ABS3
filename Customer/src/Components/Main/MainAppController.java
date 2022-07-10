@@ -37,7 +37,7 @@ public class MainAppController {
 
     @FXML
     public void initialize() {
-        titleLabel.textProperty().bind(Bindings.concat("Hello ", currentUserName));
+        titleLabel.textProperty().bind(Bindings.concat("Hello Customer ", currentUserName));
 
         // prepare components
         loadLoginPage();
