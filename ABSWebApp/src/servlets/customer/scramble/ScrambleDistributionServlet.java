@@ -1,7 +1,6 @@
 package servlets.customer.scramble;
 
 import DTO.Customers.DTOCustomer;
-import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,8 +27,8 @@ public class ScrambleDistributionServlet  extends HttpServlet {
         String usernameFromParameter = request.getParameter(USERNAME);
         int investmentFromParameter = Integer.parseInt(request.getParameter("investment"));
         String loansChosenFromParameter = request.getParameter("loansChosen");
-        DTOLoan[] loansArr= gson.fromJson(loansChosenFromParameter, DTOLoan[].class);
-        List<DTOLoan> loansChosen = Arrays.stream(loansArr).collect(Collectors.toList());
+        String[] loansArr= gson.fromJson(loansChosenFromParameter, String[].class);
+        List<String> loansChosen = Arrays.stream(loansArr).collect(Collectors.toList());
 
         if (usernameFromParameter == null || usernameFromParameter.equals(USERNAME)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);

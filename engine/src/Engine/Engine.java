@@ -121,12 +121,21 @@ public class Engine {
         return res;
     }
 
-    public void distributionOfMoneyForLoans(DTOCustomer dtoCustomer, int investmentBalance, List<DTOLoan> allInvestmentLoans) {
+    public void distributionOfMoneyForLoans(DTOCustomer dtoCustomer, int investmentBalance, List<String> allInvestmentLoansID) {
+        List<DTOLoan> allInvestmentLoans = getDTOLoansInvestment(allInvestmentLoansID);
         Customer customer = fromDTOcustomerToCustomer(dtoCustomer);
         List <LoanEditor> allInvestmentLoansSorted = sortAllInvestmentLoansByTheirCapital(allInvestmentLoans);
         List <LoanEditor> allInvestmentLoansAfterAlgorithm = fundingAlgorithm(allInvestmentLoansSorted, customer, investmentBalance);
         descriptor.updateLoansAndCustomersAfterFundingAlgorithm(allInvestmentLoansAfterAlgorithm, customer, currentYaz);
 
+    }
+
+    public List<DTOLoan> getDTOLoansInvestment(List<String> allInvestmentLoansID) {
+        List<DTOLoan> res =new ArrayList<>();
+        for(String id: allInvestmentLoansID){
+            res.add(getDTOLoan(id));
+        }
+        return res;
     }
 
 
