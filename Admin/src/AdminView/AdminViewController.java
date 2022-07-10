@@ -1,5 +1,6 @@
 package AdminView;
 
+import AdminView.Refresher.CurrentYazRefresher;
 import AdminView.Refresher.ListCustomersRefresher;
 import AdminView.Refresher.ListLoansRefresher;
 import Components.Customers.SingleCustomerController;
@@ -10,6 +11,7 @@ import DTO.Loan.DTOLoan;
 import jakarta.servlet.http.HttpServlet;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -31,17 +33,21 @@ public class AdminViewController extends HttpServlet {
     @FXML Label currentYazLabel;
     @FXML ToggleButton autoUpdateButton;
 
+    private SimpleStringProperty currYazPro;
     private SimpleBooleanProperty autoUpdatePro;
     private String adminName;
     private boolean isAdminLogin;
     private MainAppController mainAppController;
     private Timer timer1;
     private Timer timer2;
+    private Timer timer3;
     private TimerTask listLoansRefresher;
+    private TimerTask currentYazRefresher;
     private TimerTask listCustomersRefresher;
 
     public AdminViewController() {
         this.adminName = USERNAME;
+        currYazPro = new SimpleStringProperty();
         autoUpdatePro = new SimpleBooleanProperty();
         isAdminLogin = false;
 
@@ -49,15 +55,35 @@ public class AdminViewController extends HttpServlet {
 
 @FXML
     public void initialize() {
+    currentYazLabel.textProperty().bind(currYazPro);
     autoUpdateButton.selectedProperty().set(true);
     autoUpdatePro.bind(autoUpdateButton.selectedProperty());
     loadAdmin();
-
 }
 
     public void loadAdmin(){
+        loadHeader();
         loadLoans();
         loadCustomers();
+    }
+
+    public void loadHeader() {
+        setCurrentYaz();
+    }
+
+
+    public void setCurrentYaz() {
+        if (!adminName.equals(USERNAME)) {
+            currentYazRefresher = new CurrentYazRefresher(adminName, this::updateCurrentYaz, autoUpdatePro);
+            timer3 = new Timer();
+            timer3.schedule(currentYazRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateCurrentYaz(int currYaz) {
+        Platform.runLater(() -> {
+            currYazPro.set("Current Yaz: " + currYaz);
+        });
     }
 
     public void loadLoans() {

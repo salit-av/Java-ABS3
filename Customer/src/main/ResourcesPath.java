@@ -39,6 +39,7 @@ public class ResourcesPath {
     public final static String LOAD_FILE = FULL_SERVER_PATH + "/loadFile";
     //info
     public final static String BALANCE = FULL_SERVER_PATH + "/balance";
+    public final static String CURR_YAZ = FULL_SERVER_PATH + "/currYaz";
     public final static String LIST_LOANS_AS_BORROWER = FULL_SERVER_PATH + "/listLoansAsBorrower";
     public final static String LIST_LOANS_AS_LENDER = FULL_SERVER_PATH + "/listLoansAsLender";
     public final static String LIST_TRANSACTIONS = FULL_SERVER_PATH + "/listTransactions";

@@ -16,7 +16,6 @@ import Components.Transactions.WithdrawController;
 import DTO.Customers.DTOtransaction;
 import DTO.Loan.DTOLoan;
 import DTO.Loan.DTOpayments;
-import Engine.Engine;
 import com.google.gson.Gson;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -69,10 +68,12 @@ public class CustomerViewController extends CustomerViewData {
     private SimpleStringProperty currentYazPro;
     private SimpleBooleanProperty autoUpdatePro;
     private Timer timer1;
+    private Timer timer10;
     private Timer timer2;
     private Timer timer3;
     private Timer timer4;
     private TimerTask balanceRefresher;
+    private TimerTask currYazRefresher;
     private TimerTask listAsBorrowerRefresher;
     private TimerTask listAsLenderRefresher;
     private TimerTask listTransactionsRefresher;
@@ -205,6 +206,7 @@ public class CustomerViewController extends CustomerViewData {
     public void initialize() {
         // header
         currenBalanceLabel.textProperty().bind(balancePro);
+        currentYazLabel.textProperty().bind(currentYazPro);
         autoUpdateButton.selectedProperty().set(true);
         autoUpdatePro.bind(autoUpdateButton.selectedProperty());
         // Scramble tab
@@ -220,10 +222,6 @@ public class CustomerViewController extends CustomerViewData {
 
         setCusInfo(USERNAME);
 
-    }
-
-    public Engine getEngine() {
-        return null; //ServletUtils.getEngine(getServletContext());
     }
 
     public void setCusInfo(String cusName) {
@@ -254,6 +252,17 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void setCurrentYaz() {
+        if (!cusName.equals(USERNAME)) {
+            currYazRefresher = new CurrYazRefresher(cusName, this::updateCurrYaz, autoUpdatePro);
+            timer10 = new Timer();
+            timer10.schedule(currYazRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateCurrYaz(int currYaz) {
+        Platform.runLater(() -> {
+            currentYazPro.set("Current Yaz: " + currYaz);
+        });
     }
 
     // Information TAB

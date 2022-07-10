@@ -20,6 +20,8 @@ public class ResourcesPaths {
     public final static String LOGIN_PAGE = FULL_SERVER_PATH + "/loginAdminServlet";
     public final static String LIST_LOANS_ADMIN = FULL_SERVER_PATH + "/listLoansAdmin";
     public final static String LIST_CUSTOMERS_ADMIN = FULL_SERVER_PATH + "/listCustomersAdmin";
+    public final static String CURR_YAZ = FULL_SERVER_PATH + "/currYaz";
+
 
 
     // global constants
