@@ -21,6 +21,10 @@ public class Loans {
         return this.loans;
     }
 
+    public void setLoans(Map<String, Loan> loans) {
+        this.loans = loans;
+    }
+
     public boolean addLoanFromAbs(Loan loan) {
         Loan lo = loans.get(loan.getId());
         if (lo == null) {

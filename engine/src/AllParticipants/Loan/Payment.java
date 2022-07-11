@@ -1,6 +1,6 @@
 package AllParticipants.Loan;
 
-public class Payment {
+public class Payment implements Cloneable{
     private int yazPayment;
     private int interestPerPayment; // Ribit
     private int capitalPerPayment;  // Keren
@@ -37,5 +37,15 @@ public class Payment {
 
     public void setPaid(boolean paid) {
         isPaid = paid;
+    }
+
+    @Override
+    public Payment clone()  {
+       /* try {
+            return (Payment) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }*/
+        return null;
     }
 }

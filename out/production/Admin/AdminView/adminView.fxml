@@ -35,12 +35,12 @@
    <children>
       <TreeView fx:id="loansTV" prefHeight="200.0" prefWidth="200.0" stylesheets="@Admin.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
       <TreeView fx:id="customersTV" prefHeight="200.0" prefWidth="200.0" stylesheets="@Admin.css" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2" />
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans" textFill="#419678" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font name="Arial Bold" size="30.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Customers" textFill="#419678" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Customers" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font name="Arial Bold" size="30.0" />
          </font>

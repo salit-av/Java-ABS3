@@ -5,7 +5,7 @@ import DTO.Loan.DTOpayment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Payments {
+public class Payments implements Cloneable{
     private List<Payment> allPayments;
     private int investment; // Customer's investment
     private int capital;  // Keren until now
@@ -120,5 +120,18 @@ public class Payments {
 
     public void setIsInBuyingList(boolean b) {
         this.isInBuyingList = b;
+    }
+
+    @Override
+    public Payments clone()  {
+        /*try {
+            Payments newPayments =  (Payments) super.clone();
+            newPayments.getAllPayments().stream().forEach(payment -> payment.clone());
+            return newPayments;
+
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }*/
+    return null;
     }
 }

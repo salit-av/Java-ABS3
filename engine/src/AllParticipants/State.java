@@ -4,54 +4,73 @@ import AllParticipants.Customer.Customer;
 import AllParticipants.Customer.Customers;
 import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.Loans;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import com.google.gson.Gson;
 
 public class State {
-    private List<Loan> loans;
-    private List<Customer> customers;
+    private String jsonLoans;
+    private String jsonCustomers;
 
     public State(Loans loans, Customers customers) {
-        this.loans = loans.getLoans().values().stream().collect(Collectors.toList());
-        this.customers = customers.getCustomers().values().stream().collect(Collectors.toList());
+        Gson gson = new Gson();
+        this.jsonLoans = gson.toJson(loans.getLoans().values());
+        this.jsonCustomers = gson.toJson(customers.getCustomers().values());
     }
 
-/*    public List<Loan> getListLoans(Loans allloans) {
-        for(Loan loan:allloans.getLoans().values()){
-            loans.add()
-        }
-    }*/
-
-    public List<Loan> getLoans() {
-        return loans;
-    }
-
-    public void setLoans(List<Loan> loans) {
-        this.loans = loans;
-    }
-
-    public List<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
-    }
-
-    public Customers getListCustomersAsCustomers() {
+    public Customers getListCustomersAsCustomers(){
+        Gson gson = new Gson();
+        Customer[] customers =  gson.fromJson(jsonCustomers, Customer[].class);
         Customers res = new Customers();
-        for(Customer customer: customers){
+        for(Customer customer:customers){
             res.getCustomers().put(customer.getName(), customer);
         }
         return res;
     }
 
-    public Loans getListLoansAsLoans() {
+    public Loans getListLoansAsLoans(){
+        Gson gson = new Gson();
+        Loan[] loans = gson.fromJson(jsonLoans, Loan[].class);
         Loans res = new Loans();
         for(Loan loan: loans){
             res.getLoans().put(loan.getId(), loan);
         }
         return res;
     }
+
+    /*private List<Loan> loans;
+    private List<Customer> customers;
+
+    public State(Loans loans, Customers customers) {
+        this.loans = new ArrayList<>();
+        this.customers = new ArrayList<>();
+        setLoans(loans);
+        setCustomers(customers);
+    }
+
+    public void setCustomers(Customers customers) {
+        for(Customer customer: customers.getCustomers().values()){
+            this.customers.add(customer.clone());
+        }
+    }
+
+    public void setLoans(Loans loans) {
+        for(Loan loan:loans.getLoans().values()){
+            this.loans.add(loan.clone());
+        }
+    }
+
+    public Customers getListCustomersAsCustomers() {
+        Customers newCustomers = new Customers();
+        for(Customer customer: customers){
+            newCustomers.getCustomers().put(customer.getName(), customer);
+        }
+        return newCustomers;
+    }
+
+    public Loans getListLoansAsLoans() {
+        Loans newLoans = new Loans();
+        for(Loan loan:loans){
+            newLoans.getLoans().put(loan.getId(), loan);
+        }
+        return newLoans;
+    }*/
 }

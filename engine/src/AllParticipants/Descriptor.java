@@ -51,7 +51,7 @@ public class Descriptor {
 
     public void setAllLoansFromAbs(AbsLoans absLoans, Customer customer) {
         for (AbsLoan loan:absLoans.getAbsLoan()){
-            Loan lo = new Loan(loan.getId(), customer.getName(), customer, loan.getAbsCategory(), loan.getAbsCapital(), loan.getAbsTotalYazTime(), loan.getAbsPaysEveryYaz(), loan.getAbsIntristPerPayment());
+            Loan lo = new Loan(loan.getId(), customer.getName(), loan.getAbsCategory(), loan.getAbsCapital(), loan.getAbsTotalYazTime(), loan.getAbsPaysEveryYaz(), loan.getAbsIntristPerPayment());
             allLoans.addLoanFromAbs(lo);
             customer.getLoansAsBorrower().getLoans().put(lo.getId(), lo);
         }
@@ -156,7 +156,7 @@ public class Descriptor {
     public void setLoansWithPaymentsInCustomers(int currentYaz) {
         for(String loanID:allLoans.getLoans().keySet()){
             Loan loan = allLoans.getLoans().get(loanID);
-            Customer borrower = loan.getOwnerCus();
+            Customer borrower = allCustomers.getCustomers().get(loan.getOwner());
             if(loan.getNextYazToPay() < currentYaz && loan.getStatus().equals(Status.ACTIVE)){
                 loan.setStatus(Status.RISK);
                 borrower.getNotificationsList().add(new Notification("RISK!", "loan with id: " + loanID + " is in risk!", "Pay your bill!"));
@@ -201,7 +201,7 @@ public class Descriptor {
         String res = new XmlReader().addLoan(cusName, id, category, capital, totalYazTime, paysEveryYaz, internistPerPayment, allLoans, allCategories);
         if(res.equals("true")){
             Customer customer = allCustomers.getCustomers().get(cusName);
-            Loan loan = new Loan(id, cusName, customer, category, capital, totalYazTime, paysEveryYaz, internistPerPayment);
+            Loan loan = new Loan(id, cusName, category, capital, totalYazTime, paysEveryYaz, internistPerPayment);
             allLoans.getLoans().put(id, loan);
             customer.getLoansAsBorrower().getLoans().put(id, loan);
             return "Loan added successfully";

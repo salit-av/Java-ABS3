@@ -7,14 +7,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Components.Loans.singleLoanForSale.SingleLoanForSaleController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" spacing="20.0" stylesheets="@../singleLoan.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Components.Loans.singleLoanForSale.SingleLoanForSaleController">
    <children>
       <Label fx:id="idLabel" text="Loan: ID" />
       <GridPane>
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="80.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="50.0" />
         </columnConstraints>
@@ -30,11 +29,11 @@
             <Label text="Interest left:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Capital left: " GridPane.columnIndex="1" />
             <Label fx:id="interestLeftLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-            <Label text="Total yaz time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Total yaz time:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label fx:id="capitalLeftLabel" text="Label" GridPane.columnIndex="2" />
             <Label fx:id="totalYazTimeLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <Label text="Pays every yaz" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Interest per payment" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label text="Pays every yaz:" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Interest per payment:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Lender investment:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="paysEveryYazLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label fx:id="lenderInvestmentLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />

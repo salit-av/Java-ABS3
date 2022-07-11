@@ -92,7 +92,7 @@ public class Engine {
                      filter(loan -> loan.getInvestmentInLoan() <= investment).
                     filter(loan -> isInLoansList(loan.getCategory(), filterCategories)).
                     filter(loan -> loan.getInterestPerPayment() >= minimumInterest).
-                    filter(loan -> loan.getNumOfOpenLoans() <= maxLoansOpen).
+                    filter(loan -> descriptor.getAllCustomers().getCustomers().get(loan.getId()).getLoansAsBorrower().getLoans().size() <= maxLoansOpen).
                     filter(loan -> loan.getTotalYazTime() >= minimumYazForAllLoan).collect(Collectors.toList());
         }
         else{
@@ -289,6 +289,7 @@ public class Engine {
         descriptor.readonly(state.getListLoansAsLoans(), state.getListCustomersAsCustomers(), true);
     }
     public void stopReadonly() {
+        currentYaz.setCurrentYaz(stateMap.size());
         State state = stateMap.get(stateMap.size());
         descriptor.readonly(state.getListLoansAsLoans(), state.getListCustomersAsCustomers(), false);
     }

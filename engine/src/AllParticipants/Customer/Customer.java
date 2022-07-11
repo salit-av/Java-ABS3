@@ -7,10 +7,12 @@ import AllParticipants.Notification;
 import Engine.Yaz;
 import Status.Status;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class Customer {
+public class Customer implements Cloneable{
     private String name;
     private int balance;
     private List<Transaction> transactions;
@@ -33,6 +35,25 @@ public class Customer {
         return notificationsList;
     }
 
+    public void setLoansAsBorrower(Loans loansAsBorrower) {
+        this.loansAsBorrower = loansAsBorrower;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public void setLoansAsLender(Loans loansAsLender) {
+        this.loansAsLender = loansAsLender;
+    }
+
+    public void setLoansWithPayments(Loans loansWithPayments) {
+        this.loansWithPayments = loansWithPayments;
+    }
+
+    public void setNotificationsList(List<Notification> notificationsList) {
+        this.notificationsList = notificationsList;
+    }
 
     public Loans getLoansWithPayments() {
         return loansWithPayments;
@@ -120,6 +141,40 @@ public class Customer {
 
     public void addToLoansAsLender(Loan loan) {
         loansAsLender.getLoans().put(loan.getId(), loan);
+    }
+
+    @Override
+    public Customer clone()  {
+       /* try {
+            Customer newCustomer = (Customer) super.clone();
+
+            newCustomer.getTransactions().stream().forEach(transaction -> transaction.clone());
+
+            Loans newLoansAsLender = new Loans();
+            for(Loan loan: newCustomer.getLoansAsLender().getLoans().values()){
+                newLoansAsLender.getLoans().put(loan.getId(), loan.clone());
+            }
+            newCustomer.setLoansAsLender(newLoansAsLender);
+
+            Loans newLoansAsBorrower = new Loans();
+            for(Loan loan: newCustomer.getLoansAsBorrower().getLoans().values()){
+                newLoansAsBorrower.getLoans().put(loan.getId(), loan.clone());
+            }
+            newCustomer.setLoansAsBorrower(newLoansAsBorrower);
+
+            Loans newLoansWithPayments = new Loans();
+            for(Loan loan: newCustomer.getLoansWithPayments().getLoans().values()){
+                newLoansWithPayments.getLoans().put(loan.getId(), loan.clone());
+            }
+            newCustomer.setLoansWithPayments(newLoansWithPayments);
+
+            newCustomer.getNotificationsList().stream().forEach(notification -> notification.clone());
+
+            return newCustomer;
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }*/
+        return null;
     }
 }
 

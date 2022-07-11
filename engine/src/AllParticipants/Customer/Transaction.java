@@ -1,6 +1,6 @@
 package AllParticipants.Customer;
 
-public class Transaction {
+public class Transaction implements Cloneable{
     private int yaz;
     private int pay;
     private char inOrOut;
@@ -37,5 +37,15 @@ public class Transaction {
 
     public int getAfterTran() {
         return afterTran;
+    }
+
+    @Override
+    public Transaction clone()  {
+       /* try {
+            return (Transaction) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }*/
+        return null;
     }
 }

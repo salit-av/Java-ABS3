@@ -32,7 +32,7 @@ public class Customers {
             Loans allLoansAsBorrower = foundCustomerLoans(allLoans, cusName);
             Customer cus = new Customer(cusName, cusBalance, allLoansAsBorrower);
             customers.put(cusName, cus);
-            allLoansAsBorrower.setOwnerCus(cus);
+            //allLoansAsBorrower.setOwnerCus(cus);
             cus.getNotificationsList().add(new Notification("WELCOME!", "We are excited to have you in our system!", "Have FUN!"));
             return true;
         }

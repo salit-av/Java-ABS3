@@ -10,10 +10,10 @@ import Status.Status;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Loan {
+public class Loan implements Cloneable{
     private String id;
     private String owner;
-    private Customer ownerCus;
+    //private Customer ownerCus;
     private String category;
     private int capitalAtStart; // Money at start
     private int interestAtStart;
@@ -47,10 +47,10 @@ public class Loan {
     private int countAllUnpaidPayments; // how many unpaid for customer
     private int totalAllUnpaidPayments; // unpaid money for customer
 
-    public Loan(String id, String owner, Customer ownerCus, String category, int capital, int totalYazTime, int paysEveryYaz, int interestPerPayment) {
+    public Loan(String id, String owner, String category, int capital, int totalYazTime, int paysEveryYaz, int interestPerPayment) {
         this.id = id;
         this.owner = owner;
-        this.ownerCus = ownerCus;
+        //this.ownerCus = ownerCus;
         this.category = category;
         this.status = Status.NEW;
         this.capitalAtStart = capital;
@@ -97,12 +97,12 @@ public class Loan {
         this.owner = value;
     }
 
-    public Customer getOwnerCus() {
+    /*public Customer getOwnerCus() {
         return ownerCus;
-    }
+    }*/
 
     public void setOwnerCus(Customer ownerCus) {
-        this.ownerCus = ownerCus;
+       // this.ownerCus = ownerCus;
     }
 
     public String getCategory() {
@@ -231,9 +231,9 @@ public class Loan {
         return totalInterestAndCapitalUntilNow;
     }
 
-    public int getNumOfOpenLoans() {
+/*    public int getNumOfOpenLoans() {
         return ownerCus.getLoansAsBorrower().getLoans().size();
-    }
+    }*/
     public int getTotalYazTime() {
         return totalYazTime;
     }
@@ -437,6 +437,26 @@ public class Loan {
 
     public void saleLoan(Customer lender) {
         lenders.get(lender).setIsInBuyingList(true);
+    }
+
+    @Override
+    public Loan clone()  {
+       /* try {
+            Loan newLoan = (Loan) super.clone();
+            //newLoan.setOwnerCus(newLoan.getOwnerCus().clone());
+
+            Map<Customer, Payments> newLenders = new HashMap<>();
+            for(Customer customer: newLoan.getLenders().keySet()){
+                Payments payments = newLoan.getLenders().get(customer);
+                newLenders.put(customer.clone(), payments.clone());
+            }
+            newLoan.setLenders(newLenders);
+
+            return newLoan;
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }*/
+        return null;
     }
 }
 

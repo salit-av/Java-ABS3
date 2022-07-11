@@ -71,7 +71,7 @@ public class DTOLoan {
         this.interestAndCapitalEveryPay = loan.getInterestAndCapitalEveryPay();
         this.totalInterestAndCapitalUntilNow = loan.getTotalInterestAndCapitalUntilNow();
         this.capitalAndInterestAtStart = loan.getCapitalAndInterestAtStart();
-        this.numOfOpenLoans = loan.getNumOfOpenLoans();
+        //this.numOfOpenLoans = loan.getNumOfOpenLoans();
 
     }
 
