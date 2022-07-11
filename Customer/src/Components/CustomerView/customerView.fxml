@@ -113,12 +113,12 @@
                         </Label>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7">
                            <children>
-                              <Button fx:id="chargeButton" mnemonicParsing="false" onAction="#chargeToCusBalance" prefHeight="30.0" prefWidth="100.0" text="Charge">
+                              <Button fx:id="chargeButton" mnemonicParsing="false" onAction="#chargeToCusBalance" prefHeight="30.0" prefWidth="100.0" stylesheets="@CustomerView.css" text="Charge">
                                  <font>
                                     <Font name="Arial Bold" size="16.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="withdrawButton" mnemonicParsing="false" onAction="#withdrawFromCusBalance" prefHeight="30.0" prefWidth="100.0" text="Withdraw">
+                              <Button fx:id="withdrawButton" mnemonicParsing="false" onAction="#withdrawFromCusBalance" prefHeight="30.0" prefWidth="100.0" stylesheets="@CustomerView.css" text="Withdraw">
                                  <font>
                                     <Font name="Arial Bold" size="16.0" />
                                  </font>
@@ -315,8 +315,8 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <CheckComboBox fx:id="loansToChoseCB" prefHeight="25.0" prefWidth="189.0" stylesheets="@CustomerView.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
-                        <Button fx:id="OKScrambleButton" mnemonicParsing="false" onAction="#distributionOfMoneyForLoans" stylesheets="@CustomerView.css" text="OK" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="8">
+                        <CheckComboBox fx:id="loansToChoseCB" prefHeight="25.0" prefWidth="250.0" stylesheets="@CustomerView.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                        <Button fx:id="OKScrambleButton" mnemonicParsing="false" onAction="#distributionOfMoneyForLoans" stylesheets="@CustomerView.css" text="OK" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                            <font>
                               <Font name="Arial Bold" size="30.0" />
                            </font>
@@ -334,7 +334,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </VBox>
-                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="CENTER">
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" style="-fx-background-color: white; -fx-border-color: lightseagreen; -fx-border-width: 3;" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="CENTER">
                            <children>
                               <Label text="Hello!" textFill="LIGHTSEAGREEN">
                                  <font>
@@ -421,19 +421,22 @@
                               <Font name="Arial Bold" size="30.0" />
                            </font>
                         </Label>
-                        <TreeView fx:id="loanerLoansTV2" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" styleClass="tree-cell" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3" />
-                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="300.0" prefViewportHeight="300.0" prefViewportWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
+                        <TreeView fx:id="loanerLoansTV2" prefHeight="200.0" prefWidth="200.0" styleClass="tree-cell" stylesheets="@CustomerView.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="200.0" prefViewportHeight="300.0" prefViewportWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
                            <content>
                               <FlowPane fx:id="notificationEP" alignment="TOP_CENTER" prefWrapLength="100.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;">
                                  <effect>
                                     <Blend />
                                  </effect>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
                               </FlowPane>
                            </content>
                         </ScrollPane>
                         <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="300.0" prefViewportHeight="300.0" prefViewportWidth="300.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
                            <content>
-                              <FlowPane fx:id="paymentFP" alignment="TOP_CENTER" minHeight="450.0" minWidth="350.0" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" />
+                              <FlowPane fx:id="paymentFP" alignment="TOP_CENTER" style="-fx-border-color: #20b2aa; -fx-background-color: white;" />
                            </content>
                         </ScrollPane>
                      </children>
@@ -484,8 +487,8 @@
                                     <FlowPane fx:id="saleLoansFP" prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
                                  </content>
                               </ScrollPane>
-                              <Label fx:id="errorBuyLoansLabel" text="errorBuyLoansLabel" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                              <Label fx:id="errorSaleLoansLabel" text="errorSaleLoansLabel" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                              <Label fx:id="errorBuyLoansLabel" stylesheets="@CustomerView.css" text="errorBuyLoansLabel" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+                              <Label fx:id="errorSaleLoansLabel" stylesheets="@CustomerView.css" text="errorSaleLoansLabel" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                      </children></AnchorPane>

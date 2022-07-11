@@ -1,12 +1,7 @@
 
-.root {
-    -fx-background-image: url("money.jpg");
-    -fx-background-size: 2000;
-}
-
 .tab{
     -fx-background-color: white;
-    -fx-border-color:  lightseagreen;
+    -fx-border-color:  Black;
     -fx-border-width: 1.5;
     -fx-progress-color: white;
     -fx-show-tick-labels: 12;
@@ -16,7 +11,7 @@
 }
 
 .tree-cell{
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-font-style: Ariel;
 }
 
@@ -28,7 +23,9 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
 }
-
+.button:pressed{
+    -fx-background-color: white;
+}
 .label{
     -fx-background-color: white;
     -fx-border-color:  lightseagreen;
@@ -57,10 +54,12 @@
     -fx-background-color: white;
     -fx-border-color:  lightseagreen;
     -fx-border-width: 3;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-font-style: Ariel;
     -fx-font-weight: bold;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
     -fx-padding: 3;
 }
+
+

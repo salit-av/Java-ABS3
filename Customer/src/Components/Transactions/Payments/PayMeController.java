@@ -36,7 +36,7 @@ public class PayMeController extends PayMeData{
     private String borrowerName;
 
     public PayMeController() {
-        super(" ", "","","");
+        super(" ", " "," "," ");
     }
 
     public void initialize() {

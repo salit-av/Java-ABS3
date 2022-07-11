@@ -338,7 +338,7 @@ public class Loan {
 
             // Change details of the loan
             totalInterestAndCapitalUntilNow += totalPay;
-            //nextYazToPay += paysEveryYaz;   TODO check if not in mark
+            nextYazToPay += paysEveryYaz;
 
 
             if(currentYaz >= totalYazTime && totalInterestAndCapitalUntilNow == capitalAndInterestAtStart && countAllUnpaidPayments == 0){

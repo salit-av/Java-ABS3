@@ -131,7 +131,7 @@ public class Descriptor {
             return true;
         }
         else {
-            loan.addUnpaidPayment(borrower, currentYaz);
+           // loan.addUnpaidPayment(borrower, currentYaz);
             return false;
         }
     }

@@ -33,7 +33,7 @@ public class LoginAdminServlet extends HttpServlet {
 
                 synchronized (this) {
                     String errorMessage = "error";
-                    if (engine.isAdminExists(usernameFromParameter)) {
+                    if (engine.isAdminExists(usernameFromParameter) || engine.isCustomerExists(usernameFromParameter)) {
                         errorMessage = "Admin already exists.";
                     }
                     if (engine.isCustomerExists(usernameFromParameter)) {

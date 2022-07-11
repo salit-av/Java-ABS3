@@ -82,13 +82,14 @@ public class Engine {
         return descriptor.getAllCustomers().getCustomers().get(dtoCustomer.getName());
     }
 
-    public DTOLoans filterAllInvestmentLoans(List<String> filterCategories, int minimumInterest, int minimumYazForAllLoan, int maxLoansOpen, String cusName) {
+    public DTOLoans filterAllInvestmentLoans(int investment, List<String> filterCategories, int minimumInterest, int minimumYazForAllLoan, int maxLoansOpen, String cusName) {
         Customer customer = descriptor.getAllCustomers().getCustomers().get(cusName);
         List<Loan> allLoansAsList = descriptor.getAllLoans().getLoans().values().stream().collect(Collectors.toList());
         List<Loan> res;
         if(maxLoansOpen > 0) {
              res = allLoansAsList.stream().filter(loan -> !loan.getOwner().equals(customer.getName())).
                     filter(loan -> loan.getStatus().equals(Status.PENDING) ||loan.getStatus().equals(Status.NEW)).
+                     filter(loan -> loan.getInvestmentInLoan() <= investment).
                     filter(loan -> isInLoansList(loan.getCategory(), filterCategories)).
                     filter(loan -> loan.getInterestPerPayment() >= minimumInterest).
                     filter(loan -> loan.getNumOfOpenLoans() <= maxLoansOpen).
@@ -97,6 +98,7 @@ public class Engine {
         else{
             res = allLoansAsList.stream().filter(dtoLoan -> !dtoLoan.getOwner().equals(customer.getName())).
                     filter(dtoLoan -> dtoLoan.getStatus().equals(Status.PENDING) ||dtoLoan.getStatus().equals(Status.NEW)).
+                    filter(loan -> loan.getInvestmentInLoan() <= investment).
                     filter(dtoLoan -> isInLoansList(dtoLoan.getCategory(), filterCategories)).
                     filter(dtoLoan -> dtoLoan.getInterestPerPayment() >= minimumInterest).
                     filter(dtoLoan -> dtoLoan.getTotalYazTime() >= minimumYazForAllLoan).collect(Collectors.toList());

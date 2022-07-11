@@ -35,7 +35,7 @@ public class ScrambleFilterAllLoansServlet extends HttpServlet {
         if (usernameFromParameter == null || usernameFromParameter.equals(USERNAME)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
-            DTOLoan[] loans = engine.filterAllInvestmentLoans(Arrays.asList(categoriesAfterFilter), minInterestFromParameter, minYazFromParameter, maxLoansOpenFromParameter, usernameFromParameter).
+            DTOLoan[] loans = engine.filterAllInvestmentLoans(investmentFromParameter, Arrays.asList(categoriesAfterFilter), minInterestFromParameter, minYazFromParameter, maxLoansOpenFromParameter, usernameFromParameter).
                     getDTOAllLoans().toArray(new DTOLoan[0]);
             try (PrintWriter out = response.getWriter()) {
                 String json = gson.toJson(loans);

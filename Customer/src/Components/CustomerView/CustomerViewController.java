@@ -92,6 +92,9 @@ public class CustomerViewController extends CustomerViewData {
     Button chargeButton;
     @FXML
     Button withdrawButton;
+    private List<DTOLoan> loansAsBorrowerList;
+    private List<DTOLoan> loansAsLenderList;
+    private List<DTOtransaction> transactionsList;
 
     // addLoan
     @FXML
@@ -193,6 +196,9 @@ public class CustomerViewController extends CustomerViewData {
 
     public CustomerViewController() {
         super(null, null);
+        loansAsBorrowerList = new ArrayList<>();
+        loansAsLenderList = new ArrayList<>();
+        transactionsList = new ArrayList<>();
         autoUpdatePro = new SimpleBooleanProperty();
         balancePro = new SimpleStringProperty("Balance: 0");
         currentYazPro = new SimpleStringProperty("Current Yaz: 1");
@@ -297,27 +303,49 @@ public class CustomerViewController extends CustomerViewData {
 
     public void updateListLoansAsBorrower(List<DTOLoan> allLoansAsBorrower) {
         Platform.runLater(() -> {
-            if (allLoansAsBorrower.isEmpty()) {
-                loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
-            } else {
-                TreeItem<String> treeLoans = new TreeItem<>("List of loans in as a borrower");
-                for (DTOLoan loan : allLoansAsBorrower) {
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
-                        fxmlLoader.setLocation(url);
-                        VBox singleLoan = fxmlLoader.load(url.openStream());
-                        SingleLoanController singleLoanController = fxmlLoader.getController();
-                        singleLoanController.setInfoOfLoan(loan);
-                        treeLoans.getChildren().add(singleLoanController.getRoot());
+            if (allLoansAsBorrower.size() != loansAsBorrowerList.size() || loanUpdate(allLoansAsBorrower, loansAsBorrowerList)) {
+                loansAsBorrowerList = allLoansAsBorrower;
+                if (allLoansAsBorrower.isEmpty()) {
+                    loanerLoansTV1.setRoot(new TreeItem<>("There is no list of loans as a borrower"));
+                } else {
+                    TreeItem<String> treeLoans = new TreeItem<>("List of loans in as a borrower");
+                    for (DTOLoan loan : allLoansAsBorrower) {
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
+                            fxmlLoader.setLocation(url);
+                            VBox singleLoan = fxmlLoader.load(url.openStream());
+                            SingleLoanController singleLoanController = fxmlLoader.getController();
+                            singleLoanController.setInfoOfLoan(loan);
+                            treeLoans.getChildren().add(singleLoanController.getRoot());
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+                    loanerLoansTV1.setRoot(treeLoans);
                 }
-                loanerLoansTV1.setRoot(treeLoans);
             }
         });
+    }
+
+    public boolean loanUpdate(List<DTOLoan> loans, List<DTOLoan> loansList) {
+        for(DTOLoan loan: loans){
+            DTOLoan lo = getLoan(loan, loansList);
+            if(lo != null && lo.isDifferent(loan)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public DTOLoan getLoan(DTOLoan loan, List<DTOLoan> loansList) {
+        for(DTOLoan lo: loansList){
+            if(lo.getId().equals(loan.getId())){
+                return lo;
+            }
+        }
+        return null;
     }
 
     public void loadLendersLoans() {
@@ -332,6 +360,8 @@ public class CustomerViewController extends CustomerViewData {
 
     public void updateListLoansAsLender(List<DTOLoan> allLoansAsLender) {
         Platform.runLater(() -> {
+            if(allLoansAsLender.size() != loansAsLenderList.size() || loanUpdate(allLoansAsLender, loansAsLenderList)){
+                loansAsLenderList = allLoansAsLender;
             if (allLoansAsLender.isEmpty()) {
                 lenderLoansTV.setRoot(new TreeItem<>("There is no list of loans as a lender"));
             } else {
@@ -355,6 +385,7 @@ public class CustomerViewController extends CustomerViewData {
                 }
                 lenderLoansTV.setRoot(treeLoans);
             }
+            }
         });
     }
 
@@ -370,6 +401,8 @@ public class CustomerViewController extends CustomerViewData {
 
     public void updateTransactions(List<DTOtransaction> transactions) {
         Platform.runLater(() -> {
+            if(transactions.size() != transactionsList.size()){
+                transactionsList = transactions;
             if (transactions.isEmpty()) {
                 transactionsTV.setRoot(new TreeItem<>("There is no list of transactions"));
             } else {
@@ -392,6 +425,7 @@ public class CustomerViewController extends CustomerViewData {
                 }
                 transactionsTV.setRoot(treeTransactions);
             }
+            }
         });
     }
 
@@ -408,15 +442,15 @@ public class CustomerViewController extends CustomerViewData {
 
             Stage popup = new Stage();
             popup.initModality(Modality.APPLICATION_MODAL);
+            popup.setTitle("Charge balance");
 
-            Scene popUpScene = new Scene(moneyVB, 300, 200);
+            Scene popUpScene = new Scene(moneyVB, 400, 300);
             popup.setScene(popUpScene);
             popup.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
     public void withdrawFromCusBalance() {
@@ -432,15 +466,15 @@ public class CustomerViewController extends CustomerViewData {
 
             Stage popup = new Stage();
             popup.initModality(Modality.APPLICATION_MODAL);
+            popup.setTitle("Withdraw balance");
 
-            Scene popUpScene = new Scene(moneyVB, 300, 200);
+            Scene popUpScene = new Scene(moneyVB, 400, 300);
             popup.setScene(popUpScene);
             popup.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //balancePro.set("Balance: " + getCustomer().getBalance());
     }
 
     //addLoan
@@ -713,12 +747,6 @@ public class CustomerViewController extends CustomerViewData {
     @FXML
     public void distributionOfMoneyForLoans() {
         List<String> loansChosen = loansToChoseCB.getCheckModel().getCheckedItems().stream().collect(Collectors.toList());
-       /* List<DTOLoan> loansToSend = new ArrayList<>();
-        for (DTOLoan loan : loansAfterFilter) {
-            if (loansChosen.contains(loan.getId())) {
-                loansToSend.add(loan);
-            }
-        }*/
 
         Gson gson = new Gson();
         String finalUrl = HttpUrl
@@ -801,20 +829,23 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void updateListLoansWithPaymentRefresher(List<DTOLoan> allLoansWithPayment) {
-        for (DTOLoan loan : allLoansWithPayment) {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
-                fxmlLoader.setLocation(url);
-                VBox singlePayMe = fxmlLoader.load(url.openStream());
+        Platform.runLater(() -> {
+            if (!paymentFP.getChildren().isEmpty()) paymentFP.getChildren().clear();
+            for (DTOLoan loan : allLoansWithPayment) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    URL url = getClass().getResource(PAYME_VIEW_FXML_RESOURCE);
+                    fxmlLoader.setLocation(url);
+                    VBox singlePayMe = fxmlLoader.load(url.openStream());
 
-                PayMeController payMeController = fxmlLoader.getController();
-                payMeController.setInfoOfLoan(loan, cusName);
-                paymentFP.getChildren().add(singlePayMe);
-            } catch (IOException e) {
-                e.printStackTrace();
+                    PayMeController payMeController = fxmlLoader.getController();
+                    payMeController.setInfoOfLoan(loan, cusName);
+                    paymentFP.getChildren().add(singlePayMe);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
 
 
@@ -864,6 +895,7 @@ public class CustomerViewController extends CustomerViewData {
 
     public void updateNotification(List<Notification> notifications) {
         Platform.runLater(() -> {
+            notificationEP.getChildren().clear();
             for (Notification notification : notifications) {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader();

@@ -1,12 +1,8 @@
 package DTO.Loan;
 
-import AllParticipants.Customer.Customer;
 import AllParticipants.Loan.Loan;
-import AllParticipants.Loan.Payments;
-import AllParticipants.Notification;
 import Status.Status;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class DTOLoan {
@@ -181,9 +177,10 @@ public class DTOLoan {
     }
 
 
-
-
-
+    public boolean isDifferent(DTOLoan loan) {
+        return !loan.getStatus().equals(status) || loan.getLenders().size() != lenders.size() ||
+                loan.getNextYazToPay() != nextYazToPay || loan.getCapitalNow() != capitalNow;
+    }
 }
     /*
     private String id;

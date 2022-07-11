@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,12 +59,16 @@ public class AdminViewController extends HttpServlet {
     private TimerTask currentYazRefresher;
     private TimerTask listCustomersRefresher;
     private SimpleBooleanProperty isReadonly;
+    private List<DTOLoan> loans;
+    private List<DTOCustomer> customers;
     public AdminViewController() {
         this.adminName = USERNAME;
         currYazPro = new SimpleStringProperty();
         autoUpdatePro = new SimpleBooleanProperty();
         isAdminLogin = false;
         isReadonly = new SimpleBooleanProperty(false);
+        loans = new ArrayList<>();
+        customers = new ArrayList<>();
     }
 
     @FXML
@@ -114,28 +119,50 @@ public class AdminViewController extends HttpServlet {
 
     public void updateListLoans(List<DTOLoan> allLoans) {
         Platform.runLater(() -> {
-            TreeItem<String> treeLoans = new TreeItem<>("There is not list of Loans");
-            if (!allLoans.isEmpty()) {
-                treeLoans.setValue("List of Loans");
-                for (DTOLoan loan : allLoans) {
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        URL url = getClass().getResource(SINGLE_LOAN_ADMIN_VIEW_FXML_RESOURCE);
-                        fxmlLoader.setLocation(url);
-                        VBox singleLoan = fxmlLoader.load(url.openStream());
+            if(allLoans.size() != loans.size() || loanUpdate(allLoans)) {
+                loans = allLoans;
+                TreeItem<String> treeLoans = new TreeItem<>("There is not list of Loans");
+                if (!allLoans.isEmpty()) {
+                    treeLoans.setValue("List of Loans");
+                    for (DTOLoan loan : allLoans) {
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            URL url = getClass().getResource(SINGLE_LOAN_ADMIN_VIEW_FXML_RESOURCE);
+                            fxmlLoader.setLocation(url);
+                            VBox singleLoan = fxmlLoader.load(url.openStream());
 
-                        SingleLoanController singleLoanController = fxmlLoader.getController();
-                        singleLoanController.setInfoOfLoan(loan);
+                            SingleLoanController singleLoanController = fxmlLoader.getController();
+                            singleLoanController.setInfoOfLoan(loan);
 
-                        treeLoans.getChildren().add(singleLoanController.getRoot());
+                            treeLoans.getChildren().add(singleLoanController.getRoot());
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                loansTV.setRoot(treeLoans);
             }
-            loansTV.setRoot(treeLoans);
         });
+    }
+
+    public boolean loanUpdate(List<DTOLoan> allLoans) {
+        for(DTOLoan loan: allLoans){
+            DTOLoan lo = getLoan(loan);
+            if(lo != null && lo.isDifferent(loan)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public DTOLoan getLoan(DTOLoan loan) {
+        for(DTOLoan lo: loans){
+            if(lo.getId().equals(loan.getId())){
+                return lo;
+            }
+        }
+        return null;
     }
 
     public void loadCustomers() {
@@ -150,28 +177,50 @@ public class AdminViewController extends HttpServlet {
 
     public void updateListCustomers(List<DTOCustomer> allCustomers) {
         Platform.runLater(() -> {
-            TreeItem<String> treeCustomers = new TreeItem<>("There is not list of Customers");
-            if (!allCustomers.isEmpty()) {
-                treeCustomers.setValue("List of Customers");
-                for (DTOCustomer cus : allCustomers) {
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        URL url = getClass().getResource(SINGLE_CUSTOMER_ADMIN_VIEW_FXML_RESOURCE);
-                        fxmlLoader.setLocation(url);
-                        VBox singleCus = fxmlLoader.load(url.openStream());
+            if (allCustomers.size() != customers.size() || balanceChange(allCustomers)) {
+                customers = allCustomers;
+                TreeItem<String> treeCustomers = new TreeItem<>("There is not list of Customers");
+                if (!allCustomers.isEmpty()) {
+                    treeCustomers.setValue("List of Customers");
+                    for (DTOCustomer cus : allCustomers) {
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            URL url = getClass().getResource(SINGLE_CUSTOMER_ADMIN_VIEW_FXML_RESOURCE);
+                            fxmlLoader.setLocation(url);
+                            VBox singleCus = fxmlLoader.load(url.openStream());
 
-                        SingleCustomerController singleCustomerController = fxmlLoader.getController();
-                        singleCustomerController.setInfoOfCustomer(cus);
+                            SingleCustomerController singleCustomerController = fxmlLoader.getController();
+                            singleCustomerController.setInfoOfCustomer(cus);
 
-                        treeCustomers.getChildren().add(singleCustomerController.getRoot());
+                            treeCustomers.getChildren().add(singleCustomerController.getRoot());
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                customersTV.setRoot(treeCustomers);
             }
-            customersTV.setRoot(treeCustomers);
         });
+    }
+
+    public boolean balanceChange(List<DTOCustomer> allCustomers) {
+        for(DTOCustomer customer: allCustomers){
+            DTOCustomer cus = getCus(customer);
+            if(customer.getBalance() != cus.getBalance()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public DTOCustomer getCus(DTOCustomer customer) {
+        for(DTOCustomer cus: customers){
+            if(cus.getName().equals(customer.getName())){
+                return cus;
+            }
+        }
+        return null;
     }
 
     public void setMainController(MainAppController mainAppController) {
