@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Components.Loans.LendersList.LendersListController">
+   <children>
+      <TreeView fx:id="lendersTV" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+</VBox>
