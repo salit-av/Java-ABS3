@@ -54,8 +54,8 @@
             </Button>
             <HBox alignment="CENTER" spacing="30.0">
                <children>
-                  <Button mnemonicParsing="false" stylesheets="@Admin.css" text="Readonly" />
-                  <ComboBox prefWidth="150.0" stylesheets="@Admin.css" />
+                  <Button fx:id="readonlyButton" mnemonicParsing="false" onAction="#clickReadonly" stylesheets="@Admin.css" text="Readonly" />
+                  <ComboBox fx:id="readonlyCB" prefWidth="150.0" stylesheets="@Admin.css" />
                </children>
             </HBox>
          </children>

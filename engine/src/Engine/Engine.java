@@ -6,10 +6,18 @@ import AllParticipants.Loan.Loan;
 import AllParticipants.Loan.LoanEditor;
 import AllParticipants.Loan.Loans;
 import AllParticipants.Notification;
-import DTO.Loan.*;
-import DTO.Customers.*;
-import DTO.*;
-import Exceptions.*;
+import AllParticipants.State;
+import DTO.Customers.DTOBalace;
+import DTO.Customers.DTOCustomer;
+import DTO.Customers.DTOCustomers;
+import DTO.Customers.DTOtransaction;
+import DTO.DTOCategories;
+import DTO.DTOactivate;
+import DTO.Loan.DTOLoan;
+import DTO.Loan.DTOLoans;
+import Exceptions.loansWithTheSameNameException;
+import Exceptions.paymentRateIncorrectException;
+import Exceptions.referenceToCategoryThatIsntDefinedException;
 import Status.Status;
 
 import java.util.*;
@@ -18,11 +26,12 @@ import java.util.stream.Collectors;
 public class Engine {
     private Descriptor descriptor;
     private Yaz currentYaz;
-
+    private Map<Integer, State> stateMap;
 
     public Engine() {
         this.descriptor = new Descriptor();
         this.currentYaz = new Yaz();
+        this.stateMap = new HashMap<>();
     }
 
 
@@ -261,5 +270,24 @@ public class Engine {
 
     public boolean buyLoan(String buyerName, String sellersName, String loanID) {
         return descriptor.buyLoan(buyerName, sellersName, loanID);
+    }
+
+    public void saveState() {
+        stateMap.put(currentYaz.getCurrentYaz(), new State(descriptor.getAllLoans(), descriptor.getAllCustomers()));
+    }
+
+    public boolean isReadonly() {
+        return descriptor.isReadonly();
+    }
+
+    public void startReadonly(int yaz) {
+        saveState();
+        currentYaz.setCurrentYaz(yaz);
+        State state = stateMap.get(yaz);
+        descriptor.readonly(state.getListLoansAsLoans(), state.getListCustomersAsCustomers(), true);
+    }
+    public void stopReadonly() {
+        State state = stateMap.get(stateMap.size());
+        descriptor.readonly(state.getListLoansAsLoans(), state.getListCustomersAsCustomers(), false);
     }
 }

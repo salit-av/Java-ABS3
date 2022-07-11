@@ -6,12 +6,14 @@ import AllParticipants.Loan.Loans;
 public class Admin {
     private String name;
     private boolean isLogIn;
+    private boolean isReadonly;
     private Loans allLoans;
     private Customers allCustomers;
 
     public Admin() {
         name = "admin";
         isLogIn = false;
+        isReadonly = false;
         allLoans = new Loans();
         allCustomers = new Customers();
     }
@@ -19,6 +21,7 @@ public class Admin {
     public Admin(String name, boolean isLogIn, Loans allLoans, Customers allCustomers) {
         this.name = name;
         this.isLogIn = isLogIn;
+        this.isReadonly = false;
         this.allLoans = allLoans;
         this.allCustomers = allCustomers;
     }
@@ -53,5 +56,13 @@ public class Admin {
 
     public void setAllCustomers(Customers allCustomers) {
         this.allCustomers = allCustomers;
+    }
+
+    public boolean isReadonly() {
+        return isReadonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        isReadonly = readonly;
     }
 }

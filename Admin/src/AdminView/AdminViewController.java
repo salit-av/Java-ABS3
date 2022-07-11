@@ -35,6 +35,8 @@ import static main.ResourcesPaths.*;
 public class AdminViewController extends HttpServlet {
     @FXML
     Button increaseYazButton;
+    @FXML Button readonlyButton;
+    @FXML ComboBox<String> readonlyCB;
     @FXML
     TreeView<String> loansTV;
     @FXML
@@ -55,13 +57,13 @@ public class AdminViewController extends HttpServlet {
     private TimerTask listLoansRefresher;
     private TimerTask currentYazRefresher;
     private TimerTask listCustomersRefresher;
-
+    private SimpleBooleanProperty isReadonly;
     public AdminViewController() {
         this.adminName = USERNAME;
         currYazPro = new SimpleStringProperty();
         autoUpdatePro = new SimpleBooleanProperty();
         isAdminLogin = false;
-
+        isReadonly = new SimpleBooleanProperty(false);
     }
 
     @FXML
@@ -69,6 +71,9 @@ public class AdminViewController extends HttpServlet {
         currentYazLabel.textProperty().bind(currYazPro);
         autoUpdateButton.selectedProperty().set(true);
         autoUpdatePro.bind(autoUpdateButton.selectedProperty());
+        readonlyCB.getItems().add("1");
+        readonlyCB.setValue("1");
+        increaseYazButton.disableProperty().bind(isReadonly);
         loadAdmin();
     }
 
@@ -195,8 +200,61 @@ public class AdminViewController extends HttpServlet {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                response.body().string();
+                String yaz = response.body().string();
+                readonlyCB.getItems().add(yaz);
             }
         });
+    }
+
+    @FXML
+    public void clickReadonly(){
+        isReadonly.set(!isReadonly.get());
+        if(isReadonly.get()){
+            readonlyButton.textProperty().set("Stop readonly");
+
+            String finalUrl = HttpUrl
+                    .parse(START_READONLY_MOOD)
+                    .newBuilder()
+                    .addQueryParameter("username", adminName)
+                    .addQueryParameter("yaz", readonlyCB.getValue())
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    System.out.println("Ended with failure...");
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String yaz = response.body().string();
+                }
+            });
+        }
+        else{
+            readonlyButton.textProperty().set("Readonly");
+
+            String finalUrl = HttpUrl
+                    .parse(STOP_READONLY_MOOD)
+                    .newBuilder()
+                    .addQueryParameter("username", adminName)
+                    .build()
+                    .toString();
+
+            HttpClientUtil.runAsync(finalUrl, new Callback() {
+
+                @Override
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                    System.out.println("Ended with failure...");
+                }
+
+                @Override
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    String yaz = response.body().string();
+                }
+            });
+        }
     }
 }

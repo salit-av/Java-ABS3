@@ -260,5 +260,15 @@ public class Descriptor {
         }
         return true;
     }
+
+    public boolean isReadonly() {
+        return admin.isReadonly();
+    }
+
+    public void readonly(Loans loans, Customers customers, boolean bool) {
+        this.allLoans = loans;
+        this.allCustomers = customers;
+        this.admin.setReadonly(bool);
+    }
 }
 

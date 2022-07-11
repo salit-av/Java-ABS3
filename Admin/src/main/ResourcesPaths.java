@@ -22,6 +22,10 @@ public class ResourcesPaths {
     public final static String LIST_CUSTOMERS_ADMIN = FULL_SERVER_PATH + "/listCustomersAdmin";
     public final static String CURR_YAZ = FULL_SERVER_PATH + "/currYaz";
     public final static String INCREASE_YAZ = FULL_SERVER_PATH + "/increaseYaz";
+    public final static String START_READONLY_MOOD = FULL_SERVER_PATH + "/startReadonlyMood";
+    public final static String STOP_READONLY_MOOD = FULL_SERVER_PATH + "/stopReadonlyMood";
+
+
 
 
 

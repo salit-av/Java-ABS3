@@ -76,7 +76,6 @@ public class Loan {
         this.capitalAndInterestAtStart = capitalAtStart + interestAtStart;
     }
 
-
     public void setNotificationsAtLenders(){
         for(Customer lender: lenders.keySet()){
             lender.getNotificationsList().add(new Notification("PayYou!", owner + " should pay you for a loan in id:" + id, "how fun!"));

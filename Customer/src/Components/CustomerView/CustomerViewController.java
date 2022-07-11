@@ -67,6 +67,7 @@ public class CustomerViewController extends CustomerViewData {
     private SimpleStringProperty balancePro;
     private SimpleStringProperty currentYazPro;
     private SimpleBooleanProperty autoUpdatePro;
+    private SimpleStringProperty filePathPro;
     private Timer timer1;
     private Timer timer10;
     private Timer timer2;
@@ -184,7 +185,9 @@ public class CustomerViewController extends CustomerViewData {
     List<DTOLoan> loansForBuy;
     private String cusName;
     // private Engine engine;
-
+    private SimpleBooleanProperty readonlyPro;
+    private Timer timer11;
+    private TimerTask readonlyRefresher;
     private MainAppController mainAppController;
     private Stage primaryStage;
 
@@ -193,6 +196,7 @@ public class CustomerViewController extends CustomerViewData {
         autoUpdatePro = new SimpleBooleanProperty();
         balancePro = new SimpleStringProperty("Balance: 0");
         currentYazPro = new SimpleStringProperty("Current Yaz: 1");
+        filePathPro = new SimpleStringProperty(" NO FILE, please upload one! ");
         categoriesOL = FXCollections.observableArrayList();
         loansOL = FXCollections.observableArrayList();
         loansAfterFilter = new ArrayList<>();
@@ -200,6 +204,7 @@ public class CustomerViewController extends CustomerViewData {
         errorSaleLoansPro = new SimpleStringProperty();
         loansForSale = new ArrayList<>();
         loansForBuy = new ArrayList<>();
+        readonlyPro = new SimpleBooleanProperty();
     }
 
     @FXML
@@ -219,9 +224,16 @@ public class CustomerViewController extends CustomerViewData {
         errorBuyLoansLabel.setVisible(false);
         errorSaleLoansLabel.textProperty().bind(errorSaleLoansPro);
         errorSaleLoansLabel.setVisible(false);
+        // readonly
+        loadFileButton.disableProperty().bind(readonlyPro);
+        chargeButton.disableProperty().bind(readonlyPro);
+        withdrawButton.disableProperty().bind(readonlyPro);
+        submitAddLoanButton.disableProperty().bind(readonlyPro);
+        OKInvestmentButton.disableProperty().bind(readonlyPro);
+        submitScrambleButton.disableProperty().bind(readonlyPro);
+        OKScrambleButton.disableProperty().bind(readonlyPro);
 
         setCusInfo(USERNAME);
-
     }
 
     public void setCusInfo(String cusName) {
@@ -230,6 +242,7 @@ public class CustomerViewController extends CustomerViewData {
         setInfoInInformationTab();
         setInfoInPaymentTab();
         setBS();
+        setReadonly();
     }
 
     public void setHeader() {
@@ -930,9 +943,10 @@ public class CustomerViewController extends CustomerViewData {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.code() != 200) {
                     String responseBody = response.body().string();
-                    Platform.runLater(() ->
-                            filePathLabel.setText("Something went wrong: " + responseBody)
-                    );
+                    Platform.runLater(() -> {
+                        filePathPro.set("Something went wrong: " + responseBody);
+                        filePathLabel.setText(filePathPro.getValue());
+                    });
                 } else {
                     response.body().string();
                     Platform.runLater(() -> {
@@ -944,7 +958,8 @@ public class CustomerViewController extends CustomerViewData {
     }
 
     public void loadFileInfo() {
-        filePathLabel.setText("Proper file uploaded successfully");
+        filePathPro.set("Proper file uploaded successfully");
+        filePathLabel.setText(filePathPro.getValue());
         setCusInfo(cusName);
     }
 
@@ -1023,6 +1038,25 @@ public class CustomerViewController extends CustomerViewData {
                         }
                     }
                 }
+            }
+        });
+    }
+    public void setReadonly() {
+        if (!cusName.equals(USERNAME)) {
+            readonlyRefresher = new ReadonlyRefresher(cusName, this::updateReadonly, autoUpdatePro);
+            timer11 = new Timer();
+            timer11.schedule(readonlyRefresher, REFRESH_RATE, REFRESH_RATE);
+        }
+    }
+
+    public void updateReadonly(boolean readonly) {
+        Platform.runLater(() -> {
+            readonlyPro.set(readonly);
+            if(readonly){
+                filePathLabel.setText(" In readonly mood! ");
+            }
+            else{
+                filePathLabel.setText(filePathPro.getValue());
             }
         });
     }
