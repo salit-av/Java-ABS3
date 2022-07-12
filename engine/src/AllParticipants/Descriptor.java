@@ -162,6 +162,7 @@ public class Descriptor {
             Customer borrower = allCustomers.getCustomers().get(loan.getOwner());
             if(loan.getNextYazToPay() < currentYaz && loan.getStatus().equals(Status.ACTIVE)){
                 loan.setStatus(Status.RISK);
+                loan.removeFromBuyingList();
                 borrower.getNotificationsList().add(new Notification("RISK!", "loan with id: " + loanID + " is in risk!", "Pay your bill!"));
             }
             if(loan.isRiskOrActive() && loan.doPayThisYaz(currentYaz)) {
