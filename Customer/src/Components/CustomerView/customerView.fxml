@@ -10,7 +10,6 @@
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.effect.Blend?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -67,7 +66,7 @@
             <Insets bottom="15.0" left="15.0" right="60.0" top="15.0" />
          </padding>
       </HBox>
-      <TabPane minHeight="200.0" minWidth="200.0" prefHeight="700.0" prefWidth="1500.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE">
+      <TabPane minHeight="200.0" minWidth="200.0" prefHeight="700.0" prefWidth="1500.0" rotateGraphic="true" stylesheets="@tab.css" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab fx:id="informationTab" styleClass="tab-Label" text="Information">
                <content>
@@ -162,12 +161,12 @@
                         <Label stylesheets="@CustomerView.css" text=" Category " GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label stylesheets="@CustomerView.css" text=" ID: " GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label stylesheets="@CustomerView.css" text=" Intrist Per Payment: " GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                        <TextField fx:id="internistPerPaymentTF" GridPane.columnIndex="3" GridPane.rowIndex="8" />
-                        <TextField fx:id="totalYazTimeTF" GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                        <TextField fx:id="capitalTF" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                        <TextField fx:id="categoryTF" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <TextField fx:id="idTF" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <TextField fx:id="paysEveryYazTF" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                        <TextField fx:id="internistPerPaymentTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                        <TextField fx:id="totalYazTimeTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                        <TextField fx:id="capitalTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <TextField fx:id="categoryTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <TextField fx:id="idTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <TextField fx:id="paysEveryYazTF" stylesheets="@CustomerView.css" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" style="-fx-background-color: white; -fx-border-color: lightseagreen; -fx-background-radius: 5; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                            <children>
                               <Label text="Hello!" textFill="LIGHTSEAGREEN">
@@ -315,7 +314,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <CheckComboBox fx:id="loansToChoseCB" prefHeight="25.0" prefWidth="250.0" stylesheets="@CustomerView.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+                        <CheckComboBox fx:id="loansToChoseCB" prefHeight="25.0" prefWidth="335.0" stylesheets="@CustomerView.css" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
                         <Button fx:id="OKScrambleButton" mnemonicParsing="false" onAction="#distributionOfMoneyForLoans" stylesheets="@CustomerView.css" text="OK" GridPane.columnIndex="6" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                            <font>
                               <Font name="Arial Bold" size="30.0" />
@@ -387,54 +386,50 @@
                <content>
                   <GridPane>
                      <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="30.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="50.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="50.0" />
                         <ColumnConstraints hgrow="ALWAYS" minWidth="30.0" />
                         <ColumnConstraints hgrow="NEVER" minWidth="50.0" />
                         <ColumnConstraints hgrow="ALWAYS" minWidth="30.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="30.0" />
-                        <ColumnConstraints hgrow="NEVER" minWidth="50.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="30.0" />
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="30.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="30.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="50.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
                         <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
                         <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
                         <RowConstraints minHeight="30.0" vgrow="ALWAYS" />
                         <RowConstraints minHeight="30.0" vgrow="NEVER" />
                      </rowConstraints>
                      <children>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Loaner loans:" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Loaner loans:" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                            <font>
                               <Font name="Arial Bold" size="30.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Payment Control:" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Payment Control:" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                            <font>
                               <Font name="Arial Bold" size="30.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Notification Area:" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;" text="Notification Area:" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                            <font>
                               <Font name="Arial Bold" size="30.0" />
                            </font>
                         </Label>
-                        <TreeView fx:id="loanerLoansTV2" prefHeight="200.0" prefWidth="200.0" styleClass="tree-cell" stylesheets="@CustomerView.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="3" />
-                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="200.0" prefViewportHeight="300.0" prefViewportWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
+                        <TreeView fx:id="loanerLoansTV2" prefHeight="200.0" prefWidth="200.0" styleClass="tree-cell" stylesheets="@CustomerView.css" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="200.0" prefViewportHeight="300.0" prefViewportWidth="200.0" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.valignment="TOP">
                            <content>
                               <FlowPane fx:id="notificationEP" alignment="TOP_CENTER" prefWrapLength="100.0" style="-fx-border-color: #20b2aa; -fx-background-color: white;">
                                  <effect>
                                     <Blend />
                                  </effect>
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
                               </FlowPane>
                            </content>
                         </ScrollPane>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="300.0" prefViewportHeight="300.0" prefViewportWidth="300.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="3" GridPane.valignment="TOP">
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="300.0" prefViewportHeight="300.0" prefViewportWidth="300.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="3" GridPane.valignment="TOP">
                            <content>
                               <FlowPane fx:id="paymentFP" alignment="TOP_CENTER" style="-fx-border-color: #20b2aa; -fx-background-color: white;" />
                            </content>
@@ -445,53 +440,49 @@
             </Tab>
             <Tab text="Buying/Selling a loan">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="200.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="200.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+                    </rowConstraints>
                      <children>
-                        <GridPane layoutX="174.0" layoutY="155.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="30.0" />
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="50.0" />
-                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="30.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-                          </rowConstraints>
-                           <children>
-                              <Label alignment="CENTER" prefHeight="50.0" prefWidth="509.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans with potential for sale" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Arial Bold" size="30.0" />
-                                 </font>
-                              </Label>
-                              <Label alignment="CENTER" prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans to buy" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-                                 <font>
-                                    <Font name="Arial Bold" size="30.0" />
-                                 </font>
-                              </Label>
-                              <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3">
-                                 <content>
-                                    <FlowPane fx:id="buyLoansFP" prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
-                                 </content>
-                              </ScrollPane>
-                              <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="3">
-                                 <content>
-                                    <FlowPane fx:id="saleLoansFP" prefHeight="200.0" prefWidth="200.0" stylesheets="@CustomerView.css" />
-                                 </content>
-                              </ScrollPane>
-                              <Label fx:id="errorBuyLoansLabel" stylesheets="@CustomerView.css" text="errorBuyLoansLabel" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                              <Label fx:id="errorSaleLoansLabel" stylesheets="@CustomerView.css" text="errorSaleLoansLabel" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-                           </children>
-                        </GridPane>
-                     </children></AnchorPane>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans with potential for sale" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Arial Bold" size="30.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: white; -fx-border-color: lightseagreen;" text="Loans to buy" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Arial Bold" size="30.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="300.0" minWidth="400.0" prefViewportHeight="400.0" prefViewportWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.rowSpan="3">
+                           <content>
+                              <FlowPane fx:id="buyLoansFP" alignment="TOP_CENTER" minWidth="400.0" style="-fx-border-color: #20b2aa;" />
+                           </content>
+                        </ScrollPane>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="400.0" minWidth="400.0" prefViewportHeight="400.0" prefViewportWidth="400.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="3">
+                           <content>
+                              <FlowPane fx:id="saleLoansFP" alignment="TOP_CENTER" minWidth="400.0" style="-fx-border-color: #20b2aa;" />
+                           </content>
+                        </ScrollPane>
+                        <Label fx:id="errorBuyLoansLabel" stylesheets="@CustomerView.css" text="errorBuyLoansLabel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                        <Label fx:id="errorSaleLoansLabel" stylesheets="@CustomerView.css" text="errorSaleLoansLabel" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                     </children>
+                  </GridPane>
               </content>
             </Tab>
          </tabs>

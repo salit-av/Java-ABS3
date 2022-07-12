@@ -100,6 +100,9 @@ public class Descriptor {
             //update loanOwner
             loanOwner = allCustomers.getCustomers().get(loan.getOwner());
             loanOwner.updateLoanOwnerAfterInvestment(loanEditor, currentYaz);
+            if(loan.getStatus().equals(Status.ACTIVE)){
+                loanOwner.getNotificationsList().add(new Notification("Loan: " + loan.getId(), "The loan is active now", "Good Luck!"));
+            }
 
             lender.updateCustomerAfterInvestment(loanEditor, currentYaz);
         }
@@ -253,6 +256,7 @@ public class Descriptor {
                 buyerPayments.setIsInBuyingList(false);
                 loan.getLenders().remove(sellersCus);
             } else {
+                buyerCus.getLoansAsLender().getLoans().put(loanID,loan);
                 loan.getLenders().remove(sellersCus);
                 loan.getLenders().put(buyerCus, payments);
                 payments.setIsInBuyingList(false);

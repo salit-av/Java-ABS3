@@ -1,5 +1,6 @@
 package servlets.customer.info;
 
+import DTO.Customers.DTOCustomer;
 import Engine.Engine;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,7 +24,11 @@ public class BalanceServlet  extends HttpServlet {
         if (usernameFromParameter == null || usernameFromParameter.equals(USERNAME)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
-            int balance = engine.getDTOCustomer(usernameFromParameter).getBalance();
+            int balance = 0;
+            DTOCustomer customer = engine.getDTOCustomer(usernameFromParameter);
+            if(customer!= null) {
+                balance = customer.getBalance();
+            }
             response.getOutputStream().print(balance);
             response.setStatus(HttpServletResponse.SC_OK);
         }

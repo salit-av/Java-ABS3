@@ -1,14 +1,5 @@
 
-.tab{
-    -fx-background-color: white;
-    -fx-border-color:  Black;
-    -fx-border-width: 1.5;
-    -fx-progress-color: white;
-    -fx-show-tick-labels: 12;
-    -fx-font-size: 16px;
-    -fx-font-style: Ariel;
-    -fx-font-weight: bold;
-}
+
 
 .tree-cell{
     -fx-font-size: 14px;

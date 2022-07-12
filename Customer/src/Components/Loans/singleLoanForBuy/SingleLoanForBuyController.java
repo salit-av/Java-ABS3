@@ -78,7 +78,7 @@ public class SingleLoanForBuyController {
         this.lendersName = lendersName;
         this.cusName = cusName;
         this.errorBuyLoansPro = errorBuyLoansPro;
-        DTOpayments payments = loan.getLenders().get(cusName);
+        DTOpayments payments = loan.getLenders().get(lendersName);
         idPro.set("Loan: " + loan.getId());
         fromLenderPro.set(lendersName);
         capitalLeftPro.set(String.valueOf(payments.getCapitalToPay()));

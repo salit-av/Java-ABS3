@@ -344,6 +344,7 @@ public class Loan implements Cloneable{
             if(currentYaz >= totalYazTime && totalInterestAndCapitalUntilNow == capitalAndInterestAtStart && countAllUnpaidPayments == 0){
                 status = Status.FINISHED;
                 nextYazToPay = 0;
+                owner.getNotificationsList().add(new Notification("Loan: " + id, "Ended successfully", "Have a nice day!"));
                 // nextPayIncludesInterestAndCapital = 0;  TODO check if not in mark
                 yazAtTheEnd = currentYaz;
             }
@@ -363,6 +364,7 @@ public class Loan implements Cloneable{
 
             // Change details of the loan
             status = Status.RISK;
+            removeFromBuyingList();
             countAllUnpaidPayments++;
             totalAllUnpaidPayments += totalPay;
             //nextPayIncludesInterestAndCapital += totalPay;

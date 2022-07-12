@@ -116,6 +116,7 @@ public class DTOCustomer {
     }
 
     public List<DTOLoan> getDTOloansForSale() {
-        return DTOloansAsLender.values().stream().filter(dtoLoan -> dtoLoan.getStatus().equals(Status.ACTIVE)).collect(Collectors.toList());
+        return DTOloansAsLender.values().stream().filter(dtoLoan -> dtoLoan.getStatus().equals(Status.ACTIVE)).
+                filter(dtoLoan -> !dtoLoan.isLoanInBuyingList()).collect(Collectors.toList());
     }
 }

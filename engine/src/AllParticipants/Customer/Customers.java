@@ -66,26 +66,39 @@ public class Customers {
     }
 
     public DTOLoans getCustomersLoansAsBorrower(String username) {
-        return new DTOLoans(customers.get(username).getLoansAsBorrower());
+        if(customers.get(username) != null) {
+            return new DTOLoans(customers.get(username).getLoansAsBorrower());
+        }
+        else{
+            return new DTOLoans(new Loans());
+        }
     }
 
     public DTOLoans getCustomersLoansAsLender(String username) {
-        return new DTOLoans(customers.get(username).getLoansAsLender());
-
+        if(customers.get(username) != null) {
+            return new DTOLoans(customers.get(username).getLoansAsLender());
+        }
+        else{
+            return new DTOLoans(new Loans());
+        }
     }
 
     public List<DTOtransaction> getCustomersTransactions(String username) {
         List<DTOtransaction> res = new ArrayList<>();
-        List<Transaction> transactions = customers.get(username).getTransactions();
-        for(Transaction transaction:transactions){
-            res.add(new DTOtransaction(transaction.getYaz(), transaction.getPay(), transaction.getInOrOut(), transaction.getBeforeTran(), transaction.getAfterTran()));
+        if(customers.get(username) != null) {
+            List<Transaction> transactions = customers.get(username).getTransactions();
+            for (Transaction transaction : transactions) {
+                res.add(new DTOtransaction(transaction.getYaz(), transaction.getPay(), transaction.getInOrOut(), transaction.getBeforeTran(), transaction.getAfterTran()));
+            }
         }
         return res;
     }
 
     public List<Notification> getCustomersNotifications(String username) {
-        return customers.get(username).getNotificationsList();
+        if (customers.get(username) != null) {
+            return customers.get(username).getNotificationsList();
+        } else {
+            return new ArrayList<>();
+        }
     }
-
-
 }

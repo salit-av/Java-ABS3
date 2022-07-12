@@ -167,6 +167,7 @@ public class CustomerViewController extends CustomerViewData {
     private TimerTask listLoansWithPaymentRefresher;
     private ObservableList<String> categoriesOL;
     private ObservableList<String> loansOL;
+    private List<DTOLoan> loansAsBorrowerInPaymentList;
 
     // Buying/Selling a loan
     @FXML
@@ -206,6 +207,7 @@ public class CustomerViewController extends CustomerViewData {
         categoriesOL = FXCollections.observableArrayList();
         loansOL = FXCollections.observableArrayList();
         loansAfterFilter = new ArrayList<>();
+        loansAsBorrowerInPaymentList = new ArrayList<>();
         errorBuyLoansPro = new SimpleStringProperty();
         errorSaleLoansPro = new SimpleStringProperty();
         loansForSale = new ArrayList<>();
@@ -740,6 +742,7 @@ public class CustomerViewController extends CustomerViewData {
             loansOL.add(loan.getId());
         }
         if (!loansOL.isEmpty()) {
+            loansToChoseCB.getItems().clear();
             loansToChoseCB.getItems().addAll(loansOL);
         }
     }
@@ -861,26 +864,29 @@ public class CustomerViewController extends CustomerViewData {
 
     public void updateListLoansAsBorrowerInPayment(List<DTOLoan> allLoansAsBorrower) {
         Platform.runLater(() -> {
-            TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower with status Active or Risk");
-            if (!allLoansAsBorrower.isEmpty()) {
-                for (DTOLoan loan : allLoansAsBorrower) {
-                    if (loan.getStatus().equals(ACTIVE) || loan.getStatus().equals(RISK)) {
-                        treeLoans.setValue("List of loans as a borrower with status Active or Risk");
-                        try {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
-                            fxmlLoader.setLocation(url);
-                            VBox singleLoan = fxmlLoader.load(url.openStream());
-                            SingleLoanController singleLoanController = fxmlLoader.getController();
-                            singleLoanController.setInfoOfLoan(loan);
-                            treeLoans.getChildren().add(singleLoanController.getRoot());
+            if (allLoansAsBorrower.size() != loansAsBorrowerInPaymentList.size() || loanUpdate(allLoansAsBorrower, loansAsBorrowerInPaymentList)) {
+                loansAsBorrowerInPaymentList = allLoansAsBorrower;
+                TreeItem<String> treeLoans = new TreeItem<>("There is no list of loans as a borrower with status Active or Risk");
+                if (!allLoansAsBorrower.isEmpty()) {
+                    for (DTOLoan loan : allLoansAsBorrower) {
+                        if (loan.getStatus().equals(ACTIVE) || loan.getStatus().equals(RISK)) {
+                            treeLoans.setValue("List of loans as a borrower with status Active or Risk");
+                            try {
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                URL url = getClass().getResource(SINGLE_LOAN_CUSTOMERS_VIEW_FXML_RESOURCE);
+                                fxmlLoader.setLocation(url);
+                                VBox singleLoan = fxmlLoader.load(url.openStream());
+                                SingleLoanController singleLoanController = fxmlLoader.getController();
+                                singleLoanController.setInfoOfLoan(loan);
+                                treeLoans.getChildren().add(singleLoanController.getRoot());
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
+                    loanerLoansTV2.setRoot(treeLoans);
                 }
-                loanerLoansTV2.setRoot(treeLoans);
             }
         });
     }
@@ -1017,7 +1023,7 @@ public class CustomerViewController extends CustomerViewData {
         Platform.runLater(() -> {
             if (loansForSale.size() != loansForSaleFromEngine.size()) {
                 loansForSale = loansForSaleFromEngine;
-                saleLoansFP.getChildren().removeAll();
+                saleLoansFP.getChildren().clear();
 
                 for (DTOLoan loan : loansForSale) {
                     try {
@@ -1048,7 +1054,7 @@ public class CustomerViewController extends CustomerViewData {
         Platform.runLater(() -> {
             if (loansForBuy.size() != loansForBuyFromEngine.size()) {
                 loansForBuy = loansForBuyFromEngine;
-                buyLoansFP.getChildren().removeAll();
+                buyLoansFP.getChildren().clear();
 
                 for (DTOLoan loan : loansForBuy) {
                     Map<String, DTOpayments> lenders = loan.getLenders();

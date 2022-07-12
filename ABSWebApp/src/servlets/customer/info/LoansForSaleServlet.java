@@ -1,5 +1,6 @@
 package servlets.customer.info;
 
+import DTO.Customers.DTOCustomer;
 import DTO.Loan.DTOLoan;
 import Engine.Engine;
 import com.google.gson.Gson;
@@ -26,8 +27,11 @@ public class LoansForSaleServlet extends HttpServlet {
         if (usernameFromParameter == null || usernameFromParameter.equals(USERNAME)) {
             response.setStatus(HttpServletResponse.SC_CONFLICT);
         } else {
-
-            DTOLoan[] loansForSale = engine.getDTOCustomer(usernameFromParameter).getDTOloansForSale().toArray(new DTOLoan[0]);
+            DTOCustomer customer = engine.getDTOCustomer(usernameFromParameter);
+            DTOLoan[] loansForSale = new DTOLoan[0];
+            if(customer!= null) {
+                loansForSale = customer.getDTOloansForSale().toArray(new DTOLoan[0]);
+            }
             try (PrintWriter out = response.getWriter()) {
                 Gson gson = new Gson();
                 String json = gson.toJson(loansForSale);
