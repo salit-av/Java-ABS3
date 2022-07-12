@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Customer implements Cloneable{
+public class Customer {
     private String name;
     private int balance;
     private List<Transaction> transactions;
@@ -143,38 +143,5 @@ public class Customer implements Cloneable{
         loansAsLender.getLoans().put(loan.getId(), loan);
     }
 
-    @Override
-    public Customer clone()  {
-       /* try {
-            Customer newCustomer = (Customer) super.clone();
-
-            newCustomer.getTransactions().stream().forEach(transaction -> transaction.clone());
-
-            Loans newLoansAsLender = new Loans();
-            for(Loan loan: newCustomer.getLoansAsLender().getLoans().values()){
-                newLoansAsLender.getLoans().put(loan.getId(), loan.clone());
-            }
-            newCustomer.setLoansAsLender(newLoansAsLender);
-
-            Loans newLoansAsBorrower = new Loans();
-            for(Loan loan: newCustomer.getLoansAsBorrower().getLoans().values()){
-                newLoansAsBorrower.getLoans().put(loan.getId(), loan.clone());
-            }
-            newCustomer.setLoansAsBorrower(newLoansAsBorrower);
-
-            Loans newLoansWithPayments = new Loans();
-            for(Loan loan: newCustomer.getLoansWithPayments().getLoans().values()){
-                newLoansWithPayments.getLoans().put(loan.getId(), loan.clone());
-            }
-            newCustomer.setLoansWithPayments(newLoansWithPayments);
-
-            newCustomer.getNotificationsList().stream().forEach(notification -> notification.clone());
-
-            return newCustomer;
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }*/
-        return null;
-    }
 }
 

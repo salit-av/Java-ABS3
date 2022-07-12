@@ -10,7 +10,7 @@ import Status.Status;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Loan implements Cloneable{
+public class Loan {
     private String id;
     private String owner;
     //private Customer ownerCus;
@@ -441,25 +441,6 @@ public class Loan implements Cloneable{
         lenders.get(lender).setIsInBuyingList(true);
     }
 
-    @Override
-    public Loan clone()  {
-       /* try {
-            Loan newLoan = (Loan) super.clone();
-            //newLoan.setOwnerCus(newLoan.getOwnerCus().clone());
-
-            Map<Customer, Payments> newLenders = new HashMap<>();
-            for(Customer customer: newLoan.getLenders().keySet()){
-                Payments payments = newLoan.getLenders().get(customer);
-                newLenders.put(customer.clone(), payments.clone());
-            }
-            newLoan.setLenders(newLenders);
-
-            return newLoan;
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }*/
-        return null;
-    }
 }
 
 

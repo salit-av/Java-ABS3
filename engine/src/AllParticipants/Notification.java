@@ -1,6 +1,6 @@
 package AllParticipants;
 
-public class Notification implements Cloneable{
+public class Notification {
     private String title;
     private String content;
     private String end;
@@ -23,13 +23,4 @@ public class Notification implements Cloneable{
         return end;
     }
 
-    @Override
-    public Notification clone()  {
-/*        try {
-            return (Notification) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            return null;
-        }*/
-        return null;
-    }
 }
