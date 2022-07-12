@@ -3,6 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/ABSWebApp_Web</output-path>
     <root id="archive" name="ABSWebApp_Web.war">
       <element id="artifact" artifact-name="ABSWebApp:Web exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/ABSWebApp/web/WEB-INF/lib/gson-2.1.jar" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

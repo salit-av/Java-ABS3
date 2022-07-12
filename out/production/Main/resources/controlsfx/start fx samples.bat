@@ -1,1 +1,0 @@
-java -jar controlsfx-samples-8.40.14.jar

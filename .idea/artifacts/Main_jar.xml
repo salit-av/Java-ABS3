@@ -4,7 +4,7 @@
     <root id="archive" name="Main.jar">
       <element id="module-output" name="Main" />
       <element id="module-output" name="engine" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/Main/src/resources/controlsfx/controlsfx-8.40.14.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/engine/src/resources/controlsfx/controlsfx-8.40.14.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -10,11 +10,7 @@
           <element id="module-output" name="Main" />
           <element id="module-output" name="engine" />
         </element>
-        <element id="directory" name="lib">
-          <element id="library" level="project" name="google-gson-2" />
-          <element id="library" level="project" name="okHttp" />
-          <element id="library" level="project" name="controlsfx-8.40.141" />
-        </element>
+        <element id="directory" name="lib" />
       </element>
     </root>
   </artifact>
